@@ -1,12 +1,6 @@
-import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from app.db.database import Base, engine
 from app.api import auth, machines, pannes, interventions, pieces, search, stats, uploads
-from app.core.config import UPLOAD_DIR
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="TriMaint API", description="GMAO pour Triselec", version="1.0.0")
 
@@ -52,6 +46,6 @@ async def startup_event():
             )
             db.add(admin_user)
             db.commit()
-            print("Default admin user created: admin / admin123")
+            print("Utilisateur admin créé : admin / admin123")
     finally:
         db.close()
