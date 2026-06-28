@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Wrench, AlertTriangle, ClipboardList,
   Package, Search, LogOut, Users, BarChart2
 } from 'lucide-react'
+import NotificationBell from './NotificationBell'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -40,10 +41,11 @@ export default function Layout() {
             <div className="w-9 h-9 bg-orange-500 rounded-lg flex items-center justify-center">
               <Wrench size={20} className="text-white" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-lg font-bold text-white">TriMaint</h1>
               <p className="text-xs text-gray-400">GMAO Triselec</p>
             </div>
+            <NotificationBell />
           </div>
         </div>
 
@@ -67,7 +69,7 @@ export default function Layout() {
             </NavLink>
           ))}
 
-          {/* Section admin — visible uniquement pour les admins */}
+          {/* Section admin */}
           {user?.role === 'admin' && (
             <div className="pt-3 mt-3 border-t border-gray-700">
               <p className="px-3 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -103,7 +105,7 @@ export default function Layout() {
           )}
         </nav>
 
-        {/* Pied de sidebar — infos utilisateur */}
+        {/* Pied de sidebar */}
         <div className="px-3 py-4 border-t border-gray-700">
           <div className="flex items-center gap-3 px-3 py-2 mb-2 bg-gray-700/40 rounded-lg">
             <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center shrink-0">

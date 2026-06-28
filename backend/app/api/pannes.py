@@ -5,6 +5,7 @@ from app.models.panne import Panne
 from app.schemas.panne import PanneCreate, PanneUpdate, PanneOut
 from app.core.security import get_current_user
 from app.core.activity import log_activity
+from app.core.notifications import create_notification
 
 router = APIRouter(prefix="/api/pannes", tags=["pannes"])
 
@@ -32,6 +33,15 @@ def create_panne(panne_in: PanneCreate, db: Session = Depends(get_db), current_u
     db.commit()
     db.refresh(panne)
     log_activity(db, current_user, "créé", "panne", panne.id, panne.titre)
+    if panne.criticite in ("critique", "majeure"):
+        create_notification(
+            db,
+            title=f"Panne {panne.criticite} signalée",
+            message=f"{panne.titre} — signalée par {current_user.username}",
+            notif_type=panne.criticite,
+            entity_type="panne",
+            entity_id=panne.id,
+        )
     return panne
 
 

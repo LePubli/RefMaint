@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth, machines, pannes, interventions, pieces, search, stats, uploads, admin
+from app.api import auth, machines, pannes, interventions, pieces, search, stats, uploads, admin, notifications
 
 app = FastAPI(title="TriMaint API", description="GMAO pour Triselec", version="1.0.0")
 
@@ -21,6 +21,7 @@ app.include_router(search.router)
 app.include_router(stats.router)
 app.include_router(uploads.router)
 app.include_router(admin.router)
+app.include_router(notifications.router)
 
 
 @app.get("/api/health")

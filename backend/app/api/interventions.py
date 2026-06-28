@@ -5,6 +5,7 @@ from app.models.intervention import Intervention
 from app.schemas.intervention import InterventionCreate, InterventionUpdate, InterventionOut
 from app.core.security import get_current_user, require_manager_or_admin
 from app.core.activity import log_activity
+from app.core.notifications import create_notification
 
 router = APIRouter(prefix="/api/interventions", tags=["interventions"])
 
@@ -33,6 +34,14 @@ def create_intervention(inter_in: InterventionCreate, db: Session = Depends(get_
     db.refresh(inter)
     label = inter.description[:60] if inter.description else f"Intervention #{inter.id}"
     log_activity(db, current_user, "créé", "intervention", inter.id, label)
+    create_notification(
+        db,
+        title="Nouvelle intervention à valider",
+        message=f"{label} — soumise par {current_user.username}",
+        notif_type="info",
+        entity_type="intervention",
+        entity_id=inter.id,
+    )
     return inter
 
 
