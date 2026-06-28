@@ -11,6 +11,7 @@ import Interventions from './pages/Interventions'
 import Pieces from './pages/Pieces'
 import Recherche from './pages/Recherche'
 import Utilisateurs from './pages/Utilisateurs'
+import Activite from './pages/Activite'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
@@ -45,6 +46,7 @@ function AppRoutes() {
         <Route path="pieces" element={<Pieces />} />
         <Route path="recherche" element={<Recherche />} />
         <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
+        <Route path="activite" element={<AdminRoute><Activite /></AdminRoute>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

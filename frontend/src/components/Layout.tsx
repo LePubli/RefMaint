@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Wrench, AlertTriangle, ClipboardList,
-  Package, Search, LogOut, User, Users
+  Package, Search, LogOut, Users, BarChart2
 } from 'lucide-react'
 
 const navItems = [
@@ -85,6 +85,19 @@ export default function Layout() {
               >
                 <Users size={18} />
                 Utilisateurs
+              </NavLink>
+              <NavLink
+                to="/activite"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                  }`
+                }
+              >
+                <BarChart2 size={18} />
+                Journal d'activité
               </NavLink>
             </div>
           )}

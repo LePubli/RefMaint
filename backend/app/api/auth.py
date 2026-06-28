@@ -12,6 +12,7 @@ from app.core.security import (
     get_current_user, require_admin
 )
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from app.core.activity import log_activity
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -81,6 +82,7 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db), _=Depends(re
     db.add(user)
     db.commit()
     db.refresh(user)
+    log_activity(db, current_user, "créé", "utilisateur", user.id, user.username)
     return user
 
 
@@ -111,6 +113,12 @@ def update_user(
         user.email = update.email
     db.commit()
     db.refresh(user)
+    action = "modifié"
+    if update.is_active is False:
+        action = "désactivé"
+    elif update.is_active is True:
+        action = "activé"
+    log_activity(db, current_user, action, "utilisateur", user.id, user.username)
     return user
 
 
@@ -128,6 +136,7 @@ def reset_password(
         raise HTTPException(status_code=400, detail="Mot de passe trop court (min. 6 caractères)")
     user.hashed_password = get_password_hash(body.new_password)
     db.commit()
+    log_activity(db, current_user, "réinitialisé", "utilisateur", user.id, user.username)
     return {"ok": True, "message": "Mot de passe réinitialisé"}
 
 
@@ -142,8 +151,10 @@ def delete_user(
         raise HTTPException(status_code=404, detail="Utilisateur introuvable")
     if user.id == current_user.id:
         raise HTTPException(status_code=400, detail="Vous ne pouvez pas supprimer votre propre compte")
+    label = user.username
     db.delete(user)
     db.commit()
+    log_activity(db, current_user, "supprimé", "utilisateur", user_id, label)
     return {"ok": True}
 
 

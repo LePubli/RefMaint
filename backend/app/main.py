@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth, machines, pannes, interventions, pieces, search, stats, uploads
+from app.api import auth, machines, pannes, interventions, pieces, search, stats, uploads, admin
 
 app = FastAPI(title="TriMaint API", description="GMAO pour Triselec", version="1.0.0")
 
@@ -20,6 +20,7 @@ app.include_router(pieces.router)
 app.include_router(search.router)
 app.include_router(stats.router)
 app.include_router(uploads.router)
+app.include_router(admin.router)
 
 
 @app.get("/api/health")
@@ -36,8 +37,8 @@ async def startup_event():
 
     db = SessionLocal()
     try:
-        admin = db.query(User).filter(User.username == "admin").first()
-        if not admin:
+        admin_user = db.query(User).filter(User.username == "admin").first()
+        if not admin_user:
             admin_user = User(
                 username="admin",
                 email="admin@trimaint.local",

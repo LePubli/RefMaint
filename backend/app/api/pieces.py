@@ -4,6 +4,7 @@ from app.db.database import get_db
 from app.models.piece import Piece
 from app.schemas.piece import PieceCreate, PieceUpdate, PieceOut
 from app.core.security import get_current_user
+from app.core.activity import log_activity
 
 router = APIRouter(prefix="/api/pieces", tags=["pieces"])
 
@@ -22,7 +23,7 @@ def get_piece(piece_id: int, db: Session = Depends(get_db), _=Depends(get_curren
 
 
 @router.post("/", response_model=PieceOut)
-def create_piece(piece_in: PieceCreate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def create_piece(piece_in: PieceCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     existing = db.query(Piece).filter(Piece.reference == piece_in.reference).first()
     if existing:
         raise HTTPException(status_code=400, detail="Reference already exists")
@@ -30,11 +31,12 @@ def create_piece(piece_in: PieceCreate, db: Session = Depends(get_db), _=Depends
     db.add(piece)
     db.commit()
     db.refresh(piece)
+    log_activity(db, current_user, "créé", "pièce", piece.id, f"{piece.nom} ({piece.reference})")
     return piece
 
 
 @router.put("/{piece_id}", response_model=PieceOut)
-def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     piece = db.query(Piece).filter(Piece.id == piece_id).first()
     if not piece:
         raise HTTPException(status_code=404, detail="Piece not found")
@@ -42,14 +44,17 @@ def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get
         setattr(piece, key, value)
     db.commit()
     db.refresh(piece)
+    log_activity(db, current_user, "modifié", "pièce", piece.id, f"{piece.nom} ({piece.reference})")
     return piece
 
 
 @router.delete("/{piece_id}")
-def delete_piece(piece_id: int, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def delete_piece(piece_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     piece = db.query(Piece).filter(Piece.id == piece_id).first()
     if not piece:
         raise HTTPException(status_code=404, detail="Piece not found")
+    label = f"{piece.nom} ({piece.reference})"
     db.delete(piece)
     db.commit()
+    log_activity(db, current_user, "supprimé", "pièce", piece_id, label)
     return {"ok": True}

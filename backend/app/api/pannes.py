@@ -4,6 +4,7 @@ from app.db.database import get_db
 from app.models.panne import Panne
 from app.schemas.panne import PanneCreate, PanneUpdate, PanneOut
 from app.core.security import get_current_user
+from app.core.activity import log_activity
 
 router = APIRouter(prefix="/api/pannes", tags=["pannes"])
 
@@ -25,16 +26,17 @@ def get_panne(panne_id: int, db: Session = Depends(get_db), _=Depends(get_curren
 
 
 @router.post("/", response_model=PanneOut)
-def create_panne(panne_in: PanneCreate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def create_panne(panne_in: PanneCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     panne = Panne(**panne_in.model_dump())
     db.add(panne)
     db.commit()
     db.refresh(panne)
+    log_activity(db, current_user, "créé", "panne", panne.id, panne.titre)
     return panne
 
 
 @router.put("/{panne_id}", response_model=PanneOut)
-def update_panne(panne_id: int, panne_in: PanneUpdate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def update_panne(panne_id: int, panne_in: PanneUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     panne = db.query(Panne).filter(Panne.id == panne_id).first()
     if not panne:
         raise HTTPException(status_code=404, detail="Panne not found")
@@ -42,16 +44,19 @@ def update_panne(panne_id: int, panne_in: PanneUpdate, db: Session = Depends(get
         setattr(panne, key, value)
     db.commit()
     db.refresh(panne)
+    log_activity(db, current_user, "modifié", "panne", panne.id, panne.titre)
     return panne
 
 
 @router.delete("/{panne_id}")
-def delete_panne(panne_id: int, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def delete_panne(panne_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     panne = db.query(Panne).filter(Panne.id == panne_id).first()
     if not panne:
         raise HTTPException(status_code=404, detail="Panne not found")
+    label = panne.titre
     db.delete(panne)
     db.commit()
+    log_activity(db, current_user, "supprimé", "panne", panne_id, label)
     return {"ok": True}
 
 

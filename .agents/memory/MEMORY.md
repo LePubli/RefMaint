@@ -1,1 +1,2 @@
 - [bcrypt-passlib-compat](bcrypt-passlib-compat.md) — bcrypt v4+ breaks passlib's __about__ lookup; use bcrypt directly instead of passlib CryptContext
+- [lucide-react icon names](lucide-icon-names.md) — `Activity` icon does not exist in this project's lucide-react version; use `BarChart2` instead.

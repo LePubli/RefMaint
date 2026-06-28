@@ -7,6 +7,7 @@ from app.db.database import get_db
 from app.models.machine import Machine
 from app.schemas.machine import MachineCreate, MachineUpdate, MachineOut
 from app.core.security import get_current_user
+from app.core.activity import log_activity
 
 router = APIRouter(prefix="/api/machines", tags=["machines"])
 
@@ -32,18 +33,19 @@ def get_machine(machine_id: int, db: Session = Depends(get_db), _=Depends(get_cu
 
 
 @router.post("/", response_model=MachineOut)
-def create_machine(machine_in: MachineCreate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def create_machine(machine_in: MachineCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     machine = Machine(**machine_in.model_dump())
     db.add(machine)
     db.flush()
     machine.qr_code = generate_qr(f"trimaint://machine/{machine.id}")
     db.commit()
     db.refresh(machine)
+    log_activity(db, current_user, "créé", "machine", machine.id, machine.nom)
     return machine
 
 
 @router.put("/{machine_id}", response_model=MachineOut)
-def update_machine(machine_id: int, machine_in: MachineUpdate, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def update_machine(machine_id: int, machine_in: MachineUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     machine = db.query(Machine).filter(Machine.id == machine_id).first()
     if not machine:
         raise HTTPException(status_code=404, detail="Machine not found")
@@ -51,14 +53,17 @@ def update_machine(machine_id: int, machine_in: MachineUpdate, db: Session = Dep
         setattr(machine, key, value)
     db.commit()
     db.refresh(machine)
+    log_activity(db, current_user, "modifié", "machine", machine.id, machine.nom)
     return machine
 
 
 @router.delete("/{machine_id}")
-def delete_machine(machine_id: int, db: Session = Depends(get_db), _=Depends(get_current_user)):
+def delete_machine(machine_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     machine = db.query(Machine).filter(Machine.id == machine_id).first()
     if not machine:
         raise HTTPException(status_code=404, detail="Machine not found")
+    label = machine.nom
     db.delete(machine)
     db.commit()
+    log_activity(db, current_user, "supprimé", "machine", machine_id, label)
     return {"ok": True}
