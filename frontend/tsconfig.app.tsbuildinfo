@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/components/Layout.tsx","./src/context/AuthContext.tsx","./src/pages/Dashboard.tsx","./src/pages/Interventions.tsx","./src/pages/Login.tsx","./src/pages/MachineDetail.tsx","./src/pages/Machines.tsx","./src/pages/Pannes.tsx","./src/pages/Pieces.tsx","./src/pages/Recherche.tsx","./src/services/api.ts"],"version":"5.9.3"}

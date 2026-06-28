@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: trimaint_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-trimaint}
+      POSTGRES_USER: ${POSTGRES_USER:-trimaint}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trimaint_secure_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-trimaint} -d ${POSTGRES_DB:-trimaint}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - trimaint_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trimaint_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-trimaint}:${POSTGRES_PASSWORD:-trimaint_secure_password}@postgres:5432/${POSTGRES_DB:-trimaint}
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production-min-32-chars}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads_data:/data/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - trimaint_net
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trimaint_frontend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - trimaint_net
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  trimaint_net:
+    driver: bridge
