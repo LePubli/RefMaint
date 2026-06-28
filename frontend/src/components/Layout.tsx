@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Wrench, AlertTriangle, ClipboardList,
-  Package, Search, LogOut, ChevronRight, Settings, User
+  Package, Search, LogOut, User, Users
 } from 'lucide-react'
 
 const navItems = [
@@ -13,6 +13,12 @@ const navItems = [
   { to: '/pieces', label: 'Pièces', icon: Package },
   { to: '/recherche', label: 'Recherche', icon: Search },
 ]
+
+const roleColors: Record<string, string> = {
+  admin: 'text-purple-400',
+  manager: 'text-blue-400',
+  technicien: 'text-gray-400',
+}
 
 export default function Layout() {
   const { user, logout } = useAuth()
@@ -27,6 +33,7 @@ export default function Layout() {
     <div className="flex h-screen bg-gray-900 text-gray-100 overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
+
         {/* Logo */}
         <div className="px-6 py-4 border-b border-gray-700">
           <div className="flex items-center gap-3">
@@ -40,7 +47,7 @@ export default function Layout() {
           </div>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation principale */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {navItems.map(({ to, label, icon: Icon, exact }) => (
             <NavLink
@@ -59,17 +66,43 @@ export default function Layout() {
               {label}
             </NavLink>
           ))}
+
+          {/* Section admin — visible uniquement pour les admins */}
+          {user?.role === 'admin' && (
+            <div className="pt-3 mt-3 border-t border-gray-700">
+              <p className="px-3 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Administration
+              </p>
+              <NavLink
+                to="/utilisateurs"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                  }`
+                }
+              >
+                <Users size={18} />
+                Utilisateurs
+              </NavLink>
+            </div>
+          )}
         </nav>
 
-        {/* User info */}
+        {/* Pied de sidebar — infos utilisateur */}
         <div className="px-3 py-4 border-t border-gray-700">
-          <div className="flex items-center gap-3 px-3 py-2 mb-2 rounded-lg bg-gray-750">
-            <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-              <User size={16} className="text-gray-300" />
+          <div className="flex items-center gap-3 px-3 py-2 mb-2 bg-gray-700/40 rounded-lg">
+            <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center shrink-0">
+              <span className="text-sm font-bold text-orange-400">
+                {user?.username?.[0]?.toUpperCase()}
+              </span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{user?.username}</p>
-              <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+              <p className={`text-xs capitalize font-medium ${roleColors[user?.role || ''] || 'text-gray-400'}`}>
+                {user?.role === 'admin' ? 'Administrateur' : user?.role === 'manager' ? 'Manager' : 'Technicien'}
+              </p>
             </div>
           </div>
           <button
@@ -82,7 +115,7 @@ export default function Layout() {
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Contenu principal */}
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>

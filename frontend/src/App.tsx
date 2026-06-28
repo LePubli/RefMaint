@@ -10,6 +10,7 @@ import Pannes from './pages/Pannes'
 import Interventions from './pages/Interventions'
 import Pieces from './pages/Pieces'
 import Recherche from './pages/Recherche'
+import Utilisateurs from './pages/Utilisateurs'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
@@ -19,6 +20,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     </div>
   )
   if (!user) return <Navigate to="/login" replace />
+  return <>{children}</>
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth()
+  if (isLoading) return null
+  if (!user) return <Navigate to="/login" replace />
+  if (user.role !== 'admin') return <Navigate to="/" replace />
   return <>{children}</>
 }
 
@@ -35,6 +44,7 @@ function AppRoutes() {
         <Route path="interventions" element={<Interventions />} />
         <Route path="pieces" element={<Pieces />} />
         <Route path="recherche" element={<Recherche />} />
+        <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
