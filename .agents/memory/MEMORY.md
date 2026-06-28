@@ -1,0 +1,1 @@
+- [bcrypt-passlib-compat](bcrypt-passlib-compat.md) — bcrypt v4+ breaks passlib's __about__ lookup; use bcrypt directly instead of passlib CryptContext
