@@ -1,0 +1,33 @@
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+
+
+class MachineBase(BaseModel):
+    nom: str
+    site: Optional[str] = None
+    ligne: Optional[str] = None
+    zone: Optional[str] = None
+    fabricant: Optional[str] = None
+    modele: Optional[str] = None
+    code_interne: Optional[str] = None
+    statut: Optional[str] = "operationnel"
+    notes: Optional[str] = None
+
+
+class MachineCreate(MachineBase):
+    pass
+
+
+class MachineUpdate(MachineBase):
+    nom: Optional[str] = None
+
+
+class MachineOut(MachineBase):
+    id: int
+    qr_code: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True

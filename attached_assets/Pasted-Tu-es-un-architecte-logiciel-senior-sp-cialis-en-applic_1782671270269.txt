@@ -1,0 +1,179 @@
+Tu es un architecte logiciel senior spécialisé en applications industrielles et GMAO.
+
+Tu dois générer une application complète nommée :
+
+TriMaint
+
+Objectif : créer un référentiel de maintenance industrielle pour une usine de tri (Triselec).
+
+Le système doit centraliser :
+
+équipements industriels
+pannes
+interventions
+pièces détachées
+documentation technique
+historique complet
+recherche intelligente
+
+L’application doit fonctionner en web + API + base de données, entièrement dockerisée.
+
+STACK OBLIGATOIRE
+Backend : FastAPI (Python)
+Frontend web : React + Vite
+Base de données : PostgreSQL
+Cache optionnel : Redis
+Auth : JWT (simple, pas Keycloak)
+Stockage fichiers : dossier local /data (pas S3)
+ORM : SQLAlchemy
+Migration : Alembic
+Conteneurisation : Docker + Docker Compose
+ARCHITECTURE ATTENDUE
+
+Créer un projet structuré comme ceci :
+
+trimait/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── db/
+│   │   └── main.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+│
+├── frontend/
+│   ├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── Dockerfile
+│
+├── docker-compose.yml
+├── README.md
+FONCTIONNALITÉS BACKEND
+1. Authentification
+login
+register (admin only)
+JWT token
+rôles :
+admin
+technicien
+manager
+2. Machines
+
+CRUD complet :
+
+id
+nom
+site
+ligne
+zone
+fabricant
+modèle
+code interne
+QR code (généré)
+statut
+3. Pannes (core du système)
+
+CRUD complet :
+
+id
+machine_id
+titre
+description symptôme
+causes possibles (liste)
+cause réelle
+solution
+niveau criticité (1-5)
+temps moyen réparation
+pièces utilisées
+photos
+4. Interventions
+machine_id
+panne_id
+technicien
+durée
+commentaire
+photos avant/après
+validation manager
+5. Pièces détachées
+reference
+nom
+stock
+emplacement
+fournisseur
+6. Recherche intelligente
+
+Endpoint :
+
+GET /search?q=
+
+Recherche dans :
+
+pannes
+machines
+interventions
+
+Retour classé par pertinence.
+
+7. Upload fichiers
+images
+PDF
+stockés localement /data/uploads
+FRONTEND WEB (REACT)
+
+Créer une interface simple industrielle :
+
+Pages :
+Login
+Dashboard
+Machines
+Machine detail (avec pannes liées)
+Pannes
+Interventions
+Pièces
+Recherche globale
+UI :
+style industriel sobre
+tableau type maintenance
+navigation latérale
+responsive tablette atelier
+DOCKER
+docker-compose.yml doit inclure :
+backend (FastAPI)
+frontend (React build + nginx)
+postgres
+volume persistant /data
+EXIGENCES IMPORTANTES
+Code propre et modulaire
+Architecture scalable
+API documentée via Swagger (/docs)
+Aucune dépendance cloud obligatoire
+Fonctionnement 100% local possible
+Compatible déploiement industriel
+BONUS (SI POSSIBLE)
+QR code génération pour machines
+endpoint export CSV des pannes
+statistiques simples :
+top pannes
+temps moyen réparation
+logs interventions
+LIVRABLE ATTENDU
+
+Génère :
+
+Code backend complet
+Code frontend complet
+docker-compose fonctionnel
+Dockerfiles
+schéma base de données implicite via models
+README avec installation :
+docker-compose up --build
+CONTRAINTE FINALE
+
+Le système doit être directement exécutable après build Docker, sans configuration complexe.
