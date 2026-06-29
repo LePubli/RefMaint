@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Wrench, AlertTriangle, ClipboardList,
-  Package, Search, LogOut, Users, BarChart2
+  Package, Search, LogOut, Users, BarChart2, RefreshCw
 } from 'lucide-react'
 import NotificationBell from './NotificationBell'
 
@@ -12,6 +12,7 @@ const navItems = [
   { to: '/pannes', label: 'Pannes', icon: AlertTriangle },
   { to: '/interventions', label: 'Interventions', icon: ClipboardList },
   { to: '/pieces', label: 'Pièces', icon: Package },
+  { to: '/maintenance-preventive', label: 'Prévention', icon: RefreshCw },
   { to: '/recherche', label: 'Recherche', icon: Search },
 ]
 

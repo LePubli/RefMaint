@@ -12,6 +12,8 @@ import Pieces from './pages/Pieces'
 import Recherche from './pages/Recherche'
 import Utilisateurs from './pages/Utilisateurs'
 import Activite from './pages/Activite'
+import PanneDetail from './pages/PanneDetail'
+import MaintenancePreventive from './pages/MaintenancePreventive'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
@@ -42,6 +44,8 @@ function AppRoutes() {
         <Route path="machines" element={<Machines />} />
         <Route path="machines/:id" element={<MachineDetail />} />
         <Route path="pannes" element={<Pannes />} />
+        <Route path="pannes/:id" element={<PanneDetail />} />
+        <Route path="maintenance-preventive" element={<MaintenancePreventive />} />
         <Route path="interventions" element={<Interventions />} />
         <Route path="pieces" element={<Pieces />} />
         <Route path="recherche" element={<Recherche />} />

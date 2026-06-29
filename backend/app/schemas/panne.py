@@ -25,6 +25,7 @@ class PanneUpdate(BaseModel):
     causes_possibles: Optional[List[str]] = None
     cause_reelle: Optional[str] = None
     solution: Optional[str] = None
+    protocole_reparation: Optional[str] = None
     criticite: Optional[int] = None
     temps_moyen_reparation: Optional[int] = None
     photos: Optional[List[str]] = None

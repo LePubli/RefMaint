@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../services/api'
-import { Plus, Search, X, Edit2, Trash2, AlertTriangle } from 'lucide-react'
+import { Plus, Search, X, Edit2, Trash2, AlertTriangle, Eye } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 interface Panne {
@@ -155,8 +156,9 @@ export default function Pannes() {
                   <td className="px-4 py-3 text-gray-400 text-xs">{new Date(p.created_at).toLocaleDateString('fr-FR')}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <button onClick={() => openEdit(p)} className="text-gray-400 hover:text-blue-400 transition-colors"><Edit2 size={15} /></button>
-                      <button onClick={() => handleDelete(p.id)} className="text-gray-400 hover:text-red-400 transition-colors"><Trash2 size={15} /></button>
+                      <Link to={`/pannes/${p.id}`} className="text-gray-400 hover:text-orange-400 transition-colors" title="Voir le détail"><Eye size={15} /></Link>
+                      <button onClick={() => openEdit(p)} className="text-gray-400 hover:text-blue-400 transition-colors" title="Modifier"><Edit2 size={15} /></button>
+                      <button onClick={() => handleDelete(p.id)} className="text-gray-400 hover:text-red-400 transition-colors" title="Supprimer"><Trash2 size={15} /></button>
                     </div>
                   </td>
                 </tr>

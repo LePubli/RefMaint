@@ -14,6 +14,7 @@ class Panne(Base):
     causes_possibles = Column(JSON, default=[])
     cause_reelle = Column(Text)
     solution = Column(Text)
+    protocole_reparation = Column(Text)
     criticite = Column(Integer, default=3)
     temps_moyen_reparation = Column(Integer)
     photos = Column(JSON, default=[])
