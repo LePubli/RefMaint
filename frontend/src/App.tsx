@@ -13,6 +13,7 @@ import Recherche from './pages/Recherche'
 import Utilisateurs from './pages/Utilisateurs'
 import Activite from './pages/Activite'
 import PanneDetail from './pages/PanneDetail'
+import RapportPanne from './pages/RapportPanne'
 import MaintenancePreventive from './pages/MaintenancePreventive'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -45,6 +46,7 @@ function AppRoutes() {
         <Route path="machines/:id" element={<MachineDetail />} />
         <Route path="pannes" element={<Pannes />} />
         <Route path="pannes/:id" element={<PanneDetail />} />
+        <Route path="pannes/:id/rapport" element={<RapportPanne />} />
         <Route path="maintenance-preventive" element={<MaintenancePreventive />} />
         <Route path="interventions" element={<Interventions />} />
         <Route path="pieces" element={<Pieces />} />
