@@ -41,6 +41,13 @@ export default function PanneDetail() {
   const [machines, setMachines] = useState<any[]>([])
   const [interForm, setInterForm] = useState({ technicien: '', duree: '', commentaire: '' })
 
+  // Gestion pièces
+  const [allPieces, setAllPieces] = useState<any[]>([])
+  const [showAddPiece, setShowAddPiece] = useState(false)
+  const [pieceSearch, setPieceSearch] = useState('')
+  const [pieceForm, setPieceForm] = useState({ piece_id: '', quantite: '1', deduire_stock: true })
+  const [removingPiece, setRemovingPiece] = useState<number | null>(null)
+
   const fetchPanne = useCallback(() => {
     api.get(`/pannes/${id}/detail`)
       .then(r => {
@@ -72,6 +79,43 @@ export default function PanneDetail() {
       await api.put(`/pannes/${id}`, diagForm)
       toast.success('Diagnostic mis à jour')
       setEditingDiag(false)
+      fetchPanne()
+    } catch { toast.error('Erreur') }
+  }
+
+  // Ouvre le formulaire ajout pièce + charge la liste
+  const openAddPiece = () => {
+    if (allPieces.length === 0) {
+      api.get('/pieces/').then(r => setAllPieces(r.data))
+    }
+    setPieceForm({ piece_id: '', quantite: '1', deduire_stock: true })
+    setPieceSearch('')
+    setShowAddPiece(true)
+  }
+
+  const addPiece = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!pieceForm.piece_id) { toast.error('Sélectionnez une pièce'); return }
+    try {
+      const res = await api.post(`/pannes/${id}/pieces`, {
+        piece_id: Number(pieceForm.piece_id),
+        quantite: Number(pieceForm.quantite),
+        deduire_stock: pieceForm.deduire_stock,
+      })
+      const stockMsg = pieceForm.deduire_stock ? ` — stock restant : ${res.data.stock_apres}` : ''
+      toast.success(`${res.data.nom} × ${res.data.quantite} ajouté${stockMsg}`)
+      setShowAddPiece(false)
+      fetchPanne()
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Erreur')
+    }
+  }
+
+  const removePiece = async (pieceId: number, pieceName: string, restaurerStock: boolean) => {
+    setRemovingPiece(null)
+    try {
+      await api.delete(`/pannes/${id}/pieces/${pieceId}?restaurer_stock=${restaurerStock}`)
+      toast.success(`${pieceName} retiré${restaurerStock ? ' — stock restauré' : ''}`)
       fetchPanne()
     } catch { toast.error('Erreur') }
   }

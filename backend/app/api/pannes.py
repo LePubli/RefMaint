@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional, List
@@ -6,6 +6,7 @@ from datetime import datetime
 from app.db.database import get_db
 from app.models.panne import Panne
 from app.models.intervention import Intervention
+from app.models.piece import Piece, PannesPieces
 from app.schemas.panne import PanneCreate, PanneUpdate, PanneOut
 from app.core.security import get_current_user
 from app.core.activity import log_activity
@@ -168,4 +169,98 @@ def delete_panne(panne_id: int, db: Session = Depends(get_db),
     db.delete(panne)
     db.commit()
     log_activity(db, current_user, "supprimé", "panne", panne_id, label)
+    return {"ok": True}
+
+
+# ─── Gestion des pièces associées ───────────────────────────────────────────
+
+class PieceAssocIn(BaseModel):
+    piece_id: int
+    quantite: int = 1
+    deduire_stock: bool = True
+
+
+class PieceAssocOut(BaseModel):
+    piece_id: int
+    nom: str
+    reference: str
+    stock_apres: int
+    quantite: int
+
+
+@router.post("/{panne_id}/pieces", response_model=PieceAssocOut)
+def ajouter_piece(
+    panne_id: int,
+    body: PieceAssocIn,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    panne = db.query(Panne).filter(Panne.id == panne_id).first()
+    if not panne:
+        raise HTTPException(status_code=404, detail="Panne introuvable")
+    piece = db.query(Piece).filter(Piece.id == body.piece_id).first()
+    if not piece:
+        raise HTTPException(status_code=404, detail="Pièce introuvable")
+
+    if body.deduire_stock:
+        if piece.stock < body.quantite:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Stock insuffisant : {piece.stock} disponible(s), {body.quantite} demandé(s)",
+            )
+        piece.stock -= body.quantite
+
+    existing = db.query(PannesPieces).filter(
+        PannesPieces.panne_id == panne_id,
+        PannesPieces.piece_id == body.piece_id,
+    ).first()
+
+    if existing:
+        existing.quantite += body.quantite
+    else:
+        assoc = PannesPieces(panne_id=panne_id, piece_id=body.piece_id, quantite=body.quantite)
+        db.add(assoc)
+
+    db.commit()
+    db.refresh(piece)
+    log_activity(
+        db, current_user, "associé", "pièce", piece.id,
+        f"{piece.nom} × {body.quantite} → panne #{panne_id}",
+    )
+    return PieceAssocOut(
+        piece_id=piece.id,
+        nom=piece.nom,
+        reference=piece.reference,
+        stock_apres=piece.stock,
+        quantite=body.quantite,
+    )
+
+
+@router.delete("/{panne_id}/pieces/{piece_id}")
+def retirer_piece(
+    panne_id: int,
+    piece_id: int,
+    restaurer_stock: bool = Query(default=False),
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    assoc = db.query(PannesPieces).filter(
+        PannesPieces.panne_id == panne_id,
+        PannesPieces.piece_id == piece_id,
+    ).first()
+    if not assoc:
+        raise HTTPException(status_code=404, detail="Association introuvable")
+
+    if restaurer_stock:
+        piece = db.query(Piece).filter(Piece.id == piece_id).first()
+        if piece:
+            piece.stock += assoc.quantite
+            log_activity(
+                db, current_user, "restauré stock", "pièce", piece.id,
+                f"{piece.nom} + {assoc.quantite} → stock",
+            )
+
+    db.delete(assoc)
+    db.commit()
+    log_activity(db, current_user, "retiré", "pièce", piece_id, f"pièce #{piece_id} ← panne #{panne_id}")
     return {"ok": True}
