@@ -1,0 +1,55 @@
+2026-Jun-29 09:55:26.435041
+Docker 29.4.0 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jun-29 09:55:26.450149
+Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jun-29 09:55:26.888416
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jun-29 09:55:28.732272
+----------------------------------------
+2026-Jun-29 09:55:28.748931
+Importing LePubli/RefMaint:main (commit sha dec334b6a3476eee9952d6a7d65d51783280243e) to /artifacts/on3lmode3igy6315m0sl3wxy.
+2026-Jun-29 09:55:34.390897
+Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jun-29 09:55:35.371299
+Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jun-29 09:55:35.383333
+Pulling & building required images.
+2026-Jun-29 09:55:35.732389
+Adding build arguments to Docker Compose build command.
+2026-Jun-29 09:56:54.084964
+========================================
+2026-Jun-29 09:56:54.110984
+Deployment failed: Command execution failed (exit code 1): docker exec on3lmode3igy6315m0sl3wxy bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq  docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/on3lmode3igy6315m0sl3wxy -f /artifacts/on3lmode3igy6315m0sl3wxy/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=3503e7c51b59c94fba9b509c0500c47fcc3f760723842319f5a12a21d9b4a1cf'
+2026-Jun-29 09:56:54.110984
+Error: Dockerfile:14
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+--------------------
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+12 |
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+13 |     COPY . .
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+14 | >>> RUN npm run build
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+15 |
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+16 |     FROM nginx:alpine
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+--------------------
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+target frontend: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 127
+2026-Jun-29 09:56:54.110984
+2026-Jun-29 09:56:54.110984
+exit status 1
+2026-Jun-29 09:56:54.350042
+========================================
+2026-Jun-29 09:56:54.880894
+Gracefully shutting down build container: on3lmode3igy6315m0sl3wxy
