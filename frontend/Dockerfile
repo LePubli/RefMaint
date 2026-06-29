@@ -3,7 +3,10 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+
+# Forcer l'installation des devDependencies (vite, typescript, etc.)
+# même si NODE_ENV=production est injecté par la plateforme de déploiement
+RUN npm ci --include=dev
 
 COPY . .
 RUN npm run build
