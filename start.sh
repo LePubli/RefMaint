@@ -5,7 +5,7 @@ cd /home/runner/workspace/backend
 echo "Migration de la base de données..."
 
 # Détecte si la DB a déjà les tables mais pas encore alembic_version (pré-Alembic)
-NEEDS_STAMP=$(python - <<'PYEOF'
+NEEDS_STAMP=$(uv run python - <<'PYEOF'
 import os, sys
 try:
     import psycopg2
@@ -28,14 +28,14 @@ PYEOF
 
 if [ "$NEEDS_STAMP" = "yes" ]; then
     echo "Base pré-Alembic détectée, estampillage révision 0001..."
-    alembic stamp 0001
+    uv run alembic stamp 0001
 fi
 
-alembic upgrade head
+uv run alembic upgrade head
 echo "Migrations terminées."
 
 # Backend
-python -m uvicorn app.main:app --host localhost --port 8000 --reload &
+uv run python -m uvicorn app.main:app --host localhost --port 8000 --reload &
 echo "Backend démarré"
 
 # Frontend

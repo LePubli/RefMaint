@@ -1,0 +1,28 @@
+2026-Jun-29 20:39:53.229708 Docker 29.4.0 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jun-29 20:39:53.245542 Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jun-29 20:39:53.680227 Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jun-29 20:39:55.460788 ----------------------------------------
+2026-Jun-29 20:39:55.473420 Importing LePubli/RefMaint:main (commit sha 82eda53fc1488d58d1d306ca123457e571d495b3) to /artifacts/qhrzdd9t05if3n82shsyagcs.
+2026-Jun-29 20:40:00.875925 Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jun-29 20:40:01.935614 Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jun-29 20:40:01.950432 Pulling & building required images.
+2026-Jun-29 20:40:02.352648 Adding build arguments to Docker Compose build command.
+2026-Jun-29 20:40:23.302761 ========================================
+2026-Jun-29 20:40:23.319104 Deployment failed: Command execution failed (exit code 1): docker exec qhrzdd9t05if3n82shsyagcs bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/qhrzdd9t05if3n82shsyagcs -f /artifacts/qhrzdd9t05if3n82shsyagcs/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=3503e7c51b59c94fba9b509c0500c47fcc3f760723842319f5a12a21d9b4a1cf'
+2026-Jun-29 20:40:23.319104 Error: Dockerfile:1
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 --------------------
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 1 | >>> FROM python:3.11-slim
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 2 | ARG COOLIFY_FQDN
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 3 | ARG POSTGRES_DB
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 --------------------
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 target backend: failed to solve: python:3.11-slim: failed to resolve source metadata for docker.io/library/python:3.11-slim: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/3.11-slim": dial tcp: lookup registry-1.docker.io on 127.0.0.53:53: read udp 127.0.0.1:43859->127.0.0.53:53: i/o timeout
+2026-Jun-29 20:40:23.319104
+2026-Jun-29 20:40:23.319104 exit status 1
+2026-Jun-29 20:40:23.473364 ========================================
+2026-Jun-29 20:40:23.977473 Gracefully shutting down build container: qhrzdd9t05if3n82shsyagcs
