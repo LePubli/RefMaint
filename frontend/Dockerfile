@@ -4,9 +4,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Forcer l'installation des devDependencies (vite, typescript, etc.)
-# même si NODE_ENV=production est injecté par la plateforme de déploiement
-RUN npm ci --include=dev
+# Forcer NODE_ENV=development dans la commande elle-même pour garantir
+# l'installation des devDependencies (vite, tsc…) quelle que soit la
+# valeur injectée par la plateforme (Coolify, etc.)
+RUN NODE_ENV=development npm ci
 
 COPY . .
 RUN npm run build
