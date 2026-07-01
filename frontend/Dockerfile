@@ -2,15 +2,17 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-# Forcer NODE_ENV=development dans la commande elle-même pour garantir
-# l'installation des devDependencies (vite, tsc…) quelle que soit la
-# valeur injectée par la plateforme (Coolify, etc.)
-RUN NODE_ENV=development npm ci
+RUN npm install
 
 COPY . .
-RUN npm run build
+
+# Rendre node_modules/.bin explicitement disponible dans le PATH
+# pour garantir que tsc et vite sont trouvés quel que soit l'environnement
+ENV PATH="/app/node_modules/.bin:$PATH"
+
+RUN tsc -b && vite build
 
 FROM nginx:alpine
 
