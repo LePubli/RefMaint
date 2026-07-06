@@ -8,8 +8,8 @@ RUN npm ci --include=dev
 
 COPY . .
 
-# Build avec Vite (sans vérification TypeScript)
-RUN npm run build
+# Build directement avec Vite (évite les problèmes de scripts npm)
+RUN npx vite build
 
 FROM nginx:alpine
 
