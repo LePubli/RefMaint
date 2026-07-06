@@ -7,10 +7,12 @@ COPY package.json package-lock.json ./
 RUN npm ci --include=dev
 
 COPY . .
-# Juste avant RUN npx vite build, ajoutez :
-RUN ls -la && cat package.json
-# Build directement avec Vite (évite les problèmes de scripts npm)
-RUN npx vite build
+
+# Afficher les fichiers de configuration pour debug
+RUN ls -la && echo "=== vite.config ===" && cat vite.config.* 2>/dev/null || echo "No vite config found"
+
+# Build avec Vite et afficher les erreurs complètes
+RUN npx vite build --debug 2>&1 || (echo "=== BUILD FAILED ===" && exit 1)
 
 FROM nginx:alpine
 
