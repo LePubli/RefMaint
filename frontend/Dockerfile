@@ -7,7 +7,8 @@ COPY package.json package-lock.json ./
 RUN npm ci --include=dev
 
 COPY . .
-
+# Juste avant RUN npx vite build, ajoutez :
+RUN ls -la && cat package.json
 # Build directement avec Vite (évite les problèmes de scripts npm)
 RUN npx vite build
 
