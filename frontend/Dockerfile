@@ -8,11 +8,14 @@ RUN npm ci --include=dev
 
 COPY . .
 
-# Forcer le build même s'il y a des erreurs
-RUN npx vite build --force || echo "Build terminé avec des erreurs"
+# Afficher la configuration pour debug
+RUN echo "=== Files ===" && ls -la && echo "=== Vite Config ===" && cat vite.config.* 2>/dev/null || echo "No vite config"
 
-# Vérifier si le dossier dist existe quand même
-RUN ls -la dist/ || echo "WARNING: dist folder missing"
+# Tenter le build et capturer TOUTE la sortie
+RUN npx vite build 2>&1 | tee /tmp/build.log || (echo "=== BUILD FAILED ===" && cat /tmp/build.log && exit 1)
+
+# Vérifier si dist a été créé
+RUN ls -la dist/ || (echo "ERROR: dist folder not created" && exit 1)
 
 FROM nginx:alpine
 
