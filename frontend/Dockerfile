@@ -4,17 +4,18 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-# Forcer l'installation de TOUTES les dépendances (y compris devDependencies)
-# même si NODE_ENV=production est défini par Coolify
 RUN npm ci --include=dev
 
 COPY . .
 
-# Rendre node_modules/.bin explicitement disponible dans le PATH
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-# Utiliser npx pour garantir l'utilisation des binaires locaux
-RUN npx tsc -b && npx vite build
+# Séparer les commandes pour voir laquelle échoue
+# Étape 1 : Compilation TypeScript
+RUN npx tsc -b
+
+# Étape 2 : Build Vite
+RUN npx vite build
 
 FROM nginx:alpine
 
