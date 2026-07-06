@@ -10,11 +10,10 @@ COPY . .
 
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-# Séparer les commandes pour voir laquelle échoue
-# Étape 1 : Compilation TypeScript
-RUN npx tsc -b
+# Afficher les erreurs TypeScript avec détails
+RUN npx tsc -b --verbose || (echo "=== ERREURS TYPESCRIPT ===" && npx tsc -b --listFiles 2>&1 | tail -50 && exit 1)
 
-# Étape 2 : Build Vite
+# Si tsc passe, on fait le build Vite
 RUN npx vite build
 
 FROM nginx:alpine
