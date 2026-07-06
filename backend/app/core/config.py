@@ -1,7 +1,15 @@
 import os
+import warnings
 from typing import Optional
 
-SECRET_KEY = os.getenv("SECRET_KEY", "trimaint-secret-key-change-in-production-2024")
+_DEFAULT_SECRET = "trimaint-secret-key-change-in-production-2024"
+SECRET_KEY = os.getenv("SECRET_KEY", _DEFAULT_SECRET)
+if SECRET_KEY == _DEFAULT_SECRET:
+    warnings.warn(
+        "SECRET_KEY is using the insecure default value. "
+        "Set the SECRET_KEY environment variable before deploying to production.",
+        stacklevel=1,
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 

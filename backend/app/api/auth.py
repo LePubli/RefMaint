@@ -64,7 +64,7 @@ def list_users(db: Session = Depends(get_db), _=Depends(require_admin)):
 
 
 @router.post("/users", response_model=UserOut)
-def create_user(user_in: UserCreate, db: Session = Depends(get_db), _=Depends(require_admin)):
+def create_user(user_in: UserCreate, db: Session = Depends(get_db), current_user=Depends(require_admin)):
     existing = db.query(User).filter(
         (User.username == user_in.username) | (User.email == user_in.email)
     ).first()
@@ -127,7 +127,7 @@ def reset_password(
     user_id: int,
     body: PasswordReset,
     db: Session = Depends(get_db),
-    _=Depends(require_admin),
+    current_user=Depends(require_admin),
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -160,5 +160,5 @@ def delete_user(
 
 # Conserver /register pour compatibilité
 @router.post("/register", response_model=UserOut)
-def register(user_in: UserCreate, db: Session = Depends(get_db), _=Depends(require_admin)):
-    return create_user(user_in, db)
+def register(user_in: UserCreate, db: Session = Depends(get_db), current_user=Depends(require_admin)):
+    return create_user(user_in, db, current_user)
