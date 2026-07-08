@@ -2,32 +2,17 @@ FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
 
-# npm's update-notifier hangs its own exit handler when stdout isn't a TTY
-# (exactly the case in a Docker build), causing a deterministic
-# "npm error Exit handler never called!" crash right after it prints
-# "New major version of npm available!". CI=true and update-notifier=false
-# both disable that check so npm ci can actually finish and install
-# devDependencies (like typescript) instead of silently aborting mid-install.
-ENV CI=true
-ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-
-# The build host has a broken IPv6 route: Node's DNS resolver tries an AAAA
-# address for registry.npmjs.org first, gets no response, and silently hangs
-# until the OS-level TCP connect times out (~72s, matching the consistent
-# stall seen in Coolify builds) before it can fall back to IPv4. That long
-# hang is what was tripping npm's "Exit handler never called!" bug. Forcing
-# IPv4-first resolution avoids the hang entirely.
-ENV NODE_OPTIONS=--dns-result-order=ipv4first
-
-COPY package.json package-lock.json ./
-
-# The bundled npm (10.8.2) has a known "Exit handler never called!" bug
-# that has hit every single build on this host so far. Confirmed by
-# testing: npm ci still exits 0 when it happens, it just silently fails to
-# finish linking devDependency binaries (tsc, vite) into node_modules/.bin
-# right at the end of the install. Upgrading npm first is a real attempt
-# at a fix (this bug has multiple root causes fixed across npm releases).
-RUN npm install -g npm@latest
+# ROOT CAUSE (found after several false leads - update-notifier, IPv6/DNS,
+# npm's own "Exit handler never called!" bug): package-lock.json was
+# originally generated inside Replit's dev environment, which transparently
+# rewrites npm's registry to an internal proxy (package-firewall.replit.local)
+# for every package. That hostname only resolves inside Replit, so every
+# "resolved" URL baked into the lockfile was unreachable from the Coolify
+# build host, causing npm ci to fail (sometimes as ENOTFOUND, sometimes as
+# npm's own confusing internal crash once enough requests failed). Fixed by
+# regenerating package-lock.json against the real registry.npmjs.org and
+# pinning it via frontend/.npmrc so it can't silently happen again.
+COPY package.json package-lock.json .npmrc ./
 
 # Rendre node_modules/.bin explicitement disponible dans le PATH
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
@@ -39,10 +24,10 @@ ENV PATH="/app/node_modules/.bin:$PATH"
 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
 # network round-trips to the registry that aren't needed for a build.
 #
-# Since npm's exit code can't be trusted here (see above), don't rely on
-# "||" to detect failure - explicitly verify the binaries we actually need
-# exist afterward, and retry the whole install from a clean node_modules
-# a few times if they don't, before failing loudly.
+# Kept as a defensive retry (cheap insurance against ordinary transient
+# network blips) even though the root cause above is now fixed: verify the
+# binaries we actually need exist afterward rather than trusting npm's exit
+# code, and retry a couple of times before failing loudly.
 RUN for i in 1 2 3; do \
       echo "npm ci attempt $i/3..."; \
       rm -rf node_modules; \
