@@ -26,7 +26,16 @@ COPY package.json package-lock.json ./
 # (build fails silently before producing dist/). Debian slim uses glibc,
 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
 # network round-trips to the registry that aren't needed for a build.
-RUN npm ci --include=dev --no-audit --no-fund
+#
+# DIAGNOSTIC: npm ci has been crashing deterministically ~72s in with
+# "Exit handler never called!" across multiple unrelated fix attempts
+# (update-notifier, IPv4-first DNS), which means the real cause is still
+# unknown. npm always writes a detailed debug log to /root/.npm/_logs even
+# when this bug swallows the console output, but that log is normally lost
+# when the layer fails. Dumping it here on failure (still exiting non-zero
+# so the build fails loudly) lets us see what npm was actually doing right
+# before it died, instead of guessing again. Remove this once root-caused.
+RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
 
 # Rendre node_modules/.bin explicitement disponible dans le PATH
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
