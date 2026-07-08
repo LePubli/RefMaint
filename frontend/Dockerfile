@@ -2,17 +2,22 @@ FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
 
+# npm's update-notifier hangs its own exit handler when stdout isn't a TTY
+# (exactly the case in a Docker build), causing a deterministic
+# "npm error Exit handler never called!" crash right after it prints
+# "New major version of npm available!". CI=true and update-notifier=false
+# both disable that check so npm ci can actually finish and install
+# devDependencies (like typescript) instead of silently aborting mid-install.
+ENV CI=true
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
 COPY package.json package-lock.json ./
 
 # npm ci with a clean, deterministic install avoids the known npm optional-
 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
 # (build fails silently before producing dist/). Debian slim uses glibc,
 # which sidesteps the issue entirely.
-# Retry once: npm has a known intermittent bug ("Exit handler never called!")
-# that can abort mid-install and leave devDependencies (like typescript)
-# missing, which then makes "npx tsc" silently fall back to installing an
-# unrelated npm package also named "tsc" instead of failing clearly.
-RUN npm ci --include=dev || npm ci --include=dev
+RUN npm ci --include=dev
 
 # Rendre node_modules/.bin explicitement disponible dans le PATH
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
