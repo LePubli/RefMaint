@@ -22,10 +22,17 @@ def search(q: str = Query(..., min_length=1), db: Session = Depends(get_db), _=D
             Machine.fabricant.ilike(term),
             Machine.modele.ilike(term),
             Machine.site.ilike(term),
+            Machine.ligne.ilike(term),
             Machine.zone.ilike(term),
         )
-    ).limit(10).all()
-    results["machines"] = [{"id": m.id, "nom": m.nom, "code_interne": m.code_interne, "statut": m.statut, "type": "machine"} for m in machines]
+    ).limit(15).all()
+    results["machines"] = [
+        {"id": m.id, "nom": m.nom, "code_interne": m.code_interne, "statut": m.statut, "ligne": m.ligne, "zone": m.zone, "type": "machine"}
+        for m in machines
+    ]
+
+    ligne_rows = db.query(Machine.ligne).filter(Machine.ligne.ilike(term)).distinct().all()
+    results["lignes"] = sorted({row[0] for row in ligne_rows if row[0]})
 
     pannes = db.query(Panne).filter(
         or_(

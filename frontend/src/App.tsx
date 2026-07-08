@@ -6,6 +6,8 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Machines from './pages/Machines'
 import MachineDetail from './pages/MachineDetail'
+import Lignes from './pages/Lignes'
+import LigneDetail from './pages/LigneDetail'
 import Pannes from './pages/Pannes'
 import Interventions from './pages/Interventions'
 import Pieces from './pages/Pieces'
@@ -44,6 +46,8 @@ function AppRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="machines" element={<Machines />} />
         <Route path="machines/:id" element={<MachineDetail />} />
+        <Route path="lignes" element={<Lignes />} />
+        <Route path="lignes/:ligne" element={<LigneDetail />} />
         <Route path="pannes" element={<Pannes />} />
         <Route path="pannes/:id" element={<PanneDetail />} />
         <Route path="pannes/:id/rapport" element={<RapportPanne />} />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 import { Plus, Search, Wrench, ChevronRight, Edit2, Trash2, X, QrCode } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
 
 interface Machine {
   id: number
@@ -28,6 +29,8 @@ const statutColors: Record<string, string> = {
 const emptyForm = { nom: '', site: '', ligne: '', zone: '', fabricant: '', modele: '', code_interne: '', statut: 'operationnel', notes: '' }
 
 export default function Machines() {
+  const { user } = useAuth()
+  const canEdit = user?.role === 'admin' || user?.role === 'manager'
   const [machines, setMachines] = useState<Machine[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -87,9 +90,11 @@ export default function Machines() {
           <h1 className="text-2xl font-bold text-white">Machines</h1>
           <p className="text-gray-400 text-sm mt-1">{machines.length} machine{machines.length > 1 ? 's' : ''} enregistrée{machines.length > 1 ? 's' : ''}</p>
         </div>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors">
-          <Plus size={16} /> Nouvelle machine
-        </button>
+        {canEdit && (
+          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors">
+            <Plus size={16} /> Nouvelle machine
+          </button>
+        )}
       </div>
 
       {/* Search */}
@@ -139,8 +144,8 @@ export default function Machines() {
                         <QrCode size={15} />
                       </button>
                     )}
-                    <button onClick={() => openEdit(m)} className="text-gray-400 hover:text-blue-400 transition-colors"><Edit2 size={15} /></button>
-                    <button onClick={() => handleDelete(m.id)} className="text-gray-400 hover:text-red-400 transition-colors"><Trash2 size={15} /></button>
+                    {canEdit && <button onClick={() => openEdit(m)} className="text-gray-400 hover:text-blue-400 transition-colors"><Edit2 size={15} /></button>}
+                    {canEdit && <button onClick={() => handleDelete(m.id)} className="text-gray-400 hover:text-red-400 transition-colors"><Trash2 size={15} /></button>}
                     <button onClick={() => navigate(`/machines/${m.id}`)} className="text-gray-400 hover:text-orange-400 transition-colors"><ChevronRight size={15} /></button>
                   </div>
                 </td>

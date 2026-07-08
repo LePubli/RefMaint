@@ -2,12 +2,13 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Wrench, AlertTriangle, ClipboardList,
-  Package, Search, LogOut, Users, BarChart2, RefreshCw
+  Package, Search, LogOut, Users, BarChart2, RefreshCw, Factory
 } from 'lucide-react'
 import NotificationBell from './NotificationBell'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { to: '/lignes', label: 'Lignes & Process', icon: Factory },
   { to: '/machines', label: 'Machines', icon: Wrench },
   { to: '/pannes', label: 'Pannes', icon: AlertTriangle },
   { to: '/interventions', label: 'Interventions', icon: ClipboardList },

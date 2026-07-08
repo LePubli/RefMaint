@@ -13,6 +13,8 @@ class MachineBase(BaseModel):
     code_interne: Optional[str] = None
     statut: Optional[str] = "operationnel"
     notes: Optional[str] = None
+    pos_x: Optional[float] = None
+    pos_y: Optional[float] = None
 
 
 class MachineCreate(MachineBase):
