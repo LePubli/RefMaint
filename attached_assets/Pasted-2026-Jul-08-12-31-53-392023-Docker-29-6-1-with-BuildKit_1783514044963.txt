@@ -1,0 +1,1154 @@
+2026-Jul-08 12:31:53.392023 Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 12:31:53.404564 Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 12:31:53.871543 Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:31:54.080731 [CMD]: docker stop --time=30 ux4wh37uoqlrrsywdnqlcuk2
+2026-Jul-08 12:31:54.080731 Flag --time has been deprecated, use --timeout instead
+2026-Jul-08 12:31:54.084547 Error response from daemon: No such container: ux4wh37uoqlrrsywdnqlcuk2
+2026-Jul-08 12:31:54.340919 [CMD]: docker run -d --network 'coolify' --name ux4wh37uoqlrrsywdnqlcuk2 --rm -v /root/.docker/buildx:/root/.docker/buildx -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:31:54.340919 618429fa0a1fd858311c9dc7fee0c71c0d86385e279808e095be705e75df66c4
+2026-Jul-08 12:31:55.510475 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'GIT_SSH_COMMAND="ssh -o ConnectTimeout=30 -p 22 -o Port=22 -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git ls-remote '\''https://github.com/LePubli/RefMaint'\'' '\''refs/heads/main'\'''
+2026-Jul-08 12:31:55.510475 496ec11ee27b637c8d2a43713060202cee3b8e30 refs/heads/main
+2026-Jul-08 12:31:55.529528 ----------------------------------------
+2026-Jul-08 12:31:55.541502 Importing LePubli/RefMaint:main (commit sha 496ec11ee27b637c8d2a43713060202cee3b8e30) to /artifacts/ux4wh37uoqlrrsywdnqlcuk2.
+2026-Jul-08 12:31:55.834249 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'git -c http.version=HTTP/1.1 clone --depth=1 --recurse-submodules --shallow-submodules -b '\''main'\'' '\''https://github.com/LePubli/RefMaint'\'' '\''/artifacts/ux4wh37uoqlrrsywdnqlcuk2'\'' && cd '\''/artifacts/ux4wh37uoqlrrsywdnqlcuk2'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 fetch --depth=1 origin '\''496ec11ee27b637c8d2a43713060202cee3b8e30'\'' && git -c http.version=HTTP/1.1 -c advice.detachedHead=false checkout '\''496ec11ee27b637c8d2a43713060202cee3b8e30'\'' >/dev/null 2>&1 && cd '\''/artifacts/ux4wh37uoqlrrsywdnqlcuk2'\'' && if [ -f .gitmodules ]; then sed -i "s#git@\(.*\):#https://\1/#g" '\''/artifacts/ux4wh37uoqlrrsywdnqlcuk2'\''/.gitmodules || true && git -c http.version=HTTP/1.1 submodule sync && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 submodule update --init --recursive --depth=1; fi && cd '\''/artifacts/ux4wh37uoqlrrsywdnqlcuk2'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 lfs pull'
+2026-Jul-08 12:31:55.834249 Cloning into '/artifacts/ux4wh37uoqlrrsywdnqlcuk2'...
+2026-Jul-08 12:31:57.060263 From https://github.com/LePubli/RefMaint
+2026-Jul-08 12:31:57.060263 * branch 496ec11ee27b637c8d2a43713060202cee3b8e30 -> FETCH_HEAD
+2026-Jul-08 12:31:57.842772 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'cd /artifacts/ux4wh37uoqlrrsywdnqlcuk2 && git log -1 '\''496ec11ee27b637c8d2a43713060202cee3b8e30'\'' --pretty=%B'
+2026-Jul-08 12:31:57.842772 Add Docker BuildKit screenshot asset
+2026-Jul-08 12:31:57.842772
+2026-Jul-08 12:31:57.842772 Replit-Commit-Author: Agent
+2026-Jul-08 12:32:00.672979 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'test -f /artifacts/ux4wh37uoqlrrsywdnqlcuk2/backend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:32:00.672979 exists
+2026-Jul-08 12:32:00.960896 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'cat /artifacts/ux4wh37uoqlrrsywdnqlcuk2/backend/Dockerfile'
+2026-Jul-08 12:32:00.960896 FROM python:3.11-slim
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 WORKDIR /app
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 RUN apt-get update && apt-get install -y \
+2026-Jul-08 12:32:00.960896 libpq-dev \
+2026-Jul-08 12:32:00.960896 gcc \
+2026-Jul-08 12:32:00.960896 && rm -rf /var/lib/apt/lists/*
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 COPY requirements.txt .
+2026-Jul-08 12:32:00.960896 RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 COPY . .
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 EXPOSE 8000
+2026-Jul-08 12:32:00.960896
+2026-Jul-08 12:32:00.960896 ENTRYPOINT ["./entrypoint.sh"]
+2026-Jul-08 12:32:01.253235 Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 12:32:01.541423 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'test -f /artifacts/ux4wh37uoqlrrsywdnqlcuk2/frontend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:32:01.541423 exists
+2026-Jul-08 12:32:01.840578 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'cat /artifacts/ux4wh37uoqlrrsywdnqlcuk2/frontend/Dockerfile'
+2026-Jul-08 12:32:01.840578 FROM node:20-bookworm-slim AS builder
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 WORKDIR /app
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # npm's update-notifier hangs its own exit handler when stdout isn't a TTY
+2026-Jul-08 12:32:01.840578 # (exactly the case in a Docker build), causing a deterministic
+2026-Jul-08 12:32:01.840578 # "npm error Exit handler never called!" crash right after it prints
+2026-Jul-08 12:32:01.840578 # "New major version of npm available!". CI=true and update-notifier=false
+2026-Jul-08 12:32:01.840578 # both disable that check so npm ci can actually finish and install
+2026-Jul-08 12:32:01.840578 # devDependencies (like typescript) instead of silently aborting mid-install.
+2026-Jul-08 12:32:01.840578 ENV CI=true
+2026-Jul-08 12:32:01.840578 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # The build host has a broken IPv6 route: Node's DNS resolver tries an AAAA
+2026-Jul-08 12:32:01.840578 # address for registry.npmjs.org first, gets no response, and silently hangs
+2026-Jul-08 12:32:01.840578 # until the OS-level TCP connect times out (~72s, matching the consistent
+2026-Jul-08 12:32:01.840578 # stall seen in Coolify builds) before it can fall back to IPv4. That long
+2026-Jul-08 12:32:01.840578 # hang is what was tripping npm's "Exit handler never called!" bug. Forcing
+2026-Jul-08 12:32:01.840578 # IPv4-first resolution avoids the hang entirely.
+2026-Jul-08 12:32:01.840578 ENV NODE_OPTIONS=--dns-result-order=ipv4first
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 COPY package.json package-lock.json ./
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # npm ci with a clean, deterministic install avoids the known npm optional-
+2026-Jul-08 12:32:01.840578 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
+2026-Jul-08 12:32:01.840578 # (build fails silently before producing dist/). Debian slim uses glibc,
+2026-Jul-08 12:32:01.840578 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
+2026-Jul-08 12:32:01.840578 # network round-trips to the registry that aren't needed for a build.
+2026-Jul-08 12:32:01.840578 #
+2026-Jul-08 12:32:01.840578 # DIAGNOSTIC: npm ci has been crashing deterministically ~72s in with
+2026-Jul-08 12:32:01.840578 # "Exit handler never called!" across multiple unrelated fix attempts
+2026-Jul-08 12:32:01.840578 # (update-notifier, IPv4-first DNS), which means the real cause is still
+2026-Jul-08 12:32:01.840578 # unknown. npm always writes a detailed debug log to /root/.npm/_logs even
+2026-Jul-08 12:32:01.840578 # when this bug swallows the console output, but that log is normally lost
+2026-Jul-08 12:32:01.840578 # when the layer fails. Dumping it here on failure (still exiting non-zero
+2026-Jul-08 12:32:01.840578 # so the build fails loudly) lets us see what npm was actually doing right
+2026-Jul-08 12:32:01.840578 # before it died, instead of guessing again. Remove this once root-caused.
+2026-Jul-08 12:32:01.840578 RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # Rendre node_modules/.bin explicitement disponible dans le PATH
+2026-Jul-08 12:32:01.840578 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
+2026-Jul-08 12:32:01.840578 ENV PATH="/app/node_modules/.bin:$PATH"
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # Vérifier que TypeScript et Vite ont bien été installés localement avant de
+2026-Jul-08 12:32:01.840578 # continuer, pour échouer avec un message clair plutôt que de laisser npx
+2026-Jul-08 12:32:01.840578 # retomber sur un package npm sans rapport portant le même nom.
+2026-Jul-08 12:32:01.840578 RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:32:01.840578 RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 COPY . .
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # Utiliser directement les binaires locaux (pas npx) pour ne jamais risquer
+2026-Jul-08 12:32:01.840578 # un fallback silencieux vers un package du registre npm portant le même nom.
+2026-Jul-08 12:32:01.840578 RUN tsc -b
+2026-Jul-08 12:32:01.840578 RUN vite build
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 # Filet de sécurité : si vite build a réussi mais n'a pas produit dist/,
+2026-Jul-08 12:32:01.840578 # on échoue explicitement plutôt que de laisser nginx servir un dossier vide.
+2026-Jul-08 12:32:01.840578 RUN test -f dist/index.html || (echo "ERREUR: le build Vite n'a pas produit dist/index.html" && exit 1)
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 FROM nginx:alpine
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 COPY --from=builder /app/dist /usr/share/nginx/html
+2026-Jul-08 12:32:01.840578 COPY nginx.conf /etc/nginx/conf.d/default.conf
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 EXPOSE 80
+2026-Jul-08 12:32:01.840578
+2026-Jul-08 12:32:01.840578 CMD ["nginx", "-g", "daemon off;"]
+2026-Jul-08 12:32:02.154925 Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 12:32:02.170803 Pulling & building required images.
+2026-Jul-08 12:32:02.235830 Creating build-time .env file in /artifacts (outside Docker context).
+2026-Jul-08 12:32:02.524982 Adding build arguments to Docker Compose build command.
+2026-Jul-08 12:32:03.117196 [CMD]: docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/ux4wh37uoqlrrsywdnqlcuk2 -f /artifacts/ux4wh37uoqlrrsywdnqlcuk2/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:32:03.117196 #1 [internal] load local bake definitions
+2026-Jul-08 12:32:03.233693 #1 reading from stdin 1.62kB done
+2026-Jul-08 12:32:03.233693 #1 DONE 0.0s
+2026-Jul-08 12:32:03.408305 #2 [backend internal] load build definition from Dockerfile
+2026-Jul-08 12:32:03.408305 #2 transferring dockerfile: 452B done
+2026-Jul-08 12:32:03.408305 #2 DONE 0.0s
+2026-Jul-08 12:32:03.408305
+2026-Jul-08 12:32:03.408305 #3 [frontend internal] load build definition from Dockerfile
+2026-Jul-08 12:32:03.408305 #3 transferring dockerfile: 3.63kB done
+2026-Jul-08 12:32:03.408305 #3 DONE 0.0s
+2026-Jul-08 12:32:03.408305
+2026-Jul-08 12:32:03.408305 #4 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:32:04.010626 #4 ...
+2026-Jul-08 12:32:04.010626
+2026-Jul-08 12:32:04.010626 #5 [frontend internal] load metadata for docker.io/library/nginx:alpine
+2026-Jul-08 12:32:04.010626 #5 DONE 0.8s
+2026-Jul-08 12:32:04.139614
+2026-Jul-08 12:32:04.153988 #4 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:32:04.153988 #4 DONE 0.8s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #6 [backend internal] load metadata for docker.io/library/python:3.11-slim
+2026-Jul-08 12:32:04.153988 #6 DONE 0.8s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #7 [frontend internal] load .dockerignore
+2026-Jul-08 12:32:04.153988 #7 transferring context: 71B done
+2026-Jul-08 12:32:04.153988 #7 DONE 0.0s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #8 [backend internal] load .dockerignore
+2026-Jul-08 12:32:04.153988 #8 transferring context: 93B done
+2026-Jul-08 12:32:04.153988 #8 DONE 0.0s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #9 [frontend internal] load build context
+2026-Jul-08 12:32:04.153988 #9 transferring context: 326.58kB 0.0s done
+2026-Jul-08 12:32:04.153988 #9 DONE 0.0s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #10 [frontend builder 1/10] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+2026-Jul-08 12:32:04.153988 #10 resolve docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0 0.0s done
+2026-Jul-08 12:32:04.153988 #10 DONE 0.0s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #11 [frontend builder 2/10] WORKDIR /app
+2026-Jul-08 12:32:04.153988 #11 CACHED
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #12 [backend 1/7] FROM docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3
+2026-Jul-08 12:32:04.153988 #12 resolve docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3 0.0s done
+2026-Jul-08 12:32:04.153988 #12 DONE 0.1s
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #13 [backend 2/7] WORKDIR /app
+2026-Jul-08 12:32:04.153988 #13 CACHED
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #14 [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+2026-Jul-08 12:32:04.153988 #14 resolve docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa 0.0s done
+2026-Jul-08 12:32:04.153988 #14 CACHED
+2026-Jul-08 12:32:04.153988
+2026-Jul-08 12:32:04.153988 #15 [backend internal] load build context
+2026-Jul-08 12:32:04.153988 #15 transferring context: 76.48kB 0.0s done
+2026-Jul-08 12:32:04.344697 #15 DONE 0.1s
+2026-Jul-08 12:32:04.344697
+2026-Jul-08 12:32:04.344697 #16 [frontend builder 3/10] COPY package.json package-lock.json ./
+2026-Jul-08 12:32:04.344697 #16 DONE 0.1s
+2026-Jul-08 12:32:04.344697
+2026-Jul-08 12:32:04.344697 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:32:09.589133 #17 ...
+2026-Jul-08 12:32:09.589133
+2026-Jul-08 12:32:09.589133 #18 [backend 3/7] RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+2026-Jul-08 12:32:09.589133 #18 0.456 Hit:1 http://deb.debian.org/debian trixie InRelease
+2026-Jul-08 12:32:09.589133 #18 0.457 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+2026-Jul-08 12:32:09.589133 #18 0.465 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+2026-Jul-08 12:32:09.589133 #18 0.499 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9671 kB]
+2026-Jul-08 12:32:09.589133 #18 0.611 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [5412 B]
+2026-Jul-08 12:32:09.589133 #18 0.612 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [225 kB]
+2026-Jul-08 12:32:09.589133 #18 2.204 Fetched 9993 kB in 2s (5580 kB/s)
+2026-Jul-08 12:32:09.589133 #18 2.204 Reading package lists...
+2026-Jul-08 12:32:09.589133 #18 3.642 Reading package lists...
+2026-Jul-08 12:32:09.589133 #18 5.122 Building dependency tree...
+2026-Jul-08 12:32:09.589133 #18 5.481 Reading state information...
+2026-Jul-08 12:32:09.739372
+2026-Jul-08 12:32:10.076348 #18 5.970 The following additional packages will be installed:
+2026-Jul-08 12:32:10.076348 #18 5.970 binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+2026-Jul-08 12:32:10.236050 #18 5.970 cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
+2026-Jul-08 12:32:10.236050 #18 5.971 gcc-x86-64-linux-gnu krb5-locales libasan8 libatomic1 libbinutils
+2026-Jul-08 12:32:10.236050 #18 5.971 libc-dev-bin libc6-dev libcc1-0 libcom-err2 libcrypt-dev libctf-nobfd0
+2026-Jul-08 12:32:10.236050 #18 5.972 libctf0 libgcc-14-dev libgomp1 libgprofng0 libgssapi-krb5-2 libhwasan0
+2026-Jul-08 12:32:10.236050 #18 5.972 libisl23 libitm1 libjansson4 libk5crypto3 libkeyutils1 libkrb5-3
+2026-Jul-08 12:32:10.236050 #18 5.972 libkrb5support0 libldap-common libldap2 liblsan0 libmpc3 libmpfr6 libpq5
+2026-Jul-08 12:32:10.236050 #18 5.973 libquadmath0 libsasl2-2 libsasl2-modules libsasl2-modules-db libsframe1
+2026-Jul-08 12:32:10.236050 #18 5.974 libssl-dev libtsan2 libubsan1 linux-libc-dev manpages manpages-dev
+2026-Jul-08 12:32:10.236050 #18 5.975 rpcsvc-proto
+2026-Jul-08 12:32:10.236050 #18 5.979 Suggested packages:
+2026-Jul-08 12:32:10.236050 #18 5.979 binutils-doc gprofng-gui binutils-gold cpp-doc gcc-14-locales cpp-14-doc
+2026-Jul-08 12:32:10.236050 #18 5.979 gcc-multilib make autoconf automake libtool flex bison gdb gcc-doc
+2026-Jul-08 12:32:10.236050 #18 5.979 gcc-14-multilib gcc-14-doc gdb-x86-64-linux-gnu libc-devtools glibc-doc
+2026-Jul-08 12:32:10.236050 #18 5.979 krb5-doc krb5-user postgresql-doc-17 libsasl2-modules-gssapi-mit
+2026-Jul-08 12:32:10.236050 #18 5.979 | libsasl2-modules-gssapi-heimdal libsasl2-modules-ldap libsasl2-modules-otp
+2026-Jul-08 12:32:10.236050 #18 5.979 libsasl2-modules-sql libssl-doc man-browser
+2026-Jul-08 12:32:10.394126 #18 6.287 The following NEW packages will be installed:
+2026-Jul-08 12:32:10.518614 #18 6.288 binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+2026-Jul-08 12:32:10.518614 #18 6.288 cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc gcc-14
+2026-Jul-08 12:32:10.518614 #18 6.288 gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu krb5-locales libasan8
+2026-Jul-08 12:32:10.518614 #18 6.288 libatomic1 libbinutils libc-dev-bin libc6-dev libcc1-0 libcom-err2
+2026-Jul-08 12:32:10.518614 #18 6.288 libcrypt-dev libctf-nobfd0 libctf0 libgcc-14-dev libgomp1 libgprofng0
+2026-Jul-08 12:32:10.518614 #18 6.288 libgssapi-krb5-2 libhwasan0 libisl23 libitm1 libjansson4 libk5crypto3
+2026-Jul-08 12:32:10.518614 #18 6.288 libkeyutils1 libkrb5-3 libkrb5support0 libldap-common libldap2 liblsan0
+2026-Jul-08 12:32:10.518614 #18 6.289 libmpc3 libmpfr6 libpq-dev libpq5 libquadmath0 libsasl2-2 libsasl2-modules
+2026-Jul-08 12:32:10.518614 #18 6.289 libsasl2-modules-db libsframe1 libssl-dev libtsan2 libubsan1 linux-libc-dev
+2026-Jul-08 12:32:10.518614 #18 6.290 manpages manpages-dev rpcsvc-proto
+2026-Jul-08 12:32:10.518614 #18 6.354 0 upgraded, 53 newly installed, 0 to remove and 0 not upgraded.
+2026-Jul-08 12:32:10.518614 #18 6.354 Need to get 64.9 MB of archives.
+2026-Jul-08 12:32:10.518614 #18 6.354 After this operation, 244 MB of additional disk space will be used.
+2026-Jul-08 12:32:10.518614 #18 6.354 Get:1 http://deb.debian.org/debian-security trixie-security/main amd64 krb5-locales all 1.21.3-5+deb13u1 [101 kB]
+2026-Jul-08 12:32:10.518614 #18 6.358 Get:2 http://deb.debian.org/debian trixie/main amd64 manpages all 6.9.1-1 [1393 kB]
+2026-Jul-08 12:32:10.518614 #18 6.379 Get:3 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
+2026-Jul-08 12:32:10.518614 #18 6.380 Get:4 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
+2026-Jul-08 12:32:10.518614 #18 6.412 Get:5 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
+2026-Jul-08 12:32:10.704339 #18 6.421 Get:6 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
+2026-Jul-08 12:32:10.704339 #18 6.435 Get:7 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
+2026-Jul-08 12:32:10.704339 #18 6.438 Get:8 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
+2026-Jul-08 12:32:10.704339 #18 6.439 Get:9 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
+2026-Jul-08 12:32:10.704339 #18 6.440 Get:10 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
+2026-Jul-08 12:32:10.704339 #18 6.455 Get:11 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
+2026-Jul-08 12:32:10.704339 #18 6.459 Get:12 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
+2026-Jul-08 12:32:10.704339 #18 6.472 Get:13 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
+2026-Jul-08 12:32:10.704339 #18 6.480 Get:14 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
+2026-Jul-08 12:32:10.704339 #18 6.481 Get:15 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
+2026-Jul-08 12:32:10.704339 #18 6.599 Get:16 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
+2026-Jul-08 12:32:10.808292 #18 6.599 Get:17 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
+2026-Jul-08 12:32:10.808292 #18 6.600 Get:18 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
+2026-Jul-08 12:32:10.808292 #18 6.600 Get:19 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
+2026-Jul-08 12:32:10.808292 #18 6.601 Get:20 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+2026-Jul-08 12:32:10.808292 #18 6.602 Get:21 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
+2026-Jul-08 12:32:10.808292 #18 6.603 Get:22 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+2026-Jul-08 12:32:10.808292 #18 6.606 Get:23 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
+2026-Jul-08 12:32:10.808292 #18 6.636 Get:24 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
+2026-Jul-08 12:32:10.808292 #18 6.650 Get:25 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
+2026-Jul-08 12:32:10.808292 #18 6.679 Get:26 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
+2026-Jul-08 12:32:10.808292 #18 6.688 Get:27 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
+2026-Jul-08 12:32:10.808292 #18 6.703 Get:28 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
+2026-Jul-08 12:32:10.993359 #18 6.704 Get:29 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
+2026-Jul-08 12:32:10.993359 #18 6.737 Get:30 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
+2026-Jul-08 12:32:11.066070 #18 6.960 Get:31 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
+2026-Jul-08 12:32:11.310142 #18 6.966 Get:32 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
+2026-Jul-08 12:32:11.310142 #18 6.966 Get:33 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
+2026-Jul-08 12:32:11.310142 #18 6.967 Get:34 http://deb.debian.org/debian trixie/main amd64 libc-dev-bin amd64 2.41-12+deb13u3 [59.8 kB]
+2026-Jul-08 12:32:11.310142 #18 6.968 Get:35 http://deb.debian.org/debian-security trixie-security/main amd64 linux-libc-dev all 6.12.95-1 [2852 kB]
+2026-Jul-08 12:32:11.310142 #18 6.992 Get:36 http://deb.debian.org/debian trixie/main amd64 libcrypt-dev amd64 1:4.4.38-1 [119 kB]
+2026-Jul-08 12:32:11.310142 #18 6.995 Get:37 http://deb.debian.org/debian trixie/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+2026-Jul-08 12:32:11.310142 #18 6.995 Get:38 http://deb.debian.org/debian trixie/main amd64 libc6-dev amd64 2.41-12+deb13u3 [1992 kB]
+2026-Jul-08 12:32:11.310142 #18 7.013 Get:39 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b11 [25.0 kB]
+2026-Jul-08 12:32:11.310142 #18 7.014 Get:40 http://deb.debian.org/debian-security trixie-security/main amd64 libkrb5support0 amd64 1.21.3-5+deb13u1 [33.1 kB]
+2026-Jul-08 12:32:11.310142 #18 7.014 Get:41 http://deb.debian.org/debian-security trixie-security/main amd64 libk5crypto3 amd64 1.21.3-5+deb13u1 [81.2 kB]
+2026-Jul-08 12:32:11.310142 #18 7.015 Get:42 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
+2026-Jul-08 12:32:11.310142 #18 7.016 Get:43 http://deb.debian.org/debian-security trixie-security/main amd64 libkrb5-3 amd64 1.21.3-5+deb13u1 [326 kB]
+2026-Jul-08 12:32:11.310142 #18 7.019 Get:44 http://deb.debian.org/debian-security trixie-security/main amd64 libgssapi-krb5-2 amd64 1.21.3-5+deb13u1 [138 kB]
+2026-Jul-08 12:32:11.310142 #18 7.020 Get:45 http://deb.debian.org/debian trixie/main amd64 libldap-common all 2.6.10+dfsg-1 [35.1 kB]
+2026-Jul-08 12:32:11.310142 #18 7.023 Get:46 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9 [19.8 kB]
+2026-Jul-08 12:32:11.310142 #18 7.023 Get:47 http://deb.debian.org/debian trixie/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9 [57.5 kB]
+2026-Jul-08 12:32:11.310142 #18 7.023 Get:48 http://deb.debian.org/debian trixie/main amd64 libldap2 amd64 2.6.10+dfsg-1 [194 kB]
+2026-Jul-08 12:32:11.310142 #18 7.026 Get:49 http://deb.debian.org/debian-security trixie-security/main amd64 libpq5 amd64 17.10-0+deb13u1 [230 kB]
+2026-Jul-08 12:32:11.310142 #18 7.030 Get:50 http://deb.debian.org/debian-security trixie-security/main amd64 libssl-dev amd64 3.5.6-1~deb13u2 [2959 kB]
+2026-Jul-08 12:32:11.310142 #18 7.051 Get:51 http://deb.debian.org/debian-security trixie-security/main amd64 libpq-dev amd64 17.10-0+deb13u1 [154 kB]
+2026-Jul-08 12:32:11.310142 #18 7.052 Get:52 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules amd64 2.1.28+dfsg1-9 [66.7 kB]
+2026-Jul-08 12:32:11.310142 #18 7.053 Get:53 http://deb.debian.org/debian trixie/main amd64 manpages-dev all 6.9.1-1 [2122 kB]
+2026-Jul-08 12:32:11.506718 #18 7.401 debconf: unable to initialize frontend: Dialog
+2026-Jul-08 12:32:11.506718 #18 7.401 debconf: (TERM is not set, so the dialog frontend is not usable.)
+2026-Jul-08 12:32:11.506718 #18 7.401 debconf: falling back to frontend: Readline
+2026-Jul-08 12:32:11.669964 #18 7.402 debconf: unable to initialize frontend: Readline
+2026-Jul-08 12:32:11.669964 #18 7.402 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 53.)
+2026-Jul-08 12:32:11.669964 #18 7.402 debconf: falling back to frontend: Teletype
+2026-Jul-08 12:32:11.669964 #18 7.412 debconf: unable to initialize frontend: Teletype
+2026-Jul-08 12:32:11.669964 #18 7.412 debconf: (This frontend requires a controlling tty.)
+2026-Jul-08 12:32:11.669964 #18 7.412 debconf: falling back to frontend: Noninteractive
+2026-Jul-08 12:32:14.379167 #18 10.27 Fetched 64.9 MB in 1s (86.1 MB/s)
+2026-Jul-08 12:32:14.482163 #18 10.31 Selecting previously unselected package krb5-locales.
+2026-Jul-08 12:32:14.482163 #18 10.31 (Reading database ... (Reading database ... 5% (Reading database ... 10% (Reading database ... 15% (Reading database ... 20% (Reading database ... 25% (Reading database ... 30% (Reading database ... 35% (Reading database ... 40% (Reading database ... 45% (Reading database ... 50% (Reading database ... 55% (Reading database ... 60% (Reading database ... 65% (Reading database ... 70% (Reading database ... 75% (Reading database ... 80% (Reading database ... 85% (Reading database ... 90% (Reading database ... 95% (Reading database ... 100% (Reading database ... 5645 files and directories currently installed.)
+2026-Jul-08 12:32:14.482163 #18 10.32 Preparing to unpack .../00-krb5-locales_1.21.3-5+deb13u1_all.deb ...
+2026-Jul-08 12:32:14.482163 #18 10.32 Unpacking krb5-locales (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:14.482163 #18 10.37 Selecting previously unselected package manpages.
+2026-Jul-08 12:32:14.482163 #18 10.37 Preparing to unpack .../01-manpages_6.9.1-1_all.deb ...
+2026-Jul-08 12:32:14.482163 #18 10.38 Unpacking manpages (6.9.1-1) ...
+2026-Jul-08 12:32:14.586529 #18 10.48 Selecting previously unselected package libsframe1:amd64.
+2026-Jul-08 12:32:14.806915 #18 10.48 Preparing to unpack .../02-libsframe1_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:14.806915 #18 10.49 Unpacking libsframe1:amd64 (2.44-3) ...
+2026-Jul-08 12:32:14.806915 #18 10.55 Selecting previously unselected package binutils-common:amd64.
+2026-Jul-08 12:32:14.806915 #18 10.55 Preparing to unpack .../03-binutils-common_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:14.806915 #18 10.55 Unpacking binutils-common:amd64 (2.44-3) ...
+2026-Jul-08 12:32:14.888530 #18 10.78 Selecting previously unselected package libbinutils:amd64.
+2026-Jul-08 12:32:15.079328 #18 10.79 Preparing to unpack .../04-libbinutils_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.079328 #18 10.79 Unpacking libbinutils:amd64 (2.44-3) ...
+2026-Jul-08 12:32:15.079328 #18 10.87 Selecting previously unselected package libgprofng0:amd64.
+2026-Jul-08 12:32:15.079328 #18 10.87 Preparing to unpack .../05-libgprofng0_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.079328 #18 10.88 Unpacking libgprofng0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:15.079328 #18 10.97 Selecting previously unselected package libctf-nobfd0:amd64.
+2026-Jul-08 12:32:15.200060 #18 10.98 Preparing to unpack .../06-libctf-nobfd0_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.200060 #18 10.98 Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:15.200060 #18 11.03 Selecting previously unselected package libctf0:amd64.
+2026-Jul-08 12:32:15.200060 #18 11.03 Preparing to unpack .../07-libctf0_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.200060 #18 11.04 Unpacking libctf0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:15.200060 #18 11.09 Selecting previously unselected package libjansson4:amd64.
+2026-Jul-08 12:32:15.398549 #18 11.10 Preparing to unpack .../08-libjansson4_2.14-2+b3_amd64.deb ...
+2026-Jul-08 12:32:15.398549 #18 11.10 Unpacking libjansson4:amd64 (2.14-2+b3) ...
+2026-Jul-08 12:32:15.398549 #18 11.14 Selecting previously unselected package binutils-x86-64-linux-gnu.
+2026-Jul-08 12:32:15.398549 #18 11.14 Preparing to unpack .../09-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.398549 #18 11.14 Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+2026-Jul-08 12:32:15.415060 #18 11.31 Selecting previously unselected package binutils.
+2026-Jul-08 12:32:15.571350 #18 11.31 Preparing to unpack .../10-binutils_2.44-3_amd64.deb ...
+2026-Jul-08 12:32:15.571350 #18 11.32 Unpacking binutils (2.44-3) ...
+2026-Jul-08 12:32:15.571350 #18 11.37 Selecting previously unselected package libisl23:amd64.
+2026-Jul-08 12:32:15.571350 #18 11.37 Preparing to unpack .../11-libisl23_0.27-1_amd64.deb ...
+2026-Jul-08 12:32:15.571350 #18 11.37 Unpacking libisl23:amd64 (0.27-1) ...
+2026-Jul-08 12:32:15.571350 #18 11.47 Selecting previously unselected package libmpfr6:amd64.
+2026-Jul-08 12:32:15.674069 #18 11.47 Preparing to unpack .../12-libmpfr6_4.2.2-1_amd64.deb ...
+2026-Jul-08 12:32:15.674069 #18 11.47 Unpacking libmpfr6:amd64 (4.2.2-1) ...
+2026-Jul-08 12:32:15.674069 #18 11.53 Selecting previously unselected package libmpc3:amd64.
+2026-Jul-08 12:32:15.674069 #18 11.53 Preparing to unpack .../13-libmpc3_1.3.1-1+b3_amd64.deb ...
+2026-Jul-08 12:32:15.674069 #18 11.53 Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+2026-Jul-08 12:32:15.674069 #18 11.57 Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+2026-Jul-08 12:32:15.828427 #18 11.57 Preparing to unpack .../14-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:15.828427 #18 11.57 Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:32:16.433217 #18 12.33 Selecting previously unselected package cpp-14.
+2026-Jul-08 12:32:16.539088 #18 12.33 Preparing to unpack .../15-cpp-14_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.539088 #18 12.33 Unpacking cpp-14 (14.2.0-19) ...
+2026-Jul-08 12:32:16.539088 #18 12.36 Selecting previously unselected package cpp-x86-64-linux-gnu.
+2026-Jul-08 12:32:16.539088 #18 12.36 Preparing to unpack .../16-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:32:16.539088 #18 12.37 Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:32:16.539088 #18 12.41 Selecting previously unselected package cpp.
+2026-Jul-08 12:32:16.539088 #18 12.41 Preparing to unpack .../17-cpp_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:32:16.539088 #18 12.43 Unpacking cpp (4:14.2.0-1) ...
+2026-Jul-08 12:32:16.662491 #18 12.47 Selecting previously unselected package libcc1-0:amd64.
+2026-Jul-08 12:32:16.662491 #18 12.47 Preparing to unpack .../18-libcc1-0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.662491 #18 12.47 Unpacking libcc1-0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:16.662491 #18 12.51 Selecting previously unselected package libgomp1:amd64.
+2026-Jul-08 12:32:16.662491 #18 12.51 Preparing to unpack .../19-libgomp1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.662491 #18 12.52 Unpacking libgomp1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:16.662491 #18 12.56 Selecting previously unselected package libitm1:amd64.
+2026-Jul-08 12:32:16.889162 #18 12.56 Preparing to unpack .../20-libitm1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.889162 #18 12.56 Unpacking libitm1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:16.889162 #18 12.59 Selecting previously unselected package libatomic1:amd64.
+2026-Jul-08 12:32:16.889162 #18 12.60 Preparing to unpack .../21-libatomic1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.889162 #18 12.60 Unpacking libatomic1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:16.889162 #18 12.63 Selecting previously unselected package libasan8:amd64.
+2026-Jul-08 12:32:16.889162 #18 12.63 Preparing to unpack .../22-libasan8_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:16.889162 #18 12.63 Unpacking libasan8:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:16.982973 #18 12.88 Selecting previously unselected package liblsan0:amd64.
+2026-Jul-08 12:32:17.111743 #18 12.88 Preparing to unpack .../23-liblsan0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.111743 #18 12.88 Unpacking liblsan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.111743 #18 13.01 Selecting previously unselected package libtsan2:amd64.
+2026-Jul-08 12:32:17.267659 #18 13.01 Preparing to unpack .../24-libtsan2_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.267659 #18 13.01 Unpacking libtsan2:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.336195 #18 13.23 Selecting previously unselected package libubsan1:amd64.
+2026-Jul-08 12:32:17.454299 #18 13.23 Preparing to unpack .../25-libubsan1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.454299 #18 13.23 Unpacking libubsan1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.454299 #18 13.35 Selecting previously unselected package libhwasan0:amd64.
+2026-Jul-08 12:32:17.607870 #18 13.35 Preparing to unpack .../26-libhwasan0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.607870 #18 13.35 Unpacking libhwasan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.607870 #18 13.50 Selecting previously unselected package libquadmath0:amd64.
+2026-Jul-08 12:32:17.805706 #18 13.50 Preparing to unpack .../27-libquadmath0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.805706 #18 13.51 Unpacking libquadmath0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.805706 #18 13.54 Selecting previously unselected package libgcc-14-dev:amd64.
+2026-Jul-08 12:32:17.805706 #18 13.55 Preparing to unpack .../28-libgcc-14-dev_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:17.805706 #18 13.55 Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:17.878698 #18 13.77 Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+2026-Jul-08 12:32:18.033684 #18 13.77 Preparing to unpack .../29-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:18.033684 #18 13.78 Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:32:18.738170 #18 14.63 Selecting previously unselected package gcc-14.
+2026-Jul-08 12:32:18.862444 #18 14.63 Preparing to unpack .../30-gcc-14_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:32:18.862444 #18 14.64 Unpacking gcc-14 (14.2.0-19) ...
+2026-Jul-08 12:32:18.862444 #18 14.68 Selecting previously unselected package gcc-x86-64-linux-gnu.
+2026-Jul-08 12:32:18.862444 #18 14.68 Preparing to unpack .../31-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:32:18.862444 #18 14.68 Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:32:18.862444 #18 14.72 Selecting previously unselected package gcc.
+2026-Jul-08 12:32:18.862444 #18 14.72 Preparing to unpack .../32-gcc_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:32:18.862444 #18 14.73 Unpacking gcc (4:14.2.0-1) ...
+2026-Jul-08 12:32:18.862444 #18 14.76 Selecting previously unselected package libc-dev-bin.
+2026-Jul-08 12:32:19.055209 #18 14.76 Preparing to unpack .../33-libc-dev-bin_2.41-12+deb13u3_amd64.deb ...
+2026-Jul-08 12:32:19.055209 #18 14.76 Unpacking libc-dev-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:32:19.055209 #18 14.79 Selecting previously unselected package linux-libc-dev.
+2026-Jul-08 12:32:19.055209 #18 14.80 Preparing to unpack .../34-linux-libc-dev_6.12.95-1_all.deb ...
+2026-Jul-08 12:32:19.055209 #18 14.80 Unpacking linux-libc-dev (6.12.95-1) ...
+2026-Jul-08 12:32:19.413108 #18 15.31 Selecting previously unselected package libcrypt-dev:amd64.
+2026-Jul-08 12:32:19.514935 #18 15.31 Preparing to unpack .../35-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+2026-Jul-08 12:32:19.514935 #18 15.32 Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+2026-Jul-08 12:32:19.514935 #18 15.36 Selecting previously unselected package rpcsvc-proto.
+2026-Jul-08 12:32:19.514935 #18 15.37 Preparing to unpack .../36-rpcsvc-proto_1.4.3-1_amd64.deb ...
+2026-Jul-08 12:32:19.514935 #18 15.37 Unpacking rpcsvc-proto (1.4.3-1) ...
+2026-Jul-08 12:32:19.514935 #18 15.41 Selecting previously unselected package libc6-dev:amd64.
+2026-Jul-08 12:32:19.671996 #18 15.41 Preparing to unpack .../37-libc6-dev_2.41-12+deb13u3_amd64.deb ...
+2026-Jul-08 12:32:19.671996 #18 15.42 Unpacking libc6-dev:amd64 (2.41-12+deb13u3) ...
+2026-Jul-08 12:32:19.753879 #18 15.65 Selecting previously unselected package libcom-err2:amd64.
+2026-Jul-08 12:32:19.899600 #18 15.65 Preparing to unpack .../38-libcom-err2_1.47.2-3+b11_amd64.deb ...
+2026-Jul-08 12:32:19.899600 #18 15.65 Unpacking libcom-err2:amd64 (1.47.2-3+b11) ...
+2026-Jul-08 12:32:19.899600 #18 15.70 Selecting previously unselected package libkrb5support0:amd64.
+2026-Jul-08 12:32:19.899600 #18 15.70 Preparing to unpack .../39-libkrb5support0_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:19.899600 #18 15.70 Unpacking libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:19.899600 #18 15.74 Selecting previously unselected package libk5crypto3:amd64.
+2026-Jul-08 12:32:19.899600 #18 15.74 Preparing to unpack .../40-libk5crypto3_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:19.899600 #18 15.75 Unpacking libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:19.899600 #18 15.79 Selecting previously unselected package libkeyutils1:amd64.
+2026-Jul-08 12:32:20.003460 #18 15.80 Preparing to unpack .../41-libkeyutils1_1.6.3-6_amd64.deb ...
+2026-Jul-08 12:32:20.003460 #18 15.80 Unpacking libkeyutils1:amd64 (1.6.3-6) ...
+2026-Jul-08 12:32:20.003460 #18 15.84 Selecting previously unselected package libkrb5-3:amd64.
+2026-Jul-08 12:32:20.003460 #18 15.84 Preparing to unpack .../42-libkrb5-3_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:20.003460 #18 15.84 Unpacking libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:20.003460 #18 15.90 Selecting previously unselected package libgssapi-krb5-2:amd64.
+2026-Jul-08 12:32:20.131131 #18 15.90 Preparing to unpack .../43-libgssapi-krb5-2_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:20.131131 #18 15.90 Unpacking libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:20.131131 #18 15.94 Selecting previously unselected package libldap-common.
+2026-Jul-08 12:32:20.131131 #18 15.95 Preparing to unpack .../44-libldap-common_2.6.10+dfsg-1_all.deb ...
+2026-Jul-08 12:32:20.131131 #18 15.95 Unpacking libldap-common (2.6.10+dfsg-1) ...
+2026-Jul-08 12:32:20.131131 #18 15.98 Selecting previously unselected package libsasl2-modules-db:amd64.
+2026-Jul-08 12:32:20.131131 #18 15.99 Preparing to unpack .../45-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:32:20.131131 #18 15.99 Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:20.131131 #18 16.02 Selecting previously unselected package libsasl2-2:amd64.
+2026-Jul-08 12:32:20.233770 #18 16.03 Preparing to unpack .../46-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:32:20.233770 #18 16.03 Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:20.233770 #18 16.07 Selecting previously unselected package libldap2:amd64.
+2026-Jul-08 12:32:20.233770 #18 16.07 Preparing to unpack .../47-libldap2_2.6.10+dfsg-1_amd64.deb ...
+2026-Jul-08 12:32:20.233770 #18 16.07 Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
+2026-Jul-08 12:32:20.233770 #18 16.13 Selecting previously unselected package libpq5:amd64.
+2026-Jul-08 12:32:20.450699 #18 16.13 Preparing to unpack .../48-libpq5_17.10-0+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:20.450699 #18 16.13 Unpacking libpq5:amd64 (17.10-0+deb13u1) ...
+2026-Jul-08 12:32:20.450699 #18 16.19 Selecting previously unselected package libssl-dev:amd64.
+2026-Jul-08 12:32:20.450699 #18 16.19 Preparing to unpack .../49-libssl-dev_3.5.6-1~deb13u2_amd64.deb ...
+2026-Jul-08 12:32:20.450699 #18 16.19 Unpacking libssl-dev:amd64 (3.5.6-1~deb13u2) ...
+2026-Jul-08 12:32:20.543849 #18 16.44 Selecting previously unselected package libpq-dev.
+2026-Jul-08 12:32:20.652884 #18 16.44 Preparing to unpack .../50-libpq-dev_17.10-0+deb13u1_amd64.deb ...
+2026-Jul-08 12:32:20.652884 #18 16.44 Unpacking libpq-dev (17.10-0+deb13u1) ...
+2026-Jul-08 12:32:20.652884 #18 16.50 Selecting previously unselected package libsasl2-modules:amd64.
+2026-Jul-08 12:32:20.652884 #18 16.50 Preparing to unpack .../51-libsasl2-modules_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:32:20.652884 #18 16.51 Unpacking libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:20.652884 #18 16.55 Selecting previously unselected package manpages-dev.
+2026-Jul-08 12:32:20.808876 #18 16.55 Preparing to unpack .../52-manpages-dev_6.9.1-1_all.deb ...
+2026-Jul-08 12:32:20.808876 #18 16.55 Unpacking manpages-dev (6.9.1-1) ...
+2026-Jul-08 12:32:20.857458 #18 16.75 Setting up libkeyutils1:amd64 (1.6.3-6) ...
+2026-Jul-08 12:32:20.958027 #18 16.76 Setting up manpages (6.9.1-1) ...
+2026-Jul-08 12:32:20.958027 #18 16.76 Setting up libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:20.958027 #18 16.78 Setting up binutils-common:amd64 (2.44-3) ...
+2026-Jul-08 12:32:20.958027 #18 16.79 Setting up linux-libc-dev (6.12.95-1) ...
+2026-Jul-08 12:32:20.958027 #18 16.80 Setting up libctf-nobfd0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:20.958027 #18 16.80 Setting up krb5-locales (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:20.958027 #18 16.81 Setting up libcom-err2:amd64 (1.47.2-3+b11) ...
+2026-Jul-08 12:32:20.958027 #18 16.82 Setting up libgomp1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:20.958027 #18 16.83 Setting up libldap-common (2.6.10+dfsg-1) ...
+2026-Jul-08 12:32:20.958027 #18 16.83 Setting up libsframe1:amd64 (2.44-3) ...
+2026-Jul-08 12:32:20.958027 #18 16.84 Setting up libjansson4:amd64 (2.14-2+b3) ...
+2026-Jul-08 12:32:20.958027 #18 16.85 Setting up libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:20.958027 #18 16.85 Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:21.062631 #18 16.86 Setting up rpcsvc-proto (1.4.3-1) ...
+2026-Jul-08 12:32:21.062631 #18 16.86 Setting up libmpfr6:amd64 (4.2.2-1) ...
+2026-Jul-08 12:32:21.062631 #18 16.87 Setting up libquadmath0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.88 Setting up libssl-dev:amd64 (3.5.6-1~deb13u2) ...
+2026-Jul-08 12:32:21.062631 #18 16.88 Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+2026-Jul-08 12:32:21.062631 #18 16.89 Setting up libatomic1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.89 Setting up libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:21.062631 #18 16.90 Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:32:21.062631 #18 16.91 Setting up libubsan1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.91 Setting up libhwasan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.92 Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+2026-Jul-08 12:32:21.062631 #18 16.94 Setting up libasan8:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.94 Setting up libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:21.062631 #18 16.95 Setting up libtsan2:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.062631 #18 16.96 Setting up libbinutils:amd64 (2.44-3) ...
+2026-Jul-08 12:32:21.170981 #18 16.96 Setting up libisl23:amd64 (0.27-1) ...
+2026-Jul-08 12:32:21.170981 #18 16.97 Setting up libc-dev-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:32:21.170981 #18 16.98 Setting up libcc1-0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 16.98 Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
+2026-Jul-08 12:32:21.170981 #18 16.99 Setting up liblsan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 16.99 Setting up libitm1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 17.00 Setting up libctf0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:21.170981 #18 17.01 Setting up manpages-dev (6.9.1-1) ...
+2026-Jul-08 12:32:21.170981 #18 17.01 Setting up libgprofng0:amd64 (2.44-3) ...
+2026-Jul-08 12:32:21.170981 #18 17.02 Setting up libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:32:21.170981 #18 17.03 Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 17.03 Setting up cpp-14 (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 17.04 Setting up libc6-dev:amd64 (2.41-12+deb13u3) ...
+2026-Jul-08 12:32:21.170981 #18 17.05 Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+2026-Jul-08 12:32:21.170981 #18 17.06 Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+2026-Jul-08 12:32:21.170981 #18 17.06 Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:32:21.420889 #18 17.07 Setting up libpq5:amd64 (17.10-0+deb13u1) ...
+2026-Jul-08 12:32:21.420889 #18 17.08 Setting up libpq-dev (17.10-0+deb13u1) ...
+2026-Jul-08 12:32:21.420889 #18 17.09 Setting up binutils (2.44-3) ...
+2026-Jul-08 12:32:21.420889 #18 17.10 Setting up cpp (4:14.2.0-1) ...
+2026-Jul-08 12:32:21.420889 #18 17.13 Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:32:21.420889 #18 17.13 Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:32:21.420889 #18 17.14 Setting up gcc-14 (14.2.0-19) ...
+2026-Jul-08 12:32:21.420889 #18 17.14 Setting up gcc (4:14.2.0-1) ...
+2026-Jul-08 12:32:21.420889 #18 17.16 Processing triggers for libc-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:32:22.102381 #18 DONE 18.0s
+2026-Jul-08 12:32:22.102381
+2026-Jul-08 12:32:22.102381 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:32:22.335966 #17 ...
+2026-Jul-08 12:32:22.335966
+2026-Jul-08 12:32:22.335966 #19 [backend 4/7] COPY requirements.txt .
+2026-Jul-08 12:32:22.335966 #19 DONE 0.1s
+2026-Jul-08 12:32:22.335966
+2026-Jul-08 12:32:22.335966 #20 [backend 5/7] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:32:26.402900 #20 4.216 Collecting fastapi==0.115.0 (from -r requirements.txt (line 1))
+2026-Jul-08 12:32:26.567855 #20 4.262 Downloading fastapi-0.115.0-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:32:26.567855 #20 4.383 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:26.801250 #20 4.389 Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+2026-Jul-08 12:32:26.801250 #20 4.457 Collecting gunicorn==22.0.0 (from -r requirements.txt (line 3))
+2026-Jul-08 12:32:26.801250 #20 4.464 Downloading gunicorn-22.0.0-py3-none-any.whl.metadata (4.4 kB)
+2026-Jul-08 12:32:27.818942 #20 5.633 Collecting sqlalchemy==2.0.35 (from -r requirements.txt (line 4))
+2026-Jul-08 12:32:27.951960 #20 5.641 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB)
+2026-Jul-08 12:32:27.951960 #20 5.765 Collecting alembic==1.13.3 (from -r requirements.txt (line 5))
+2026-Jul-08 12:32:28.108496 #20 5.773 Downloading alembic-1.13.3-py3-none-any.whl.metadata (7.4 kB)
+2026-Jul-08 12:32:28.198026 #20 6.012 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 6))
+2026-Jul-08 12:32:28.373299 #20 6.018 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:32:28.373299 #20 6.055 Collecting python-jose==3.3.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:28.373299 #20 6.060 Downloading python_jose-3.3.0-py2.py3-none-any.whl.metadata (5.4 kB)
+2026-Jul-08 12:32:28.373299 #20 6.188 Collecting bcrypt==4.2.1 (from -r requirements.txt (line 8))
+2026-Jul-08 12:32:28.583743 #20 6.195 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl.metadata (9.8 kB)
+2026-Jul-08 12:32:28.583743 #20 6.238 Collecting python-multipart==0.0.12 (from -r requirements.txt (line 9))
+2026-Jul-08 12:32:28.583743 #20 6.247 Downloading python_multipart-0.0.12-py3-none-any.whl.metadata (1.9 kB)
+2026-Jul-08 12:32:29.021211 #20 6.836 Collecting pillow==11.0.0 (from -r requirements.txt (line 10))
+2026-Jul-08 12:32:29.127188 #20 6.842 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-Jul-08 12:32:29.127188 #20 6.883 Collecting qrcode==8.0 (from -r requirements.txt (line 11))
+2026-Jul-08 12:32:29.127188 #20 6.889 Downloading qrcode-8.0-py3-none-any.whl.metadata (17 kB)
+2026-Jul-08 12:32:29.127188 #20 6.942 Collecting aiofiles==24.1.0 (from -r requirements.txt (line 12))
+2026-Jul-08 12:32:29.283796 #20 6.947 Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
+2026-Jul-08 12:32:29.387653 #20 7.202 Collecting starlette<0.39.0,>=0.37.2 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:29.546107 #20 7.209 Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+2026-Jul-08 12:32:29.976255 #20 7.791 Collecting pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:30.154963 #20 7.795 Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+2026-Jul-08 12:32:30.154963 #20 7.802 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 174.0 MB/s eta 0:00:00
+2026-Jul-08 12:32:30.154963 #20 7.878 Collecting typing-extensions>=4.8.0 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:30.154963 #20 7.884 Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-Jul-08 12:32:30.154963 #20 7.968 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:30.370853 #20 7.974 Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:32:30.370853 #20 8.005 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:30.370853 #20 8.011 Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-Jul-08 12:32:30.370853 #20 8.035 Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from gunicorn==22.0.0->-r requirements.txt (line 3)) (26.2)
+2026-Jul-08 12:32:30.886816 #20 8.701 Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.35->-r requirements.txt (line 4))
+2026-Jul-08 12:32:31.043349 #20 8.707 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+2026-Jul-08 12:32:31.120268 #20 8.935 Collecting Mako (from alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:32:31.267053 #20 8.942 Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
+2026-Jul-08 12:32:31.267053 #20 9.022 Collecting ecdsa!=0.15 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:31.267053 #20 9.029 Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+2026-Jul-08 12:32:31.267053 #20 9.082 Collecting rsa (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:31.511032 #20 9.087 Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+2026-Jul-08 12:32:31.511032 #20 9.168 Collecting pyasn1 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:31.511032 #20 9.175 Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+2026-Jul-08 12:32:32.257021 #20 10.07 Collecting cryptography>=3.4.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:32.412630 #20 10.08 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-Jul-08 12:32:32.422062 #20 10.23 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:32.619852 #20 10.24 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+2026-Jul-08 12:32:32.619852 #20 10.30 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:32.619852 #20 10.31 Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:32:32.619852 #20 10.43 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:32.775449 #20 10.44 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-Jul-08 12:32:32.879361 #20 10.69 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:33.037142 #20 10.70 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:32:33.182155 #20 11.00 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:33.341368 #20 11.01 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:32:33.467124 #20 11.28 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:32:33.621928 #20 11.29 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+2026-Jul-08 12:32:33.839503 #20 11.65 Collecting cffi>=2.0.0 (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:33.997162 #20 11.66 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-Jul-08 12:32:33.997162 #20 11.72 Collecting six>=1.9.0 (from ecdsa!=0.15->python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:33.997162 #20 11.72 Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-Jul-08 12:32:33.997162 #20 11.81 Collecting annotated-types>=0.6.0 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:34.153081 #20 11.82 Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-Jul-08 12:32:36.688276 #20 14.50 Collecting pydantic-core==2.46.4 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:36.869493 #20 14.51 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+2026-Jul-08 12:32:36.869493 #20 14.55 Collecting typing-inspection>=0.4.2 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:36.869493 #20 14.56 Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:32:36.869493 #20 14.68 Collecting anyio<5,>=3.4.0 (from starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:37.024803 #20 14.69 Downloading anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+2026-Jul-08 12:32:37.140986 #20 14.96 Collecting MarkupSafe>=0.9.2 (from Mako->alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:32:37.291536 #20 14.96 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-Jul-08 12:32:37.291536 #20 15.11 Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:32:37.507307 #20 15.11 Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+2026-Jul-08 12:32:37.507307 #20 15.18 Collecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:32:37.507307 #20 15.19 Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+2026-Jul-08 12:32:37.507307 #20 15.32 Downloading fastapi-0.115.0-py3-none-any.whl (94 kB)
+2026-Jul-08 12:32:37.622034 #20 15.33 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.6/94.6 kB 153.9 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.622034 #20 15.34 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+2026-Jul-08 12:32:37.622034 #20 15.34 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 144.8 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.622034 #20 15.35 Downloading gunicorn-22.0.0-py3-none-any.whl (84 kB)
+2026-Jul-08 12:32:37.622034 #20 15.36 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.4/84.4 kB 147.3 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.622034 #20 15.36 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+2026-Jul-08 12:32:37.622034 #20 15.39 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 149.3 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.622034 #20 15.40 Downloading alembic-1.13.3-py3-none-any.whl (233 kB)
+2026-Jul-08 12:32:37.622034 #20 15.41 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.2/233.2 kB 148.1 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.622034 #20 15.41 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+2026-Jul-08 12:32:37.622034 #20 15.44 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 162.9 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.722829 #20 15.44 Downloading python_jose-3.3.0-py2.py3-none-any.whl (33 kB)
+2026-Jul-08 12:32:37.722829 #20 15.45 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl (278 kB)
+2026-Jul-08 12:32:37.722829 #20 15.46 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 278.6/278.6 kB 101.3 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.722829 #20 15.47 Downloading python_multipart-0.0.12-py3-none-any.whl (23 kB)
+2026-Jul-08 12:32:37.722829 #20 15.48 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.4 MB)
+2026-Jul-08 12:32:37.722829 #20 15.52 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 116.6 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.722829 #20 15.53 Downloading qrcode-8.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:32:37.722829 #20 15.53 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.7/45.7 kB 110.0 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.722829 #20 15.54 Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+2026-Jul-08 12:32:37.824664 #20 15.54 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-Jul-08 12:32:37.824664 #20 15.55 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 136.8 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.824664 #20 15.55 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+2026-Jul-08 12:32:37.824664 #20 15.61 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 102.9 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.824664 #20 15.62 Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+2026-Jul-08 12:32:37.824664 #20 15.62 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 150.8/150.8 kB 125.5 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.824664 #20 15.63 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (617 kB)
+2026-Jul-08 12:32:37.824664 #20 15.64 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 617.4/617.4 kB 152.2 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.925749 #20 15.65 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-Jul-08 12:32:37.925749 #20 15.66 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (464 kB)
+2026-Jul-08 12:32:37.925749 #20 15.66 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 464.7/464.7 kB 136.4 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.925749 #20 15.67 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-Jul-08 12:32:37.925749 #20 15.68 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 200.6 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.925749 #20 15.69 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-Jul-08 12:32:37.925749 #20 15.70 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 138.1 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.925749 #20 15.71 Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+2026-Jul-08 12:32:37.925749 #20 15.72 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2026-Jul-08 12:32:37.925749 #20 15.73 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 154.8 MB/s eta 0:00:00
+2026-Jul-08 12:32:37.925749 #20 15.74 Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+2026-Jul-08 12:32:38.028801 #20 15.74 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.5/71.5 kB 126.5 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.75 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:32:38.028801 #20 15.76 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 81.4 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.76 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+2026-Jul-08 12:32:38.028801 #20 15.79 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 183.8 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.80 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+2026-Jul-08 12:32:38.028801 #20 15.80 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 456.9/456.9 kB 148.3 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.81 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+2026-Jul-08 12:32:38.028801 #20 15.82 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.6/184.6 kB 160.5 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.82 Downloading mako-1.3.12-py3-none-any.whl (78 kB)
+2026-Jul-08 12:32:38.028801 #20 15.83 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.5/78.5 kB 195.1 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.028801 #20 15.84 Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+2026-Jul-08 12:32:38.028801 #20 15.84 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 135.5 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.255261 #20 15.85 Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+2026-Jul-08 12:32:38.255261 #20 15.86 Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-Jul-08 12:32:38.255261 #20 15.86 Downloading anyio-4.14.1-py3-none-any.whl (124 kB)
+2026-Jul-08 12:32:38.255261 #20 15.87 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.9/124.9 kB 118.0 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.255261 #20 15.88 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+2026-Jul-08 12:32:38.255261 #20 15.88 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 217.9/217.9 kB 172.8 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.255261 #20 15.89 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-Jul-08 12:32:38.255261 #20 15.89 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-Jul-08 12:32:38.255261 #20 15.90 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-Jul-08 12:32:38.255261 #20 15.91 Downloading idna-3.18-py3-none-any.whl (65 kB)
+2026-Jul-08 12:32:38.255261 #20 15.91 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 157.2 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.255261 #20 15.92 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+2026-Jul-08 12:32:38.255261 #20 15.92 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 179.9 MB/s eta 0:00:00
+2026-Jul-08 12:32:38.740031 #20 16.55 Installing collected packages: websockets, uvloop, typing-extensions, six, qrcode, pyyaml, python-multipart, python-dotenv, pycparser, pyasn1, psycopg2-binary, pillow, MarkupSafe, idna, httptools, h11, gunicorn, greenlet, click, bcrypt, annotated-types, aiofiles, uvicorn, typing-inspection, sqlalchemy, rsa, pydantic-core, Mako, ecdsa, cffi, anyio, watchfiles, starlette, python-jose, pydantic, cryptography, alembic, fastapi
+2026-Jul-08 12:32:46.939616 #20 24.75 Successfully installed Mako-1.3.12 MarkupSafe-3.0.3 aiofiles-24.1.0 alembic-1.13.3 annotated-types-0.7.0 anyio-4.14.1 bcrypt-4.2.1 cffi-2.1.0 click-8.4.2 cryptography-49.0.0 ecdsa-0.19.2 fastapi-0.115.0 greenlet-3.5.3 gunicorn-22.0.0 h11-0.16.0 httptools-0.8.0 idna-3.18 pillow-11.0.0 psycopg2-binary-2.9.10 pyasn1-0.6.3 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 python-dotenv-1.2.2 python-jose-3.3.0 python-multipart-0.0.12 pyyaml-6.0.3 qrcode-8.0 rsa-4.9.1 six-1.17.0 sqlalchemy-2.0.35 starlette-0.38.6 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.30.6 uvloop-0.22.1 watchfiles-1.2.0 websockets-16.0
+2026-Jul-08 12:32:47.090120 #20 24.75 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+2026-Jul-08 12:32:47.134687 #20 24.95
+2026-Jul-08 12:32:47.134687 #20 24.95 [notice] A new release of pip is available: 24.0 -> 26.1.2
+2026-Jul-08 12:32:47.134687 #20 24.95 [notice] To update, run: pip install --upgrade pip
+2026-Jul-08 12:32:48.617814 #20 DONE 26.4s
+2026-Jul-08 12:32:48.617814
+2026-Jul-08 12:32:48.617814 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:32:48.721104 #17 ...
+2026-Jul-08 12:32:48.721104
+2026-Jul-08 12:32:48.721104 #21 [backend 6/7] COPY . .
+2026-Jul-08 12:32:48.721104 #21 DONE 0.1s
+2026-Jul-08 12:32:48.872926 #22 [backend 7/7] RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:32:49.001233 #22 DONE 0.3s
+2026-Jul-08 12:32:49.001233
+2026-Jul-08 12:32:49.001233 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:32:49.159495 #17 ...
+2026-Jul-08 12:32:49.159495
+2026-Jul-08 12:32:49.159495 #23 [backend] exporting to image
+2026-Jul-08 12:32:49.159495 #23 exporting layers
+2026-Jul-08 12:33:05.974535 ========================================
+2026-Jul-08 12:33:05.998673 Deployment failed: Command execution failed (exit code 255): docker exec ux4wh37uoqlrrsywdnqlcuk2 bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/ux4wh37uoqlrrsywdnqlcuk2 -f /artifacts/ux4wh37uoqlrrsywdnqlcuk2/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:33:05.998673 Error: #1 [internal] load local bake definitions
+2026-Jul-08 12:33:05.998673 #1 reading from stdin 1.62kB done
+2026-Jul-08 12:33:05.998673 #1 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #2 [backend internal] load build definition from Dockerfile
+2026-Jul-08 12:33:05.998673 #2 transferring dockerfile: 452B done
+2026-Jul-08 12:33:05.998673 #2 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #3 [frontend internal] load build definition from Dockerfile
+2026-Jul-08 12:33:05.998673 #3 transferring dockerfile: 3.63kB done
+2026-Jul-08 12:33:05.998673 #3 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #4 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:33:05.998673 #4 ...
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #5 [frontend internal] load metadata for docker.io/library/nginx:alpine
+2026-Jul-08 12:33:05.998673 #5 DONE 0.8s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #4 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:33:05.998673 #4 DONE 0.8s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #6 [backend internal] load metadata for docker.io/library/python:3.11-slim
+2026-Jul-08 12:33:05.998673 #6 DONE 0.8s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #7 [frontend internal] load .dockerignore
+2026-Jul-08 12:33:05.998673 #7 transferring context: 71B done
+2026-Jul-08 12:33:05.998673 #7 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #8 [backend internal] load .dockerignore
+2026-Jul-08 12:33:05.998673 #8 transferring context: 93B done
+2026-Jul-08 12:33:05.998673 #8 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #9 [frontend internal] load build context
+2026-Jul-08 12:33:05.998673 #9 transferring context: 326.58kB 0.0s done
+2026-Jul-08 12:33:05.998673 #9 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #10 [frontend builder 1/10] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+2026-Jul-08 12:33:05.998673 #10 resolve docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0 0.0s done
+2026-Jul-08 12:33:05.998673 #10 DONE 0.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #11 [frontend builder 2/10] WORKDIR /app
+2026-Jul-08 12:33:05.998673 #11 CACHED
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #12 [backend 1/7] FROM docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3
+2026-Jul-08 12:33:05.998673 #12 resolve docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3 0.0s done
+2026-Jul-08 12:33:05.998673 #12 DONE 0.1s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #13 [backend 2/7] WORKDIR /app
+2026-Jul-08 12:33:05.998673 #13 CACHED
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #14 [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+2026-Jul-08 12:33:05.998673 #14 resolve docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa 0.0s done
+2026-Jul-08 12:33:05.998673 #14 CACHED
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #15 [backend internal] load build context
+2026-Jul-08 12:33:05.998673 #15 transferring context: 76.48kB 0.0s done
+2026-Jul-08 12:33:05.998673 #15 DONE 0.1s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #16 [frontend builder 3/10] COPY package.json package-lock.json ./
+2026-Jul-08 12:33:05.998673 #16 DONE 0.1s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:33:05.998673 #17 ...
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #18 [backend 3/7] RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+2026-Jul-08 12:33:05.998673 #18 0.456 Hit:1 http://deb.debian.org/debian trixie InRelease
+2026-Jul-08 12:33:05.998673 #18 0.457 Get:<REDACTED>@INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 53.)
+2026-Jul-08 12:33:05.998673 #18 7.402 debconf: falling back to frontend: Teletype
+2026-Jul-08 12:33:05.998673 #18 7.412 debconf: unable to initialize frontend: Teletype
+2026-Jul-08 12:33:05.998673 #18 7.412 debconf: (This frontend requires a controlling tty.)
+2026-Jul-08 12:33:05.998673 #18 7.412 debconf: falling back to frontend: Noninteractive
+2026-Jul-08 12:33:05.998673 #18 10.27 Fetched 64.9 MB in 1s (86.1 MB/s)
+2026-Jul-08 12:33:05.998673 #18 10.31 Selecting previously unselected package krb5-locales.
+2026-Jul-08 12:33:05.998673 #18 10.31 (Reading database ... (Reading database ... 5% (Reading database ... 10% (Reading database ... 15% (Reading database ... 20% (Reading database ... 25% (Reading database ... 30% (Reading database ... 35% (Reading database ... 40% (Reading database ... 45% (Reading database ... 50% (Reading database ... 55% (Reading database ... 60% (Reading database ... 65% (Reading database ... 70% (Reading database ... 75% (Reading database ... 80% (Reading database ... 85% (Reading database ... 90% (Reading database ... 95% (Reading database ... 100% (Reading database ... 5645 files and directories currently installed.)
+2026-Jul-08 12:33:05.998673 #18 10.32 Preparing to unpack .../00-krb5-locales_1.21.3-5+deb13u1_all.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.32 Unpacking krb5-locales (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 10.37 Selecting previously unselected package manpages.
+2026-Jul-08 12:33:05.998673 #18 10.37 Preparing to unpack .../01-manpages_6.9.1-1_all.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.38 Unpacking manpages (6.9.1-1) ...
+2026-Jul-08 12:33:05.998673 #18 10.48 Selecting previously unselected package libsframe1:amd64.
+2026-Jul-08 12:33:05.998673 #18 10.48 Preparing to unpack .../02-libsframe1_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.49 Unpacking libsframe1:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 10.55 Selecting previously unselected package binutils-common:amd64.
+2026-Jul-08 12:33:05.998673 #18 10.55 Preparing to unpack .../03-binutils-common_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.55 Unpacking binutils-common:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 10.78 Selecting previously unselected package libbinutils:amd64.
+2026-Jul-08 12:33:05.998673 #18 10.79 Preparing to unpack .../04-libbinutils_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.79 Unpacking libbinutils:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 10.87 Selecting previously unselected package libgprofng0:amd64.
+2026-Jul-08 12:33:05.998673 #18 10.87 Preparing to unpack .../05-libgprofng0_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.88 Unpacking libgprofng0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 10.97 Selecting previously unselected package libctf-nobfd0:amd64.
+2026-Jul-08 12:33:05.998673 #18 10.98 Preparing to unpack .../06-libctf-nobfd0_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 10.98 Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 11.03 Selecting previously unselected package libctf0:amd64.
+2026-Jul-08 12:33:05.998673 #18 11.03 Preparing to unpack .../07-libctf0_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.04 Unpacking libctf0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 11.09 Selecting previously unselected package libjansson4:amd64.
+2026-Jul-08 12:33:05.998673 #18 11.10 Preparing to unpack .../08-libjansson4_2.14-2+b3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.10 Unpacking libjansson4:amd64 (2.14-2+b3) ...
+2026-Jul-08 12:33:05.998673 #18 11.14 Selecting previously unselected package binutils-x86-64-linux-gnu.
+2026-Jul-08 12:33:05.998673 #18 11.14 Preparing to unpack .../09-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.14 Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 11.31 Selecting previously unselected package binutils.
+2026-Jul-08 12:33:05.998673 #18 11.31 Preparing to unpack .../10-binutils_2.44-3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.32 Unpacking binutils (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 11.37 Selecting previously unselected package libisl23:amd64.
+2026-Jul-08 12:33:05.998673 #18 11.37 Preparing to unpack .../11-libisl23_0.27-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.37 Unpacking libisl23:amd64 (0.27-1) ...
+2026-Jul-08 12:33:05.998673 #18 11.47 Selecting previously unselected package libmpfr6:amd64.
+2026-Jul-08 12:33:05.998673 #18 11.47 Preparing to unpack .../12-libmpfr6_4.2.2-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.47 Unpacking libmpfr6:amd64 (4.2.2-1) ...
+2026-Jul-08 12:33:05.998673 #18 11.53 Selecting previously unselected package libmpc3:amd64.
+2026-Jul-08 12:33:05.998673 #18 11.53 Preparing to unpack .../13-libmpc3_1.3.1-1+b3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.53 Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+2026-Jul-08 12:33:05.998673 #18 11.57 Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+2026-Jul-08 12:33:05.998673 #18 11.57 Preparing to unpack .../14-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 11.57 Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.33 Selecting previously unselected package cpp-14.
+2026-Jul-08 12:33:05.998673 #18 12.33 Preparing to unpack .../15-cpp-14_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.33 Unpacking cpp-14 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.36 Selecting previously unselected package cpp-x86-64-linux-gnu.
+2026-Jul-08 12:33:05.998673 #18 12.36 Preparing to unpack .../16-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.37 Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 12.41 Selecting previously unselected package cpp.
+2026-Jul-08 12:33:05.998673 #18 12.41 Preparing to unpack .../17-cpp_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.43 Unpacking cpp (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 12.47 Selecting previously unselected package libcc1-0:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.47 Preparing to unpack .../18-libcc1-0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.47 Unpacking libcc1-0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.51 Selecting previously unselected package libgomp1:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.51 Preparing to unpack .../19-libgomp1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.52 Unpacking libgomp1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.56 Selecting previously unselected package libitm1:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.56 Preparing to unpack .../20-libitm1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.56 Unpacking libitm1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.59 Selecting previously unselected package libatomic1:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.60 Preparing to unpack .../21-libatomic1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.60 Unpacking libatomic1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.63 Selecting previously unselected package libasan8:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.63 Preparing to unpack .../22-libasan8_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.63 Unpacking libasan8:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 12.88 Selecting previously unselected package liblsan0:amd64.
+2026-Jul-08 12:33:05.998673 #18 12.88 Preparing to unpack .../23-liblsan0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 12.88 Unpacking liblsan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.01 Selecting previously unselected package libtsan2:amd64.
+2026-Jul-08 12:33:05.998673 #18 13.01 Preparing to unpack .../24-libtsan2_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.01 Unpacking libtsan2:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.23 Selecting previously unselected package libubsan1:amd64.
+2026-Jul-08 12:33:05.998673 #18 13.23 Preparing to unpack .../25-libubsan1_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.23 Unpacking libubsan1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.35 Selecting previously unselected package libhwasan0:amd64.
+2026-Jul-08 12:33:05.998673 #18 13.35 Preparing to unpack .../26-libhwasan0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.35 Unpacking libhwasan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.50 Selecting previously unselected package libquadmath0:amd64.
+2026-Jul-08 12:33:05.998673 #18 13.50 Preparing to unpack .../27-libquadmath0_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.51 Unpacking libquadmath0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.54 Selecting previously unselected package libgcc-14-dev:amd64.
+2026-Jul-08 12:33:05.998673 #18 13.55 Preparing to unpack .../28-libgcc-14-dev_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.55 Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 13.77 Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+2026-Jul-08 12:33:05.998673 #18 13.77 Preparing to unpack .../29-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 13.78 Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 14.63 Selecting previously unselected package gcc-14.
+2026-Jul-08 12:33:05.998673 #18 14.63 Preparing to unpack .../30-gcc-14_14.2.0-19_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 14.64 Unpacking gcc-14 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 14.68 Selecting previously unselected package gcc-x86-64-linux-gnu.
+2026-Jul-08 12:33:05.998673 #18 14.68 Preparing to unpack .../31-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 14.68 Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 14.72 Selecting previously unselected package gcc.
+2026-Jul-08 12:33:05.998673 #18 14.72 Preparing to unpack .../32-gcc_4%3a14.2.0-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 14.73 Unpacking gcc (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 14.76 Selecting previously unselected package libc-dev-bin.
+2026-Jul-08 12:33:05.998673 #18 14.76 Preparing to unpack .../33-libc-dev-bin_2.41-12+deb13u3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 14.76 Unpacking libc-dev-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:33:05.998673 #18 14.79 Selecting previously unselected package linux-libc-dev.
+2026-Jul-08 12:33:05.998673 #18 14.80 Preparing to unpack .../34-linux-libc-dev_6.12.95-1_all.deb ...
+2026-Jul-08 12:33:05.998673 #18 14.80 Unpacking linux-libc-dev (6.12.95-1) ...
+2026-Jul-08 12:33:05.998673 #18 15.31 Selecting previously unselected package libcrypt-dev:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.31 Preparing to unpack .../35-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.32 Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+2026-Jul-08 12:33:05.998673 #18 15.36 Selecting previously unselected package rpcsvc-proto.
+2026-Jul-08 12:33:05.998673 #18 15.37 Preparing to unpack .../36-rpcsvc-proto_1.4.3-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.37 Unpacking rpcsvc-proto (1.4.3-1) ...
+2026-Jul-08 12:33:05.998673 #18 15.41 Selecting previously unselected package libc6-dev:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.41 Preparing to unpack .../37-libc6-dev_2.41-12+deb13u3_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.42 Unpacking libc6-dev:amd64 (2.41-12+deb13u3) ...
+2026-Jul-08 12:33:05.998673 #18 15.65 Selecting previously unselected package libcom-err2:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.65 Preparing to unpack .../38-libcom-err2_1.47.2-3+b11_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.65 Unpacking libcom-err2:amd64 (1.47.2-3+b11) ...
+2026-Jul-08 12:33:05.998673 #18 15.70 Selecting previously unselected package libkrb5support0:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.70 Preparing to unpack .../39-libkrb5support0_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.70 Unpacking libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 15.74 Selecting previously unselected package libk5crypto3:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.74 Preparing to unpack .../40-libk5crypto3_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.75 Unpacking libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 15.79 Selecting previously unselected package libkeyutils1:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.80 Preparing to unpack .../41-libkeyutils1_1.6.3-6_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.80 Unpacking libkeyutils1:amd64 (1.6.3-6) ...
+2026-Jul-08 12:33:05.998673 #18 15.84 Selecting previously unselected package libkrb5-3:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.84 Preparing to unpack .../42-libkrb5-3_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.84 Unpacking libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 15.90 Selecting previously unselected package libgssapi-krb5-2:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.90 Preparing to unpack .../43-libgssapi-krb5-2_1.21.3-5+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.90 Unpacking libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 15.94 Selecting previously unselected package libldap-common.
+2026-Jul-08 12:33:05.998673 #18 15.95 Preparing to unpack .../44-libldap-common_2.6.10+dfsg-1_all.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.95 Unpacking libldap-common (2.6.10+dfsg-1) ...
+2026-Jul-08 12:33:05.998673 #18 15.98 Selecting previously unselected package libsasl2-modules-db:amd64.
+2026-Jul-08 12:33:05.998673 #18 15.99 Preparing to unpack .../45-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 15.99 Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.02 Selecting previously unselected package libsasl2-2:amd64.
+2026-Jul-08 12:33:05.998673 #18 16.03 Preparing to unpack .../46-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.03 Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.07 Selecting previously unselected package libldap2:amd64.
+2026-Jul-08 12:33:05.998673 #18 16.07 Preparing to unpack .../47-libldap2_2.6.10+dfsg-1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.07 Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.13 Selecting previously unselected package libpq5:amd64.
+2026-Jul-08 12:33:05.998673 #18 16.13 Preparing to unpack .../48-libpq5_17.10-0+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.13 Unpacking libpq5:amd64 (17.10-0+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.19 Selecting previously unselected package libssl-dev:amd64.
+2026-Jul-08 12:33:05.998673 #18 16.19 Preparing to unpack .../49-libssl-dev_3.5.6-1~deb13u2_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.19 Unpacking libssl-dev:amd64 (3.5.6-1~deb13u2) ...
+2026-Jul-08 12:33:05.998673 #18 16.44 Selecting previously unselected package libpq-dev.
+2026-Jul-08 12:33:05.998673 #18 16.44 Preparing to unpack .../50-libpq-dev_17.10-0+deb13u1_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.44 Unpacking libpq-dev (17.10-0+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.50 Selecting previously unselected package libsasl2-modules:amd64.
+2026-Jul-08 12:33:05.998673 #18 16.50 Preparing to unpack .../51-libsasl2-modules_2.1.28+dfsg1-9_amd64.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.51 Unpacking libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.55 Selecting previously unselected package manpages-dev.
+2026-Jul-08 12:33:05.998673 #18 16.55 Preparing to unpack .../52-manpages-dev_6.9.1-1_all.deb ...
+2026-Jul-08 12:33:05.998673 #18 16.55 Unpacking manpages-dev (6.9.1-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.75 Setting up libkeyutils1:amd64 (1.6.3-6) ...
+2026-Jul-08 12:33:05.998673 #18 16.76 Setting up manpages (6.9.1-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.76 Setting up libsasl2-modules:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.78 Setting up binutils-common:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 16.79 Setting up linux-libc-dev (6.12.95-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.80 Setting up libctf-nobfd0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 16.80 Setting up krb5-locales (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.81 Setting up libcom-err2:amd64 (1.47.2-3+b11) ...
+2026-Jul-08 12:33:05.998673 #18 16.82 Setting up libgomp1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.83 Setting up libldap-common (2.6.10+dfsg-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.83 Setting up libsframe1:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 16.84 Setting up libjansson4:amd64 (2.14-2+b3) ...
+2026-Jul-08 12:33:05.998673 #18 16.85 Setting up libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.85 Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.86 Setting up rpcsvc-proto (1.4.3-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.86 Setting up libmpfr6:amd64 (4.2.2-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.87 Setting up libquadmath0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.88 Setting up libssl-dev:amd64 (3.5.6-1~deb13u2) ...
+2026-Jul-08 12:33:05.998673 #18 16.88 Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+2026-Jul-08 12:33:05.998673 #18 16.89 Setting up libatomic1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.89 Setting up libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.90 Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
+2026-Jul-08 12:33:05.998673 #18 16.91 Setting up libubsan1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.91 Setting up libhwasan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.92 Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.94 Setting up libasan8:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.94 Setting up libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 16.95 Setting up libtsan2:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.96 Setting up libbinutils:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 16.96 Setting up libisl23:amd64 (0.27-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.97 Setting up libc-dev-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:33:05.998673 #18 16.98 Setting up libcc1-0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.98 Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
+2026-Jul-08 12:33:05.998673 #18 16.99 Setting up liblsan0:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 16.99 Setting up libitm1:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.00 Setting up libctf0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 17.01 Setting up manpages-dev (6.9.1-1) ...
+2026-Jul-08 12:33:05.998673 #18 17.01 Setting up libgprofng0:amd64 (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 17.02 Setting up libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 17.03 Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.03 Setting up cpp-14 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.04 Setting up libc6-dev:amd64 (2.41-12+deb13u3) ...
+2026-Jul-08 12:33:05.998673 #18 17.05 Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.06 Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 17.06 Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 17.07 Setting up libpq5:amd64 (17.10-0+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 17.08 Setting up libpq-dev (17.10-0+deb13u1) ...
+2026-Jul-08 12:33:05.998673 #18 17.09 Setting up binutils (2.44-3) ...
+2026-Jul-08 12:33:05.998673 #18 17.10 Setting up cpp (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 17.13 Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.13 Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 17.14 Setting up gcc-14 (14.2.0-19) ...
+2026-Jul-08 12:33:05.998673 #18 17.14 Setting up gcc (4:14.2.0-1) ...
+2026-Jul-08 12:33:05.998673 #18 17.16 Processing triggers for libc-bin (2.41-12+deb13u3) ...
+2026-Jul-08 12:33:05.998673 #18 DONE 18.0s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:33:05.998673 #17 ...
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #19 [backend 4/7] COPY requirements.txt .
+2026-Jul-08 12:33:05.998673 #19 DONE 0.1s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #20 [backend 5/7] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:33:05.998673 #20 4.216 Collecting fastapi==0.115.0 (from -r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 4.262 Downloading fastapi-0.115.0-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:33:05.998673 #20 4.383 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 4.389 Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+2026-Jul-08 12:33:05.998673 #20 4.457 Collecting gunicorn==22.0.0 (from -r requirements.txt (line 3))
+2026-Jul-08 12:33:05.998673 #20 4.464 Downloading gunicorn-22.0.0-py3-none-any.whl.metadata (4.4 kB)
+2026-Jul-08 12:33:05.998673 #20 5.633 Collecting sqlalchemy==2.0.35 (from -r requirements.txt (line 4))
+2026-Jul-08 12:33:05.998673 #20 5.641 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB)
+2026-Jul-08 12:33:05.998673 #20 5.765 Collecting alembic==1.13.3 (from -r requirements.txt (line 5))
+2026-Jul-08 12:33:05.998673 #20 5.773 Downloading alembic-1.13.3-py3-none-any.whl.metadata (7.4 kB)
+2026-Jul-08 12:33:05.998673 #20 6.012 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 6))
+2026-Jul-08 12:33:05.998673 #20 6.018 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:33:05.998673 #20 6.055 Collecting python-jose==3.3.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 6.060 Downloading python_jose-3.3.0-py2.py3-none-any.whl.metadata (5.4 kB)
+2026-Jul-08 12:33:05.998673 #20 6.188 Collecting bcrypt==4.2.1 (from -r requirements.txt (line 8))
+2026-Jul-08 12:33:05.998673 #20 6.195 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl.metadata (9.8 kB)
+2026-Jul-08 12:33:05.998673 #20 6.238 Collecting python-multipart==0.0.12 (from -r requirements.txt (line 9))
+2026-Jul-08 12:33:05.998673 #20 6.247 Downloading python_multipart-0.0.12-py3-none-any.whl.metadata (1.9 kB)
+2026-Jul-08 12:33:05.998673 #20 6.836 Collecting pillow==11.0.0 (from -r requirements.txt (line 10))
+2026-Jul-08 12:33:05.998673 #20 6.842 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-Jul-08 12:33:05.998673 #20 6.883 Collecting qrcode==8.0 (from -r requirements.txt (line 11))
+2026-Jul-08 12:33:05.998673 #20 6.889 Downloading qrcode-8.0-py3-none-any.whl.metadata (17 kB)
+2026-Jul-08 12:33:05.998673 #20 6.942 Collecting aiofiles==24.1.0 (from -r requirements.txt (line 12))
+2026-Jul-08 12:33:05.998673 #20 6.947 Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
+2026-Jul-08 12:33:05.998673 #20 7.202 Collecting starlette<0.39.0,>=0.37.2 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 7.209 Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+2026-Jul-08 12:33:05.998673 #20 7.791 Collecting pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 7.795 Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+2026-Jul-08 12:33:05.998673 #20 7.802 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 174.0 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 7.878 Collecting typing-extensions>=4.8.0 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 7.884 Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-Jul-08 12:33:05.998673 #20 7.968 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 7.974 Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:33:05.998673 #20 8.005 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 8.011 Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-Jul-08 12:33:05.998673 #20 8.035 Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from gunicorn==22.0.0->-r requirements.txt (line 3)) (26.2)
+2026-Jul-08 12:33:05.998673 #20 8.701 Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.35->-r requirements.txt (line 4))
+2026-Jul-08 12:33:05.998673 #20 8.707 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+2026-Jul-08 12:33:05.998673 #20 8.935 Collecting Mako (from alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:33:05.998673 #20 8.942 Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
+2026-Jul-08 12:33:05.998673 #20 9.022 Collecting ecdsa!=0.15 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 9.029 Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+2026-Jul-08 12:33:05.998673 #20 9.082 Collecting rsa (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 9.087 Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+2026-Jul-08 12:33:05.998673 #20 9.168 Collecting pyasn1 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 9.175 Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+2026-Jul-08 12:33:05.998673 #20 10.07 Collecting cryptography>=3.4.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 10.08 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-Jul-08 12:33:05.998673 #20 10.23 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 10.24 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+2026-Jul-08 12:33:05.998673 #20 10.30 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 10.31 Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:33:05.998673 #20 10.43 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 10.44 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-Jul-08 12:33:05.998673 #20 10.69 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 10.70 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:33:05.998673 #20 11.00 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 11.01 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:33:05.998673 #20 11.28 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:33:05.998673 #20 11.29 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+2026-Jul-08 12:33:05.998673 #20 11.65 Collecting cffi>=2.0.0 (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 11.66 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-Jul-08 12:33:05.998673 #20 11.72 Collecting six>=1.9.0 (from ecdsa!=0.15->python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 11.72 Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-Jul-08 12:33:05.998673 #20 11.81 Collecting annotated-types>=0.6.0 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 11.82 Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-Jul-08 12:33:05.998673 #20 14.50 Collecting pydantic-core==2.46.4 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 14.51 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+2026-Jul-08 12:33:05.998673 #20 14.55 Collecting typing-inspection>=0.4.2 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 14.56 Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:33:05.998673 #20 14.68 Collecting anyio<5,>=3.4.0 (from starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 14.69 Downloading anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+2026-Jul-08 12:33:05.998673 #20 14.96 Collecting MarkupSafe>=0.9.2 (from Mako->alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:33:05.998673 #20 14.96 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-Jul-08 12:33:05.998673 #20 15.11 Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:33:05.998673 #20 15.11 Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+2026-Jul-08 12:33:05.998673 #20 15.18 Collecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:33:05.998673 #20 15.19 Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+2026-Jul-08 12:33:05.998673 #20 15.32 Downloading fastapi-0.115.0-py3-none-any.whl (94 kB)
+2026-Jul-08 12:33:05.998673 #20 15.33 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.6/94.6 kB 153.9 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.34 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+2026-Jul-08 12:33:05.998673 #20 15.34 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 144.8 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.35 Downloading gunicorn-22.0.0-py3-none-any.whl (84 kB)
+2026-Jul-08 12:33:05.998673 #20 15.36 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.4/84.4 kB 147.3 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.36 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+2026-Jul-08 12:33:05.998673 #20 15.39 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 149.3 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.40 Downloading alembic-1.13.3-py3-none-any.whl (233 kB)
+2026-Jul-08 12:33:05.998673 #20 15.41 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.2/233.2 kB 148.1 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.41 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+2026-Jul-08 12:33:05.998673 #20 15.44 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 162.9 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.44 Downloading python_jose-3.3.0-py2.py3-none-any.whl (33 kB)
+2026-Jul-08 12:33:05.998673 #20 15.45 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl (278 kB)
+2026-Jul-08 12:33:05.998673 #20 15.46 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 278.6/278.6 kB 101.3 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.47 Downloading python_multipart-0.0.12-py3-none-any.whl (23 kB)
+2026-Jul-08 12:33:05.998673 #20 15.48 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.4 MB)
+2026-Jul-08 12:33:05.998673 #20 15.52 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 116.6 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.53 Downloading qrcode-8.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:33:05.998673 #20 15.53 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.7/45.7 kB 110.0 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.54 Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+2026-Jul-08 12:33:05.998673 #20 15.54 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-Jul-08 12:33:05.998673 #20 15.55 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 136.8 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.55 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+2026-Jul-08 12:33:05.998673 #20 15.61 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 102.9 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.62 Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+2026-Jul-08 12:33:05.998673 #20 15.62 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 150.8/150.8 kB 125.5 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.63 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (617 kB)
+2026-Jul-08 12:33:05.998673 #20 15.64 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 617.4/617.4 kB 152.2 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.65 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-Jul-08 12:33:05.998673 #20 15.66 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (464 kB)
+2026-Jul-08 12:33:05.998673 #20 15.66 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 464.7/464.7 kB 136.4 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.67 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-Jul-08 12:33:05.998673 #20 15.68 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 200.6 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.69 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-Jul-08 12:33:05.998673 #20 15.70 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 138.1 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.71 Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+2026-Jul-08 12:33:05.998673 #20 15.72 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2026-Jul-08 12:33:05.998673 #20 15.73 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 154.8 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.74 Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+2026-Jul-08 12:33:05.998673 #20 15.74 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.5/71.5 kB 126.5 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.75 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:33:05.998673 #20 15.76 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 81.4 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.76 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+2026-Jul-08 12:33:05.998673 #20 15.79 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 183.8 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.80 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+2026-Jul-08 12:33:05.998673 #20 15.80 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 456.9/456.9 kB 148.3 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.81 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+2026-Jul-08 12:33:05.998673 #20 15.82 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.6/184.6 kB 160.5 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.82 Downloading mako-1.3.12-py3-none-any.whl (78 kB)
+2026-Jul-08 12:33:05.998673 #20 15.83 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.5/78.5 kB 195.1 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.84 Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+2026-Jul-08 12:33:05.998673 #20 15.84 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 135.5 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.85 Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+2026-Jul-08 12:33:05.998673 #20 15.86 Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-Jul-08 12:33:05.998673 #20 15.86 Downloading anyio-4.14.1-py3-none-any.whl (124 kB)
+2026-Jul-08 12:33:05.998673 #20 15.87 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.9/124.9 kB 118.0 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.88 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+2026-Jul-08 12:33:05.998673 #20 15.88 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 217.9/217.9 kB 172.8 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.89 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-Jul-08 12:33:05.998673 #20 15.89 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-Jul-08 12:33:05.998673 #20 15.90 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-Jul-08 12:33:05.998673 #20 15.91 Downloading idna-3.18-py3-none-any.whl (65 kB)
+2026-Jul-08 12:33:05.998673 #20 15.91 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 157.2 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 15.92 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+2026-Jul-08 12:33:05.998673 #20 15.92 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 179.9 MB/s eta 0:00:00
+2026-Jul-08 12:33:05.998673 #20 16.55 Installing collected packages: websockets, uvloop, typing-extensions, six, qrcode, pyyaml, python-multipart, python-dotenv, pycparser, pyasn1, psycopg2-binary, pillow, MarkupSafe, idna, httptools, h11, gunicorn, greenlet, click, bcrypt, annotated-types, aiofiles, uvicorn, typing-inspection, sqlalchemy, rsa, pydantic-core, Mako, ecdsa, cffi, anyio, watchfiles, starlette, python-jose, pydantic, cryptography, alembic, fastapi
+2026-Jul-08 12:33:05.998673 #20 24.75 Successfully installed Mako-1.3.12 MarkupSafe-3.0.3 aiofiles-24.1.0 alembic-1.13.3 annotated-types-0.7.0 anyio-4.14.1 bcrypt-4.2.1 cffi-2.1.0 click-8.4.2 cryptography-49.0.0 ecdsa-0.19.2 fastapi-0.115.0 greenlet-3.5.3 gunicorn-22.0.0 h11-0.16.0 httptools-0.8.0 idna-3.18 pillow-11.0.0 psycopg2-binary-2.9.10 pyasn1-0.6.3 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 python-dotenv-1.2.2 python-jose-3.3.0 python-multipart-0.0.12 pyyaml-6.0.3 qrcode-8.0 rsa-4.9.1 six-1.17.0 sqlalchemy-2.0.35 starlette-0.38.6 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.30.6 uvloop-0.22.1 watchfiles-1.2.0 websockets-16.0
+2026-Jul-08 12:33:05.998673 #20 24.75 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+2026-Jul-08 12:33:05.998673 #20 24.95
+2026-Jul-08 12:33:05.998673 #20 24.95 [notice] A new release of pip is available: 24.0 -> 26.1.2
+2026-Jul-08 12:33:05.998673 #20 24.95 [notice] To update, run: pip install --upgrade pip
+2026-Jul-08 12:33:05.998673 #20 DONE 26.4s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:33:05.998673 #17 ...
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #21 [backend 6/7] COPY . .
+2026-Jul-08 12:33:05.998673 #21 DONE 0.1s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #22 [backend 7/7] RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:33:05.998673 #22 DONE 0.3s
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #17 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:33:05.998673 #17 ...
+2026-Jul-08 12:33:05.998673
+2026-Jul-08 12:33:05.998673 #23 [backend] exporting to image
+2026-Jul-08 12:33:05.998673 #23 exporting layers
+2026-Jul-08 12:33:06.037082 Error type: App\Exceptions\DeploymentException
+2026-Jul-08 12:33:06.059946 Error code: 0
+2026-Jul-08 12:33:06.083579 Location: /var/www/html/app/Traits/ExecuteRemoteCommand.php:242
+2026-Jul-08 12:33:06.109148 Stack trace (first 5 lines):
+2026-Jul-08 12:33:06.136576 #0 /var/www/html/app/Traits/ExecuteRemoteCommand.php(106): App\Jobs\ApplicationDeploymentJob->executeCommandWithProcess()
+2026-Jul-08 12:33:06.161387 #1 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(275): App\Jobs\ApplicationDeploymentJob->{closure:App\Traits\ExecuteRemoteCommand::execute_remote_command():72}()
+2026-Jul-08 12:33:06.186157 #2 /var/www/html/app/Traits/ExecuteRemoteCommand.php(72): Illuminate\Support\Collection->each()
+2026-Jul-08 12:33:06.210620 #3 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(773): App\Jobs\ApplicationDeploymentJob->execute_remote_command()
+2026-Jul-08 12:33:06.232198 #4 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(497): App\Jobs\ApplicationDeploymentJob->deploy_docker_compose_buildpack()
+2026-Jul-08 12:33:06.257461 ========================================
+2026-Jul-08 12:33:07.630838 Gracefully shutting down build container: ux4wh37uoqlrrsywdnqlcuk2
+2026-Jul-08 12:33:07.820947 [CMD]: docker stop --time=30 ux4wh37uoqlrrsywdnqlcuk2
+2026-Jul-08 12:33:07.820947 Flag --time has been deprecated, use --timeout instead
