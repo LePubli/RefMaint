@@ -11,13 +11,22 @@ WORKDIR /app
 ENV CI=true
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
+# The build host has a broken IPv6 route: Node's DNS resolver tries an AAAA
+# address for registry.npmjs.org first, gets no response, and silently hangs
+# until the OS-level TCP connect times out (~72s, matching the consistent
+# stall seen in Coolify builds) before it can fall back to IPv4. That long
+# hang is what was tripping npm's "Exit handler never called!" bug. Forcing
+# IPv4-first resolution avoids the hang entirely.
+ENV NODE_OPTIONS=--dns-result-order=ipv4first
+
 COPY package.json package-lock.json ./
 
 # npm ci with a clean, deterministic install avoids the known npm optional-
 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
 # (build fails silently before producing dist/). Debian slim uses glibc,
-# which sidesteps the issue entirely.
-RUN npm ci --include=dev
+# which sidesteps the issue entirely. --no-audit/--no-fund skip extra
+# network round-trips to the registry that aren't needed for a build.
+RUN npm ci --include=dev --no-audit --no-fund
 
 # Rendre node_modules/.bin explicitement disponible dans le PATH
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
