@@ -21,31 +21,39 @@ ENV NODE_OPTIONS=--dns-result-order=ipv4first
 
 COPY package.json package-lock.json ./
 
+# The bundled npm (10.8.2) has a known "Exit handler never called!" bug
+# that has hit every single build on this host so far. Confirmed by
+# testing: npm ci still exits 0 when it happens, it just silently fails to
+# finish linking devDependency binaries (tsc, vite) into node_modules/.bin
+# right at the end of the install. Upgrading npm first is a real attempt
+# at a fix (this bug has multiple root causes fixed across npm releases).
+RUN npm install -g npm@latest
+
+# Rendre node_modules/.bin explicitement disponible dans le PATH
+# pour garantir que tsc et vite sont trouvés quel que soit l'environnement
+ENV PATH="/app/node_modules/.bin:$PATH"
+
 # npm ci with a clean, deterministic install avoids the known npm optional-
 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
 # (build fails silently before producing dist/). Debian slim uses glibc,
 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
 # network round-trips to the registry that aren't needed for a build.
 #
-# DIAGNOSTIC: npm ci has been crashing deterministically ~72s in with
-# "Exit handler never called!" across multiple unrelated fix attempts
-# (update-notifier, IPv4-first DNS), which means the real cause is still
-# unknown. npm always writes a detailed debug log to /root/.npm/_logs even
-# when this bug swallows the console output, but that log is normally lost
-# when the layer fails. Dumping it here on failure (still exiting non-zero
-# so the build fails loudly) lets us see what npm was actually doing right
-# before it died, instead of guessing again. Remove this once root-caused.
-RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
-
-# Rendre node_modules/.bin explicitement disponible dans le PATH
-# pour garantir que tsc et vite sont trouvés quel que soit l'environnement
-ENV PATH="/app/node_modules/.bin:$PATH"
-
-# Vérifier que TypeScript et Vite ont bien été installés localement avant de
-# continuer, pour échouer avec un message clair plutôt que de laisser npx
-# retomber sur un package npm sans rapport portant le même nom.
-RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
-RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+# Since npm's exit code can't be trusted here (see above), don't rely on
+# "||" to detect failure - explicitly verify the binaries we actually need
+# exist afterward, and retry the whole install from a clean node_modules
+# a few times if they don't, before failing loudly.
+RUN for i in 1 2 3; do \
+      echo "npm ci attempt $i/3..."; \
+      rm -rf node_modules; \
+      npm ci --include=dev --no-audit --no-fund; \
+      if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then \
+        echo "npm ci attempt $i produced a working install."; \
+        exit 0; \
+      fi; \
+      echo "npm ci attempt $i did not install tsc/vite - retrying."; \
+    done; \
+    echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
 
 COPY . .
 
