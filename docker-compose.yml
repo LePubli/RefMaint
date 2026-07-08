@@ -36,6 +36,7 @@ services:
         condition: service_healthy
     networks:
       - trimaint_net
+      - coolify
     expose:
       - "8000"
 
@@ -52,6 +53,7 @@ services:
       - backend
     networks:
       - trimaint_net
+      - coolify
 
 volumes:
   postgres_data:
@@ -62,3 +64,5 @@ volumes:
 networks:
   trimaint_net:
     driver: bridge
+    coolify:   
+      external: true 
