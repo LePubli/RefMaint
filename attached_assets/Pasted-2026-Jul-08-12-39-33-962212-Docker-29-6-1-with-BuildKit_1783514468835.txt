@@ -1,0 +1,427 @@
+2026-Jul-08 12:39:33.962212 Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 12:39:33.975812 Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 12:39:34.420000 Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:39:34.613772 [CMD]: docker stop --time=30 y2l4zpap3wpcuzrshqwwyr3s
+2026-Jul-08 12:39:34.613772 Flag --time has been deprecated, use --timeout instead
+2026-Jul-08 12:39:34.617646 Error response from daemon: No such container: y2l4zpap3wpcuzrshqwwyr3s
+2026-Jul-08 12:39:34.882871 [CMD]: docker run -d --network 'coolify' --name y2l4zpap3wpcuzrshqwwyr3s --rm -v /root/.docker/buildx:/root/.docker/buildx -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:39:34.882871 3159d3392f2bf762227b6edcf37cd2d4a4b2a2ba466a921f84646dd6fa0824af
+2026-Jul-08 12:39:36.085324 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'GIT_SSH_COMMAND="ssh -o ConnectTimeout=30 -p 22 -o Port=22 -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git ls-remote '\''https://github.com/LePubli/RefMaint'\'' '\''refs/heads/main'\'''
+2026-Jul-08 12:39:36.085324 104524a582476fcb1da7362e053933e9b185dcfd refs/heads/main
+2026-Jul-08 12:39:36.106870 ----------------------------------------
+2026-Jul-08 12:39:36.118347 Importing LePubli/RefMaint:main (commit sha 104524a582476fcb1da7362e053933e9b185dcfd) to /artifacts/y2l4zpap3wpcuzrshqwwyr3s.
+2026-Jul-08 12:39:36.401316 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'git -c http.version=HTTP/1.1 clone --depth=1 --recurse-submodules --shallow-submodules -b '\''main'\'' '\''https://github.com/LePubli/RefMaint'\'' '\''/artifacts/y2l4zpap3wpcuzrshqwwyr3s'\'' && cd '\''/artifacts/y2l4zpap3wpcuzrshqwwyr3s'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 fetch --depth=1 origin '\''104524a582476fcb1da7362e053933e9b185dcfd'\'' && git -c http.version=HTTP/1.1 -c advice.detachedHead=false checkout '\''104524a582476fcb1da7362e053933e9b185dcfd'\'' >/dev/null 2>&1 && cd '\''/artifacts/y2l4zpap3wpcuzrshqwwyr3s'\'' && if [ -f .gitmodules ]; then sed -i "s#git@\(.*\):#https://\1/#g" '\''/artifacts/y2l4zpap3wpcuzrshqwwyr3s'\''/.gitmodules || true && git -c http.version=HTTP/1.1 submodule sync && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 submodule update --init --recursive --depth=1; fi && cd '\''/artifacts/y2l4zpap3wpcuzrshqwwyr3s'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 lfs pull'
+2026-Jul-08 12:39:36.401316 Cloning into '/artifacts/y2l4zpap3wpcuzrshqwwyr3s'...
+2026-Jul-08 12:39:37.999222 From https://github.com/LePubli/RefMaint
+2026-Jul-08 12:39:37.999222 * branch 104524a582476fcb1da7362e053933e9b185dcfd -> FETCH_HEAD
+2026-Jul-08 12:39:38.758605 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'cd /artifacts/y2l4zpap3wpcuzrshqwwyr3s && git log -1 '\''104524a582476fcb1da7362e053933e9b185dcfd'\'' --pretty=%B'
+2026-Jul-08 12:39:38.758605 Document concurrent build resource contention issue and add supporting assets to agent memory
+2026-Jul-08 12:39:38.758605
+2026-Jul-08 12:39:38.758605 Replit-Commit-Author: Agent
+2026-Jul-08 12:39:41.433042 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'test -f /artifacts/y2l4zpap3wpcuzrshqwwyr3s/backend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:39:41.433042 exists
+2026-Jul-08 12:39:41.692939 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'cat /artifacts/y2l4zpap3wpcuzrshqwwyr3s/backend/Dockerfile'
+2026-Jul-08 12:39:41.692939 FROM python:3.11-slim
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 WORKDIR /app
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 # No compiler needed: psycopg2-binary, bcrypt, cryptography and pillow all
+2026-Jul-08 12:39:41.692939 # ship prebuilt manylinux wheels for this Python/arch, so gcc/libpq-dev were
+2026-Jul-08 12:39:41.692939 # unused dead weight here. Removing them cuts unnecessary CPU/network/memory
+2026-Jul-08 12:39:41.692939 # load during the build, which matters because Coolify builds backend and
+2026-Jul-08 12:39:41.692939 # frontend concurrently (buildx bake) and the combined peak usage was likely
+2026-Jul-08 12:39:41.692939 # contributing to intermittent build failures on constrained hosts.
+2026-Jul-08 12:39:41.692939 COPY requirements.txt .
+2026-Jul-08 12:39:41.692939 RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 COPY . .
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 EXPOSE 8000
+2026-Jul-08 12:39:41.692939
+2026-Jul-08 12:39:41.692939 ENTRYPOINT ["./entrypoint.sh"]
+2026-Jul-08 12:39:41.959163 Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 12:39:42.215952 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'test -f /artifacts/y2l4zpap3wpcuzrshqwwyr3s/frontend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:39:42.215952 exists
+2026-Jul-08 12:39:42.483312 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'cat /artifacts/y2l4zpap3wpcuzrshqwwyr3s/frontend/Dockerfile'
+2026-Jul-08 12:39:42.483312 FROM node:20-bookworm-slim AS builder
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 WORKDIR /app
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # npm's update-notifier hangs its own exit handler when stdout isn't a TTY
+2026-Jul-08 12:39:42.483312 # (exactly the case in a Docker build), causing a deterministic
+2026-Jul-08 12:39:42.483312 # "npm error Exit handler never called!" crash right after it prints
+2026-Jul-08 12:39:42.483312 # "New major version of npm available!". CI=true and update-notifier=false
+2026-Jul-08 12:39:42.483312 # both disable that check so npm ci can actually finish and install
+2026-Jul-08 12:39:42.483312 # devDependencies (like typescript) instead of silently aborting mid-install.
+2026-Jul-08 12:39:42.483312 ENV CI=true
+2026-Jul-08 12:39:42.483312 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # The build host has a broken IPv6 route: Node's DNS resolver tries an AAAA
+2026-Jul-08 12:39:42.483312 # address for registry.npmjs.org first, gets no response, and silently hangs
+2026-Jul-08 12:39:42.483312 # until the OS-level TCP connect times out (~72s, matching the consistent
+2026-Jul-08 12:39:42.483312 # stall seen in Coolify builds) before it can fall back to IPv4. That long
+2026-Jul-08 12:39:42.483312 # hang is what was tripping npm's "Exit handler never called!" bug. Forcing
+2026-Jul-08 12:39:42.483312 # IPv4-first resolution avoids the hang entirely.
+2026-Jul-08 12:39:42.483312 ENV NODE_OPTIONS=--dns-result-order=ipv4first
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 COPY package.json package-lock.json ./
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # npm ci with a clean, deterministic install avoids the known npm optional-
+2026-Jul-08 12:39:42.483312 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
+2026-Jul-08 12:39:42.483312 # (build fails silently before producing dist/). Debian slim uses glibc,
+2026-Jul-08 12:39:42.483312 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
+2026-Jul-08 12:39:42.483312 # network round-trips to the registry that aren't needed for a build.
+2026-Jul-08 12:39:42.483312 #
+2026-Jul-08 12:39:42.483312 # DIAGNOSTIC: npm ci has been crashing deterministically ~72s in with
+2026-Jul-08 12:39:42.483312 # "Exit handler never called!" across multiple unrelated fix attempts
+2026-Jul-08 12:39:42.483312 # (update-notifier, IPv4-first DNS), which means the real cause is still
+2026-Jul-08 12:39:42.483312 # unknown. npm always writes a detailed debug log to /root/.npm/_logs even
+2026-Jul-08 12:39:42.483312 # when this bug swallows the console output, but that log is normally lost
+2026-Jul-08 12:39:42.483312 # when the layer fails. Dumping it here on failure (still exiting non-zero
+2026-Jul-08 12:39:42.483312 # so the build fails loudly) lets us see what npm was actually doing right
+2026-Jul-08 12:39:42.483312 # before it died, instead of guessing again. Remove this once root-caused.
+2026-Jul-08 12:39:42.483312 RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # Rendre node_modules/.bin explicitement disponible dans le PATH
+2026-Jul-08 12:39:42.483312 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
+2026-Jul-08 12:39:42.483312 ENV PATH="/app/node_modules/.bin:$PATH"
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # Vérifier que TypeScript et Vite ont bien été installés localement avant de
+2026-Jul-08 12:39:42.483312 # continuer, pour échouer avec un message clair plutôt que de laisser npx
+2026-Jul-08 12:39:42.483312 # retomber sur un package npm sans rapport portant le même nom.
+2026-Jul-08 12:39:42.483312 RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:39:42.483312 RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 COPY . .
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # Utiliser directement les binaires locaux (pas npx) pour ne jamais risquer
+2026-Jul-08 12:39:42.483312 # un fallback silencieux vers un package du registre npm portant le même nom.
+2026-Jul-08 12:39:42.483312 RUN tsc -b
+2026-Jul-08 12:39:42.483312 RUN vite build
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 # Filet de sécurité : si vite build a réussi mais n'a pas produit dist/,
+2026-Jul-08 12:39:42.483312 # on échoue explicitement plutôt que de laisser nginx servir un dossier vide.
+2026-Jul-08 12:39:42.483312 RUN test -f dist/index.html || (echo "ERREUR: le build Vite n'a pas produit dist/index.html" && exit 1)
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 FROM nginx:alpine
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 COPY --from=builder /app/dist /usr/share/nginx/html
+2026-Jul-08 12:39:42.483312 COPY nginx.conf /etc/nginx/conf.d/default.conf
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 EXPOSE 80
+2026-Jul-08 12:39:42.483312
+2026-Jul-08 12:39:42.483312 CMD ["nginx", "-g", "daemon off;"]
+2026-Jul-08 12:39:42.764137 Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 12:39:42.775844 Pulling & building required images.
+2026-Jul-08 12:39:42.838079 Creating build-time .env file in /artifacts (outside Docker context).
+2026-Jul-08 12:39:43.113398 Adding build arguments to Docker Compose build command.
+2026-Jul-08 12:39:43.756158 [CMD]: docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/y2l4zpap3wpcuzrshqwwyr3s -f /artifacts/y2l4zpap3wpcuzrshqwwyr3s/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:39:43.756158 #1 [internal] load local bake definitions
+2026-Jul-08 12:39:43.873950 #1 reading from stdin 1.62kB done
+2026-Jul-08 12:39:43.873950 #1 DONE 0.0s
+2026-Jul-08 12:39:44.046485 #2 [backend internal] load build definition from Dockerfile
+2026-Jul-08 12:39:44.046485 #2 transferring dockerfile: 795B done
+2026-Jul-08 12:39:44.046485 #2 DONE 0.0s
+2026-Jul-08 12:39:44.046485
+2026-Jul-08 12:39:44.046485 #3 [frontend internal] load build definition from Dockerfile
+2026-Jul-08 12:39:44.046485 #3 transferring dockerfile: 3.63kB done
+2026-Jul-08 12:39:44.046485 #3 DONE 0.0s
+2026-Jul-08 12:39:44.046485
+2026-Jul-08 12:39:44.046485 #4 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:39:44.646339 #4 DONE 0.8s
+2026-Jul-08 12:39:44.646339
+2026-Jul-08 12:39:44.646339 #5 [frontend internal] load metadata for docker.io/library/nginx:alpine
+2026-Jul-08 12:39:44.751305 #5 DONE 0.8s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #6 [backend internal] load metadata for docker.io/library/python:3.11-slim
+2026-Jul-08 12:39:44.751305 #6 DONE 0.8s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #7 [backend internal] load .dockerignore
+2026-Jul-08 12:39:44.751305 #7 transferring context: 93B done
+2026-Jul-08 12:39:44.751305 #7 DONE 0.0s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #8 [frontend internal] load .dockerignore
+2026-Jul-08 12:39:44.751305 #8 transferring context: 71B done
+2026-Jul-08 12:39:44.751305 #8 DONE 0.0s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #9 [backend 1/6] FROM docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3
+2026-Jul-08 12:39:44.751305 #9 resolve docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3 0.0s done
+2026-Jul-08 12:39:44.751305 #9 DONE 0.0s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #10 [backend 2/6] WORKDIR /app
+2026-Jul-08 12:39:44.751305 #10 CACHED
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #11 [frontend internal] load build context
+2026-Jul-08 12:39:44.751305 #11 transferring context: 326.58kB 0.0s done
+2026-Jul-08 12:39:44.751305 #11 DONE 0.0s
+2026-Jul-08 12:39:44.751305
+2026-Jul-08 12:39:44.751305 #12 [backend internal] load build context
+2026-Jul-08 12:39:44.751305 #12 transferring context: 76.83kB 0.0s done
+2026-Jul-08 12:39:44.986916 #12 DONE 0.0s
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #13 [frontend builder 1/10] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+2026-Jul-08 12:39:44.986916 #13 resolve docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0 0.0s done
+2026-Jul-08 12:39:44.986916 #13 DONE 0.0s
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #14 [frontend builder 2/10] WORKDIR /app
+2026-Jul-08 12:39:44.986916 #14 CACHED
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #15 [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+2026-Jul-08 12:39:44.986916 #15 resolve docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa 0.0s done
+2026-Jul-08 12:39:44.986916 #15 CACHED
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #16 [backend 3/6] COPY requirements.txt .
+2026-Jul-08 12:39:44.986916 #16 DONE 0.1s
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #17 [frontend builder 3/10] COPY package.json package-lock.json ./
+2026-Jul-08 12:39:44.986916 #17 DONE 0.1s
+2026-Jul-08 12:39:44.986916
+2026-Jul-08 12:39:44.986916 #18 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:39:50.579090 #18 ...
+2026-Jul-08 12:39:50.579090
+2026-Jul-08 12:39:50.579090 #19 [backend 4/6] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:39:50.579090 #19 4.400 Collecting fastapi==0.115.0 (from -r requirements.txt (line 1))
+2026-Jul-08 12:39:50.579090 #19 4.440 Downloading fastapi-0.115.0-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:39:50.579090 #19 4.566 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:50.579090 #19 4.574 Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+2026-Jul-08 12:39:50.579090 #19 4.649 Collecting gunicorn==22.0.0 (from -r requirements.txt (line 3))
+2026-Jul-08 12:39:50.579090 #19 4.659 Downloading gunicorn-22.0.0-py3-none-any.whl.metadata (4.4 kB)
+2026-Jul-08 12:39:50.579090 #19 5.747 Collecting sqlalchemy==2.0.35 (from -r requirements.txt (line 4))
+2026-Jul-08 12:39:50.706512 #19 5.755 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB)
+2026-Jul-08 12:39:50.706512 #19 5.875 Collecting alembic==1.13.3 (from -r requirements.txt (line 5))
+2026-Jul-08 12:39:50.864837 #19 5.883 Downloading alembic-1.13.3-py3-none-any.whl.metadata (7.4 kB)
+2026-Jul-08 12:39:50.937758 #19 6.107 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 6))
+2026-Jul-08 12:39:51.142595 #19 6.112 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:39:51.142595 #19 6.151 Collecting python-jose==3.3.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:51.142595 #19 6.156 Downloading python_jose-3.3.0-py2.py3-none-any.whl.metadata (5.4 kB)
+2026-Jul-08 12:39:51.142595 #19 6.309 Collecting bcrypt==4.2.1 (from -r requirements.txt (line 8))
+2026-Jul-08 12:39:51.353980 #19 6.316 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl.metadata (9.8 kB)
+2026-Jul-08 12:39:51.353980 #19 6.366 Collecting python-multipart==0.0.12 (from -r requirements.txt (line 9))
+2026-Jul-08 12:39:51.353980 #19 6.372 Downloading python_multipart-0.0.12-py3-none-any.whl.metadata (1.9 kB)
+2026-Jul-08 12:39:51.813617 #19 6.982 Collecting pillow==11.0.0 (from -r requirements.txt (line 10))
+2026-Jul-08 12:39:51.914214 #19 6.991 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-Jul-08 12:39:51.914214 #19 7.037 Collecting qrcode==8.0 (from -r requirements.txt (line 11))
+2026-Jul-08 12:39:51.914214 #19 7.041 Downloading qrcode-8.0-py3-none-any.whl.metadata (17 kB)
+2026-Jul-08 12:39:51.914214 #19 7.083 Collecting aiofiles==24.1.0 (from -r requirements.txt (line 12))
+2026-Jul-08 12:39:52.070724 #19 7.089 Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
+2026-Jul-08 12:39:52.161190 #19 7.330 Collecting starlette<0.39.0,>=0.37.2 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:52.318103 #19 7.336 Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+2026-Jul-08 12:39:52.730380 #19 7.899 Collecting pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:52.899032 #19 7.905 Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+2026-Jul-08 12:39:52.899032 #19 7.911 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 101.9 MB/s eta 0:00:00
+2026-Jul-08 12:39:52.899032 #19 7.971 Collecting typing-extensions>=4.8.0 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:52.899032 #19 7.977 Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-Jul-08 12:39:52.899032 #19 8.068 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:53.121503 #19 8.075 Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:39:53.121503 #19 8.109 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:53.121503 #19 8.115 Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-Jul-08 12:39:53.121503 #19 8.139 Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from gunicorn==22.0.0->-r requirements.txt (line 3)) (26.2)
+2026-Jul-08 12:39:53.625159 #19 8.793 Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.35->-r requirements.txt (line 4))
+2026-Jul-08 12:39:53.777865 #19 8.796 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+2026-Jul-08 12:39:53.855701 #19 9.024 Collecting Mako (from alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:39:53.992329 #19 9.028 Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
+2026-Jul-08 12:39:53.992329 #19 9.099 Collecting ecdsa!=0.15 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:53.992329 #19 9.105 Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+2026-Jul-08 12:39:53.992329 #19 9.161 Collecting rsa (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:54.231029 #19 9.167 Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+2026-Jul-08 12:39:54.231029 #19 9.245 Collecting pyasn1 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:54.231029 #19 9.250 Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+2026-Jul-08 12:39:54.990353 #19 10.16 Collecting cryptography>=3.4.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:55.148117 #19 10.17 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-Jul-08 12:39:55.155921 #19 10.32 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:55.376349 #19 10.33 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+2026-Jul-08 12:39:55.376349 #19 10.39 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:55.376349 #19 10.39 Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:39:55.392185 #19 10.56 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:55.550504 #19 10.57 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-Jul-08 12:39:55.652352 #19 10.82 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:55.810683 #19 10.83 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:39:55.932147 #19 11.10 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:56.093428 #19 11.11 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:39:56.265756 #19 11.43 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:39:56.423167 #19 11.44 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+2026-Jul-08 12:39:56.641134 #19 11.81 Collecting cffi>=2.0.0 (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:56.791228 #19 11.82 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-Jul-08 12:39:56.791228 #19 11.86 Collecting six>=1.9.0 (from ecdsa!=0.15->python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:39:56.791228 #19 11.87 Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-Jul-08 12:39:56.791228 #19 11.96 Collecting annotated-types>=0.6.0 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:56.949255 #19 11.97 Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-Jul-08 12:39:59.571323 #19 14.74 Collecting pydantic-core==2.46.4 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:59.760863 #19 14.75 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+2026-Jul-08 12:39:59.760863 #19 14.79 Collecting typing-inspection>=0.4.2 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:59.760863 #19 14.80 Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:39:59.760863 #19 14.93 Collecting anyio<5,>=3.4.0 (from starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:39:59.915935 #19 14.93 Downloading anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+2026-Jul-08 12:40:00.070021 #19 15.24 Collecting MarkupSafe>=0.9.2 (from Mako->alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:40:00.229647 #19 15.25 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-Jul-08 12:40:00.255149 #19 15.42 Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:40:00.482916 #19 15.43 Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+2026-Jul-08 12:40:00.482916 #19 15.49 Collecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:40:00.482916 #19 15.50 Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+2026-Jul-08 12:40:00.494343 #19 15.66 Downloading fastapi-0.115.0-py3-none-any.whl (94 kB)
+2026-Jul-08 12:40:00.608691 #19 15.67 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.6/94.6 kB 112.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.615175 #19 15.68 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+2026-Jul-08 12:40:00.615175 #19 15.68 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 149.0 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.615175 #19 15.69 Downloading gunicorn-22.0.0-py3-none-any.whl (84 kB)
+2026-Jul-08 12:40:00.615175 #19 15.69 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.4/84.4 kB 126.4 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.615175 #19 15.70 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+2026-Jul-08 12:40:00.615175 #19 15.73 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 125.4 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.615175 #19 15.74 Downloading alembic-1.13.3-py3-none-any.whl (233 kB)
+2026-Jul-08 12:40:00.615175 #19 15.74 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.2/233.2 kB 128.5 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.615175 #19 15.75 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+2026-Jul-08 12:40:00.615175 #19 15.78 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 144.1 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.714080 #19 15.78 Downloading python_jose-3.3.0-py2.py3-none-any.whl (33 kB)
+2026-Jul-08 12:40:00.714080 #19 15.79 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl (278 kB)
+2026-Jul-08 12:40:00.714080 #19 15.80 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 278.6/278.6 kB 72.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.714080 #19 15.81 Downloading python_multipart-0.0.12-py3-none-any.whl (23 kB)
+2026-Jul-08 12:40:00.714080 #19 15.81 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.4 MB)
+2026-Jul-08 12:40:00.714080 #19 15.86 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 108.6 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.714080 #19 15.87 Downloading qrcode-8.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:40:00.714080 #19 15.87 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.7/45.7 kB 33.2 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.714080 #19 15.88 Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+2026-Jul-08 12:40:00.820914 #19 15.89 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-Jul-08 12:40:00.820914 #19 15.89 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 130.0 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.820914 #19 15.90 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+2026-Jul-08 12:40:00.820914 #19 15.95 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 117.4 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.820914 #19 15.96 Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+2026-Jul-08 12:40:00.820914 #19 15.96 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 150.8/150.8 kB 118.6 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.820914 #19 15.97 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (617 kB)
+2026-Jul-08 12:40:00.820914 #19 15.98 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 617.4/617.4 kB 121.6 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.820914 #19 15.99 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-Jul-08 12:40:00.919924 #19 15.99 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (464 kB)
+2026-Jul-08 12:40:00.919924 #19 16.00 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 464.7/464.7 kB 165.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.919924 #19 16.01 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-Jul-08 12:40:00.919924 #19 16.01 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 205.8 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.919924 #19 16.02 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-Jul-08 12:40:00.919924 #19 16.05 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 126.8 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.919924 #19 16.05 Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+2026-Jul-08 12:40:00.919924 #19 16.06 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2026-Jul-08 12:40:00.919924 #19 16.07 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 141.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.919924 #19 16.08 Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+2026-Jul-08 12:40:00.919924 #19 16.08 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.5/71.5 kB 151.9 MB/s eta 0:00:00
+2026-Jul-08 12:40:00.919924 #19 16.09 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:40:01.021981 #19 16.09 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 140.9 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.10 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+2026-Jul-08 12:40:01.021981 #19 16.13 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 163.8 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.13 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+2026-Jul-08 12:40:01.021981 #19 16.14 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 456.9/456.9 kB 146.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.15 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+2026-Jul-08 12:40:01.021981 #19 16.15 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.6/184.6 kB 80.8 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.16 Downloading mako-1.3.12-py3-none-any.whl (78 kB)
+2026-Jul-08 12:40:01.021981 #19 16.17 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.5/78.5 kB 143.4 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.17 Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+2026-Jul-08 12:40:01.021981 #19 16.18 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 129.9 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.021981 #19 16.18 Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+2026-Jul-08 12:40:01.021981 #19 16.19 Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-Jul-08 12:40:01.226778 #19 16.20 Downloading anyio-4.14.1-py3-none-any.whl (124 kB)
+2026-Jul-08 12:40:01.226778 #19 16.20 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.9/124.9 kB 169.6 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.226778 #19 16.21 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+2026-Jul-08 12:40:01.226778 #19 16.21 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 217.9/217.9 kB 175.7 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.226778 #19 16.22 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-Jul-08 12:40:01.226778 #19 16.22 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-Jul-08 12:40:01.226778 #19 16.23 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-Jul-08 12:40:01.226778 #19 16.23 Downloading idna-3.18-py3-none-any.whl (65 kB)
+2026-Jul-08 12:40:01.226778 #19 16.24 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 128.0 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.226778 #19 16.24 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+2026-Jul-08 12:40:01.226778 #19 16.24 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 153.0 MB/s eta 0:00:00
+2026-Jul-08 12:40:01.698591 #19 16.87 Installing collected packages: websockets, uvloop, typing-extensions, six, qrcode, pyyaml, python-multipart, python-dotenv, pycparser, pyasn1, psycopg2-binary, pillow, MarkupSafe, idna, httptools, h11, gunicorn, greenlet, click, bcrypt, annotated-types, aiofiles, uvicorn, typing-inspection, sqlalchemy, rsa, pydantic-core, Mako, ecdsa, cffi, anyio, watchfiles, starlette, python-jose, pydantic, cryptography, alembic, fastapi
+2026-Jul-08 12:40:09.402780 #19 24.57 Successfully installed Mako-1.3.12 MarkupSafe-3.0.3 aiofiles-24.1.0 alembic-1.13.3 annotated-types-0.7.0 anyio-4.14.1 bcrypt-4.2.1 cffi-2.1.0 click-8.4.2 cryptography-49.0.0 ecdsa-0.19.2 fastapi-0.115.0 greenlet-3.5.3 gunicorn-22.0.0 h11-0.16.0 httptools-0.8.0 idna-3.18 pillow-11.0.0 psycopg2-binary-2.9.10 pyasn1-0.6.3 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 python-dotenv-1.2.2 python-jose-3.3.0 python-multipart-0.0.12 pyyaml-6.0.3 qrcode-8.0 rsa-4.9.1 six-1.17.0 sqlalchemy-2.0.35 starlette-0.38.6 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.30.6 uvloop-0.22.1 watchfiles-1.2.0 websockets-16.0
+2026-Jul-08 12:40:09.554270 #19 24.57 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+2026-Jul-08 12:40:09.594457 #19 24.76
+2026-Jul-08 12:40:09.594457 #19 24.76 [notice] A new release of pip is available: 24.0 -> 26.1.2
+2026-Jul-08 12:40:09.594457 #19 24.76 [notice] To update, run: pip install --upgrade pip
+2026-Jul-08 12:40:11.278134 #19 DONE 26.4s
+2026-Jul-08 12:40:11.278134
+2026-Jul-08 12:40:11.278134 #18 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:40:11.528152 #18 ...
+2026-Jul-08 12:40:11.528152
+2026-Jul-08 12:40:11.528152 #20 [backend 5/6] COPY . .
+2026-Jul-08 12:40:11.528152 #20 DONE 0.1s
+2026-Jul-08 12:40:11.528152
+2026-Jul-08 12:40:11.528152 #21 [backend 6/6] RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:40:11.644464 #21 DONE 0.3s
+2026-Jul-08 12:40:11.644464
+2026-Jul-08 12:40:11.644464 #18 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:40:11.800640 #18 ...
+2026-Jul-08 12:40:11.800640
+2026-Jul-08 12:40:11.800640 #22 [backend] exporting to image
+2026-Jul-08 12:40:11.800640 #22 exporting layers
+2026-Jul-08 12:40:21.286643 #22 exporting layers 9.6s done
+2026-Jul-08 12:40:21.507441 #22 exporting manifest sha256:2937faae9a1d1379f2756608721fe67a2ee06e62f67c600998d54075c2506a1b 0.0s done
+2026-Jul-08 12:40:21.507441 #22 exporting config sha256:753301403e249d4ca6f8b52ec5e86db6f367365a8d08a1275bd4c7c83444ed6a 0.0s done
+2026-Jul-08 12:40:21.507441 #22 exporting attestation manifest sha256:034a3903210416d94035552e45f1b066602a336ce8a509e777d97cd7a84b8266 0.0s done
+2026-Jul-08 12:40:21.507441 #22 exporting manifest list sha256:4f3babfac5a23b20a5a1adeb71cf8ab22222a368b7e92afd7a2b1a7a810d8dc5 0.0s done
+2026-Jul-08 12:40:21.507441 #22 naming to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:104524a582476fcb1da7362e053933e9b185dcfd done
+2026-Jul-08 12:40:21.507441 #22 unpacking to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:104524a582476fcb1da7362e053933e9b185dcfd
+2026-Jul-08 12:40:23.223629 #22 unpacking to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:104524a582476fcb1da7362e053933e9b185dcfd 1.9s done
+2026-Jul-08 12:40:23.390067 #22 DONE 11.6s
+2026-Jul-08 12:40:23.390067
+2026-Jul-08 12:40:23.390067 #23 [backend] resolving provenance for metadata file
+2026-Jul-08 12:40:23.562701 #23 DONE 0.0s
+2026-Jul-08 12:40:23.562701
+2026-Jul-08 12:40:23.562701 #18 [frontend builder 4/10] RUN npm ci --include=dev --no-audit --no-fund || (echo "===== npm debug log ====="; cat /root/.npm/_logs/*-debug-0.log 2>&1; echo "===== end npm debug log ====="; exit 1)
+2026-Jul-08 12:40:57.299277 #18 72.46 npm error Exit handler never called!
+2026-Jul-08 12:40:57.499643 #18 72.46 npm error This is an error with npm itself. Please report this error at:
+2026-Jul-08 12:40:57.499643 #18 72.46 npm error <https://github.com/npm/cli/issues>
+2026-Jul-08 12:40:57.499643 #18 72.46 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-08T12_39_45_364Z-debug-0.log
+2026-Jul-08 12:40:57.499643 #18 DONE 72.5s
+2026-Jul-08 12:40:57.499643
+2026-Jul-08 12:40:57.499643 #24 [frontend builder 5/10] RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:40:57.655690 #24 0.307 ERREUR: TypeScript n'a pas été installé par npm ci
+2026-Jul-08 12:40:57.750782 #24 ERROR: process "/bin/sh -c test -x node_modules/.bin/tsc || (echo \"ERREUR: TypeScript n'a pas été installé par npm ci\" && exit 1)" did not complete successfully: exit code: 1
+2026-Jul-08 12:40:57.750782 ------
+2026-Jul-08 12:40:57.750782 > [frontend builder 5/10] RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1):
+2026-Jul-08 12:40:57.750782 0.307 ERREUR: TypeScript n'a pas été installé par npm ci
+2026-Jul-08 12:40:57.750782 ------
+2026-Jul-08 12:40:57.757593 Dockerfile:52
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 --------------------
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 50 | # continuer, pour échouer avec un message clair plutôt que de laisser npx
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 51 | # retomber sur un package npm sans rapport portant le même nom.
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 52 | >>> RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 53 | RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 54 |
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 --------------------
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 target frontend: failed to solve: process "/bin/sh -c test -x node_modules/.bin/tsc || (echo \"ERREUR: TypeScript n'a pas été installé par npm ci\" && exit 1)" did not complete successfully: exit code: 1
+2026-Jul-08 12:40:57.757593
+2026-Jul-08 12:40:57.757593 exit status 1
+2026-Jul-08 12:40:57.850529 ========================================
+2026-Jul-08 12:40:57.867294 Deployment failed: Command execution failed (exit code 1): docker exec y2l4zpap3wpcuzrshqwwyr3s bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/y2l4zpap3wpcuzrshqwwyr3s -f /artifacts/y2l4zpap3wpcuzrshqwwyr3s/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:40:57.867294 Error: Dockerfile:52
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 --------------------
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 50 | # continuer, pour échouer avec un message clair plutôt que de laisser npx
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 51 | # retomber sur un package npm sans rapport portant le même nom.
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 52 | >>> RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 53 | RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 54 |
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 --------------------
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 target frontend: failed to solve: process "/bin/sh -c test -x node_modules/.bin/tsc || (echo \"ERREUR: TypeScript n'a pas été installé par npm ci\" && exit 1)" did not complete successfully: exit code: 1
+2026-Jul-08 12:40:57.867294
+2026-Jul-08 12:40:57.867294 exit status 1
+2026-Jul-08 12:40:57.888199 Error type: App\Exceptions\DeploymentException
+2026-Jul-08 12:40:57.907252 Error code: 0
+2026-Jul-08 12:40:57.924348 Location: /var/www/html/app/Traits/ExecuteRemoteCommand.php:242
+2026-Jul-08 12:40:57.942125 Stack trace (first 5 lines):
+2026-Jul-08 12:40:57.958997 #0 /var/www/html/app/Traits/ExecuteRemoteCommand.php(106): App\Jobs\ApplicationDeploymentJob->executeCommandWithProcess()
+2026-Jul-08 12:40:57.976512 #1 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(275): App\Jobs\ApplicationDeploymentJob->{closure:App\Traits\ExecuteRemoteCommand::execute_remote_command():72}()
+2026-Jul-08 12:40:57.997563 #2 /var/www/html/app/Traits/ExecuteRemoteCommand.php(72): Illuminate\Support\Collection->each()
+2026-Jul-08 12:40:58.017621 #3 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(773): App\Jobs\ApplicationDeploymentJob->execute_remote_command()
+2026-Jul-08 12:40:58.036906 #4 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(497): App\Jobs\ApplicationDeploymentJob->deploy_docker_compose_buildpack()
+2026-Jul-08 12:40:58.057973 ========================================
