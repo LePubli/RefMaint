@@ -1,0 +1,53 @@
+2026-Jul-08 12:03:18.049202
+Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 12:03:18.069617
+Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 12:03:18.541547
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:03:20.332909
+----------------------------------------
+2026-Jul-08 12:03:20.346569
+Importing LePubli/RefMaint:main (commit sha 9b510cbeca0fc89cf7ac80f486fea06e10604d26) to /artifacts/rn2xhy3zbplvhct69c51bl0v.
+2026-Jul-08 12:03:26.154814
+Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 12:03:27.067949
+Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 12:03:27.083363
+Pulling & building required images.
+2026-Jul-08 12:03:27.438685
+Adding build arguments to Docker Compose build command.
+2026-Jul-08 12:04:45.803299
+========================================
+2026-Jul-08 12:04:45.825476
+Deployment failed: Command execution failed (exit code 1): docker exec rn2xhy3zbplvhct69c51bl0v bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq  docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/rn2xhy3zbplvhct69c51bl0v -f /artifacts/rn2xhy3zbplvhct69c51bl0v/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:04:45.825476
+Error: Dockerfile:27
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+--------------------
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+25 |     # le code de sortie de tee (quasi toujours 0), ce qui masquait les erreurs
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+26 |     # réelles de build et ne les faisait remonter à Docker/Coolify.
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+27 | >>> RUN npx tsc -b
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+28 |     RUN npx vite build
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+29 |
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+--------------------
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+target frontend: failed to solve: process "/bin/sh -c npx tsc -b" did not complete successfully: exit code: 1
+2026-Jul-08 12:04:45.825476
+2026-Jul-08 12:04:45.825476
+exit status 1
+2026-Jul-08 12:04:46.069432
+========================================
