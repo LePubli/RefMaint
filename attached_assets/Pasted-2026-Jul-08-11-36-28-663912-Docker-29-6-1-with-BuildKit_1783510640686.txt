@@ -1,0 +1,55 @@
+2026-Jul-08 11:36:28.663912
+Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 11:36:28.677602
+Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 11:36:29.110479
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 11:36:30.653684
+----------------------------------------
+2026-Jul-08 11:36:30.664548
+Importing LePubli/RefMaint:main (commit sha 0913bdc02181d504a4bcfdf870ea8a6b731fe9f2) to /artifacts/waolhj932bxupsoukd0v0olr.
+2026-Jul-08 11:36:35.985254
+Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 11:36:36.801671
+Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 11:36:36.813940
+Pulling & building required images.
+2026-Jul-08 11:36:37.180460
+Adding build arguments to Docker Compose build command.
+2026-Jul-08 11:36:38.006430
+========================================
+2026-Jul-08 11:36:38.017562
+Deployment failed: Command execution failed (exit code 1): docker exec waolhj932bxupsoukd0v0olr bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq  docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/waolhj932bxupsoukd0v0olr -f /artifacts/waolhj932bxupsoukd0v0olr/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 11:36:38.017562
+Error: Dockerfile:12
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+--------------------
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+10 |     COPY package.json package-lock.json ./
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+11 |
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+12 | >>> <<<<<<< HEAD
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+13 |     # npm ci with a clean, deterministic install avoids the known npm optional-
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+14 |     # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+--------------------
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+target frontend: failed to solve: dockerfile parse error on line 12: unknown instruction: <<<<<<<
+2026-Jul-08 11:36:38.017562
+2026-Jul-08 11:36:38.017562
+exit status 1
+2026-Jul-08 11:36:38.140776
+========================================
+2026-Jul-08 11:36:38.617918
+Gracefully shutting down build container: waolhj932bxupsoukd0v0olr
