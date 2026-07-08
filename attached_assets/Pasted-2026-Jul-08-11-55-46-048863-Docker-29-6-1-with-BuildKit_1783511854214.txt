@@ -1,0 +1,55 @@
+2026-Jul-08 11:55:46.048863
+Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 11:55:46.214069
+Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 11:55:46.687878
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 11:55:48.892953
+----------------------------------------
+2026-Jul-08 11:55:48.905202
+Importing LePubli/RefMaint:main (commit sha 84e41ecbd41b4258c3d3d2e50d1d386216919537) to /artifacts/i2i0v0kmna22c2i7hvt90xy2.
+2026-Jul-08 11:55:54.544308
+Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 11:55:55.442169
+Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 11:55:55.457519
+Pulling & building required images.
+2026-Jul-08 11:55:55.815103
+Adding build arguments to Docker Compose build command.
+2026-Jul-08 11:57:22.020696
+========================================
+2026-Jul-08 11:57:22.042228
+Deployment failed: Command execution failed (exit code 1): docker exec i2i0v0kmna22c2i7hvt90xy2 bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq  docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/i2i0v0kmna22c2i7hvt90xy2 -f /artifacts/i2i0v0kmna22c2i7hvt90xy2/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 11:57:22.042228
+Error: Dockerfile:16
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+--------------------
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+14 |     COPY . .
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+15 |
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+16 | >>> RUN npx vite build
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+17 |
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+18 |     FROM nginx:alpine
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+--------------------
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+target frontend: failed to solve: process "/bin/sh -c npx vite build" did not complete successfully: exit code: 1
+2026-Jul-08 11:57:22.042228
+2026-Jul-08 11:57:22.042228
+exit status 1
+2026-Jul-08 11:57:22.260800
+========================================
+2026-Jul-08 11:57:22.817127
+Gracefully shutting down build container: i2i0v0kmna22c2i7hvt90xy2
