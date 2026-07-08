@@ -1,0 +1,103 @@
+#  OBJECTIF
+Ajouter un module "GMAO Visuelle" à l'application TriMaint existante (FastAPI + React/Vite + PostgreSQL + Docker/Coolify). 
+Ce module doit permettre :
+1. D'afficher un schéma interactif du process de tri (image/SVG avec zones cliquables)
+2. De gérer les équipements (code, nom, zone, photo, fiche technique, position sur le schéma)
+3. De constituer une base de connaissances des pannes (symptômes, causes, solutions, prévention)
+4. De tracer les incidents réels (historique, statut, technicien, résolution)
+5. D'offrir un moteur de recherche global (équipement, panne, solution)
+6. De gérer les droits : Technicien (lecture + déclaration incident) / Chef d'équipe ou Admin (CRUD complet + validation)
+
+# 🛠️ CONTRAINTES TECHNIQUES
+- Stack existante : FastAPI (backend), React+Vite+TypeScript (frontend), PostgreSQL 16, Docker Compose, Coolify
+- Authentification JWT déjà en place. Ajouter un champ `role` (string: "admin", "chef_equipe", "technicien") au modèle User s'il n'existe pas.
+- Stockage fichiers : `/data/uploads` (déjà monté en volume Docker). Retourner les chemins relatifs dans les réponses API.
+- Respecter la structure actuelle du projet. Ne pas modifier `docker-compose.yml` sauf si strictement nécessaire.
+- Générer et appliquer les migrations Alembic automatiquement.
+- UI responsive, TailwindCSS déjà utilisé.
+
+# 📦 STRUCTURE DES FICHIERS À CRÉER/MODIFIER
+backend/
+├── models.py                  → Ajouter 4 nouveaux modèles SQLAlchemy
+├── schemas.py                 → Ajouter les schémas Pydantic correspondants
+├── routers/
+│   ├── equipements.py         → CRUD + recherche équipements
+│   ├── pannes.py              → CRUD types de pannes & solutions
+│   ├── incidents.py           → Déclaration & historique incidents
+│   └── documents.py           → Upload/gestion documents liés
+├── services/upload.py         → Service sécurisé d'upload fichiers
+└── main.py                    → Inclure les nouveaux routers
+frontend/src/
+├── api/equipements.ts         → Hooks/fonctions d'appel API
+├── components/ProcessMap/
+│   ├── ProcessMap.tsx         → Schéma interactif (image + hotspots absolus)
+│   └── EquipmentHotspot.tsx   → Zone cliquable avec tooltip
+├── components/Equipment/
+│   ├── EquipmentCard.tsx
+│   ├── EquipmentDetail.tsx    → Fiche complète + onglets (infos, pannes, incidents, docs)
+│   └── EquipmentForm.tsx      → Création/édition (avec upload photo)
+├── components/Fault/
+│   ├── FaultList.tsx
+│   └── FaultForm.tsx          → Formulaire panne/solution
+── components/Search/
+│   └── GlobalSearch.tsx       → Barre de recherche avec autocomplete
+└── pages/
+    ├── ProcessView.tsx        → Page principale schéma + sidebar recherche
+    ├── EquipmentList.tsx      → Liste filtrable
+    └── IncidentReport.tsx     → Déclarer un incident
+
+# 📋 PLAN D'EXÉCUTION SÉQUENTIEL (À suivre strictement dans l'ordre)
+
+## ÉTAPE 1 : Backend - Modèles & Base de données
+1. Dans `backend/models.py`, ajouter :
+   - `Equipement` (id, code, nom, type, zone, marque, modele, position_x/y, largeur/hauteur, photo_url, description, actif, critique, created_at, updated_at)
+   - `TypePanne` (id, equipement_id FK, code, titre, symptomes, causes_possibles, solutions, prevention, niveau_critique, temps_resolution_estime, tags, actif)
+   - `Incident` (id, equipement_id FK, type_panne_id FK nullable, titre, description, date_debut, date_fin, duree_arret, niveau_critique, impact_production, technicien_id FK User, resolution, pieces_rechangees, cout_estime, statut: "ouvert"|"en_cours"|"resolu"|"clos")
+   - `Document` (id, equipement_id FK, titre, type_document, fichier_url, fichier_type, description, version)
+2. Dans `backend/schemas.py`, créer les Pydantic models pour chaque table (Create, Update, Response). Inclure les relations imbriquées optionnelles.
+3. Générer la migration Alembic : `alembic revision --autogenerate -m "add_gmao_process_module"` puis `alembic upgrade head`
+
+## ÉTAPE 2 : Backend - API & Upload
+1. Créer `backend/services/upload.py` : fonction `save_upload_file(file: UploadFile, subfolder: str) -> str` qui sauvegarde dans `/data/uploads/<subfolder>/` et retourne le chemin relatif. Gérer les extensions autorisées (jpg, png, pdf, mp4).
+2. Créer `backend/routers/equipements.py` : GET/POST/PUT/DELETE + endpoint `GET /search?q=...` (recherche ILIKE sur code, nom, type, zone, tags pannes).
+3. Créer `backend/routers/pannes.py` : CRUD types de pannes. Endpoint `GET /equipements/{id}/pannes`.
+4. Créer `backend/routers/incidents.py` : Déclaration, mise à jour statut, historique. Endpoint `GET /equipements/{id}/incidents`.
+5. Créer `backend/routers/documents.py` : POST upload, GET liste, DELETE.
+6. Dans `backend/main.py`, inclure tous les routers sous le préfixe `/api`.
+7. Ajouter une dépendance `get_current_active_user` avec vérification de rôle pour les routes POST/PUT/DELETE (technicien peut seulement POST incidents).
+
+## ÉTAPE 3 : Frontend - Intégration API & UI de base
+1. Dans `frontend/src/api/equipements.ts`, créer les fonctions fetch avec `axios` (ou fetch) pointant vers `/api/...`. Gérer les headers JWT.
+2. Créer `GlobalSearch.tsx` : input avec debounce 300ms, appel `/api/equipements/search?q=...`, affichage dropdown résultats.
+3. Créer `EquipmentCard.tsx` & `EquipmentList.tsx` : grille responsive, filtres par zone/type, bouton "Voir fiche".
+4. Créer `EquipmentDetail.tsx` : layout 2 colonnes (gauche: photo + infos, droite: onglets Pannes / Incidents / Documents). Utiliser `react-tabs` ou état local pour les onglets.
+
+## ÉTAPE 4 : Frontend - Schéma Interactif
+1. Créer `ProcessMap.tsx` : container relatif, image de fond (placeholder `schema-process.jpg` dans `/public`), overlay absolu.
+2. Créer `EquipmentHotspot.tsx` : div positionné via `style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }}`, hover scale, click ouvre `EquipmentDetail` en modal ou sidebar.
+3. Ajouter contrôles : zoom in/out, reset view, toggle labels.
+4. Lier la recherche globale au schéma : sélection d'un résultat → scroll/zoom vers le hotspot correspondant.
+
+## ÉTAPE 5 : Formulaires & Uploads
+1. `EquipmentForm.tsx` & `FaultForm.tsx` : react-hook-form + zod validation. Champ file input pour photo/documents, appel API upload dédié.
+2. Afficher preview image avant soumission.
+3. Gestion états loading/error/success avec `react-hot-toast`.
+
+## ÉTAPE 6 : Tests & Validation
+1. Lancer `npm run dev` frontend & `uvicorn backend.main:app --reload` backend.
+2. Tester : création équipement → upload photo → apparition sur liste → clic schéma → ouverture fiche.
+3. Tester : création panne → liaison équipement → recherche globale → filtrage.
+4. Tester : déclaration incident → changement statut → historique affiché.
+5. Vérifier rôles : technicien ne voit pas boutons "Modifier/Supprimer" équipement/panne.
+6. Confirmer compatibilité Docker : les nouveaux endpoints répondent, les uploads vont dans `/data/uploads`, aucune erreur console.
+
+# ⚠️ RÈGLES STRICTES POUR L'AGENT
+- Exécuter les étapes UNE PAR UNE. Attendre la validation implicite (fichiers créés, pas d'erreur console) avant de passer à la suivante.
+- Ne JAMAIS hardcoder des chemins absolis serveur. Utiliser des variables d'environnement ou chemins relatifs Docker.
+- Conserver la compatibilité avec le déploiement Coolify (expose au lieu de ports, healthchecks, networks).
+- Commenter le code critique (relations SQLAlchemy, logique de recherche, positionnement hotspots).
+- Si un fichier existe déjà, le modifier proprement sans écraser la logique métier existante.
+- À la fin, fournir un résumé des fichiers créés/modifiés + les commandes exactes pour tester en local.
+
+# 🚀 DÉMARRAGE
+Commence par l'ÉTAPE 1. Crée les modèles SQLAlchemy, les schémas Pydantic, et prépare la commande de migration Alembic. Attends mon "OK" ou continue automatiquement si tout compile sans erreur.
