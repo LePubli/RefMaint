@@ -45,8 +45,9 @@ services:
       dockerfile: Dockerfile
     container_name: trimaint_frontend
     restart: unless-stopped
-    ports:
-      - "${PORT:-80}:80"
+    # Port 80 exposé en interne uniquement - Coolify gère le routage via Traefik
+    expose:
+      - "80"
     depends_on:
       - backend
     networks:
