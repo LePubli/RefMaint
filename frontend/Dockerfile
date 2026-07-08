@@ -8,19 +8,28 @@ COPY package.json package-lock.json ./
 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
 # (build fails silently before producing dist/). Debian slim uses glibc,
 # which sidesteps the issue entirely.
-RUN npm ci --include=dev
-
-COPY . .
+# Retry once: npm has a known intermittent bug ("Exit handler never called!")
+# that can abort mid-install and leave devDependencies (like typescript)
+# missing, which then makes "npx tsc" silently fall back to installing an
+# unrelated npm package also named "tsc" instead of failing clearly.
+RUN npm ci --include=dev || npm ci --include=dev
 
 # Rendre node_modules/.bin explicitement disponible dans le PATH
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-# Type-check puis build. Pas de pipe vers tee ici : "cmd | tee file" renvoie
-# le code de sortie de tee (quasi toujours 0), ce qui masquait les erreurs
-# réelles de build et ne les faisait remonter à Docker/Coolify.
-RUN npx tsc -b
-RUN npx vite build
+# Vérifier que TypeScript et Vite ont bien été installés localement avant de
+# continuer, pour échouer avec un message clair plutôt que de laisser npx
+# retomber sur un package npm sans rapport portant le même nom.
+RUN test -x node_modules/.bin/tsc || (echo "ERREUR: TypeScript n'a pas été installé par npm ci" && exit 1)
+RUN test -x node_modules/.bin/vite || (echo "ERREUR: Vite n'a pas été installé par npm ci" && exit 1)
+
+COPY . .
+
+# Utiliser directement les binaires locaux (pas npx) pour ne jamais risquer
+# un fallback silencieux vers un package du registre npm portant le même nom.
+RUN tsc -b
+RUN vite build
 
 # Filet de sécurité : si vite build a réussi mais n'a pas produit dist/,
 # on échoue explicitement plutôt que de laisser nginx servir un dossier vide.
