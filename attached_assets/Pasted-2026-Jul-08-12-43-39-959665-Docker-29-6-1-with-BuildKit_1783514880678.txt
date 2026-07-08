@@ -1,0 +1,520 @@
+2026-Jul-08 12:43:39.959665 Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 12:43:39.977088 Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 12:43:40.430000 Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:43:40.625507 [CMD]: docker stop --time=30 b6jkgr6ctjvdrsuuc9cznwle
+2026-Jul-08 12:43:40.625507 Flag --time has been deprecated, use --timeout instead
+2026-Jul-08 12:43:40.629242 Error response from daemon: No such container: b6jkgr6ctjvdrsuuc9cznwle
+2026-Jul-08 12:43:40.874274 [CMD]: docker run -d --network 'coolify' --name b6jkgr6ctjvdrsuuc9cznwle --rm -v /root/.docker/buildx:/root/.docker/buildx -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 12:43:40.874274 90f9374748a01b3299d985340e0a7d11436933f31ef4e913a96da3bc4e84a9d9
+2026-Jul-08 12:43:42.020751 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'GIT_SSH_COMMAND="ssh -o ConnectTimeout=30 -p 22 -o Port=22 -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git ls-remote '\''https://github.com/LePubli/RefMaint'\'' '\''refs/heads/main'\'''
+2026-Jul-08 12:43:42.020751 ac84c61148e5fc0d7f24a9c84a9e771615013155 refs/heads/main
+2026-Jul-08 12:43:42.040591 ----------------------------------------
+2026-Jul-08 12:43:42.051569 Importing LePubli/RefMaint:main (commit sha ac84c61148e5fc0d7f24a9c84a9e771615013155) to /artifacts/b6jkgr6ctjvdrsuuc9cznwle.
+2026-Jul-08 12:43:42.308573 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'git -c http.version=HTTP/1.1 clone --depth=1 --recurse-submodules --shallow-submodules -b '\''main'\'' '\''https://github.com/LePubli/RefMaint'\'' '\''/artifacts/b6jkgr6ctjvdrsuuc9cznwle'\'' && cd '\''/artifacts/b6jkgr6ctjvdrsuuc9cznwle'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 fetch --depth=1 origin '\''ac84c61148e5fc0d7f24a9c84a9e771615013155'\'' && git -c http.version=HTTP/1.1 -c advice.detachedHead=false checkout '\''ac84c61148e5fc0d7f24a9c84a9e771615013155'\'' >/dev/null 2>&1 && cd '\''/artifacts/b6jkgr6ctjvdrsuuc9cznwle'\'' && if [ -f .gitmodules ]; then sed -i "s#git@\(.*\):#https://\1/#g" '\''/artifacts/b6jkgr6ctjvdrsuuc9cznwle'\''/.gitmodules || true && git -c http.version=HTTP/1.1 submodule sync && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 submodule update --init --recursive --depth=1; fi && cd '\''/artifacts/b6jkgr6ctjvdrsuuc9cznwle'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git -c http.version=HTTP/1.1 lfs pull'
+2026-Jul-08 12:43:42.308573 Cloning into '/artifacts/b6jkgr6ctjvdrsuuc9cznwle'...
+2026-Jul-08 12:43:43.510779 From https://github.com/LePubli/RefMaint
+2026-Jul-08 12:43:43.510779 * branch ac84c61148e5fc0d7f24a9c84a9e771615013155 -> FETCH_HEAD
+2026-Jul-08 12:43:44.263142 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'cd /artifacts/b6jkgr6ctjvdrsuuc9cznwle && git log -1 '\''ac84c61148e5fc0d7f24a9c84a9e771615013155'\'' --pretty=%B'
+2026-Jul-08 12:43:44.263142 Add Docker BuildKit screenshot asset
+2026-Jul-08 12:43:44.263142
+2026-Jul-08 12:43:44.263142 Replit-Commit-Author: Agent
+2026-Jul-08 12:43:47.045018 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'test -f /artifacts/b6jkgr6ctjvdrsuuc9cznwle/backend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:43:47.045018 exists
+2026-Jul-08 12:43:47.298608 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'cat /artifacts/b6jkgr6ctjvdrsuuc9cznwle/backend/Dockerfile'
+2026-Jul-08 12:43:47.298608 FROM python:3.11-slim
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 WORKDIR /app
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 # No compiler needed: psycopg2-binary, bcrypt, cryptography and pillow all
+2026-Jul-08 12:43:47.298608 # ship prebuilt manylinux wheels for this Python/arch, so gcc/libpq-dev were
+2026-Jul-08 12:43:47.298608 # unused dead weight here. Removing them cuts unnecessary CPU/network/memory
+2026-Jul-08 12:43:47.298608 # load during the build, which matters because Coolify builds backend and
+2026-Jul-08 12:43:47.298608 # frontend concurrently (buildx bake) and the combined peak usage was likely
+2026-Jul-08 12:43:47.298608 # contributing to intermittent build failures on constrained hosts.
+2026-Jul-08 12:43:47.298608 COPY requirements.txt .
+2026-Jul-08 12:43:47.298608 RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 COPY . .
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 EXPOSE 8000
+2026-Jul-08 12:43:47.298608
+2026-Jul-08 12:43:47.298608 ENTRYPOINT ["./entrypoint.sh"]
+2026-Jul-08 12:43:47.588106 Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 12:43:47.849369 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'test -f /artifacts/b6jkgr6ctjvdrsuuc9cznwle/frontend/Dockerfile && echo '\''exists'\'' || echo '\''not found'\'''
+2026-Jul-08 12:43:47.849369 exists
+2026-Jul-08 12:43:48.112548 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'cat /artifacts/b6jkgr6ctjvdrsuuc9cznwle/frontend/Dockerfile'
+2026-Jul-08 12:43:48.112548 FROM node:20-bookworm-slim AS builder
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 WORKDIR /app
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # npm's update-notifier hangs its own exit handler when stdout isn't a TTY
+2026-Jul-08 12:43:48.112548 # (exactly the case in a Docker build), causing a deterministic
+2026-Jul-08 12:43:48.112548 # "npm error Exit handler never called!" crash right after it prints
+2026-Jul-08 12:43:48.112548 # "New major version of npm available!". CI=true and update-notifier=false
+2026-Jul-08 12:43:48.112548 # both disable that check so npm ci can actually finish and install
+2026-Jul-08 12:43:48.112548 # devDependencies (like typescript) instead of silently aborting mid-install.
+2026-Jul-08 12:43:48.112548 ENV CI=true
+2026-Jul-08 12:43:48.112548 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # The build host has a broken IPv6 route: Node's DNS resolver tries an AAAA
+2026-Jul-08 12:43:48.112548 # address for registry.npmjs.org first, gets no response, and silently hangs
+2026-Jul-08 12:43:48.112548 # until the OS-level TCP connect times out (~72s, matching the consistent
+2026-Jul-08 12:43:48.112548 # stall seen in Coolify builds) before it can fall back to IPv4. That long
+2026-Jul-08 12:43:48.112548 # hang is what was tripping npm's "Exit handler never called!" bug. Forcing
+2026-Jul-08 12:43:48.112548 # IPv4-first resolution avoids the hang entirely.
+2026-Jul-08 12:43:48.112548 ENV NODE_OPTIONS=--dns-result-order=ipv4first
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 COPY package.json package-lock.json ./
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # The bundled npm (10.8.2) has a known "Exit handler never called!" bug
+2026-Jul-08 12:43:48.112548 # that has hit every single build on this host so far. Confirmed by
+2026-Jul-08 12:43:48.112548 # testing: npm ci still exits 0 when it happens, it just silently fails to
+2026-Jul-08 12:43:48.112548 # finish linking devDependency binaries (tsc, vite) into node_modules/.bin
+2026-Jul-08 12:43:48.112548 # right at the end of the install. Upgrading npm first is a real attempt
+2026-Jul-08 12:43:48.112548 # at a fix (this bug has multiple root causes fixed across npm releases).
+2026-Jul-08 12:43:48.112548 RUN npm install -g npm@latest
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # Rendre node_modules/.bin explicitement disponible dans le PATH
+2026-Jul-08 12:43:48.112548 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
+2026-Jul-08 12:43:48.112548 ENV PATH="/app/node_modules/.bin:$PATH"
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # npm ci with a clean, deterministic install avoids the known npm optional-
+2026-Jul-08 12:43:48.112548 # dependencies bug that breaks Rollup/esbuild native binaries on Alpine/musl
+2026-Jul-08 12:43:48.112548 # (build fails silently before producing dist/). Debian slim uses glibc,
+2026-Jul-08 12:43:48.112548 # which sidesteps the issue entirely. --no-audit/--no-fund skip extra
+2026-Jul-08 12:43:48.112548 # network round-trips to the registry that aren't needed for a build.
+2026-Jul-08 12:43:48.112548 #
+2026-Jul-08 12:43:48.112548 # Since npm's exit code can't be trusted here (see above), don't rely on
+2026-Jul-08 12:43:48.112548 # "||" to detect failure - explicitly verify the binaries we actually need
+2026-Jul-08 12:43:48.112548 # exist afterward, and retry the whole install from a clean node_modules
+2026-Jul-08 12:43:48.112548 # a few times if they don't, before failing loudly.
+2026-Jul-08 12:43:48.112548 RUN for i in 1 2 3; do \
+2026-Jul-08 12:43:48.112548 echo "npm ci attempt $i/3..."; \
+2026-Jul-08 12:43:48.112548 rm -rf node_modules; \
+2026-Jul-08 12:43:48.112548 npm ci --include=dev --no-audit --no-fund; \
+2026-Jul-08 12:43:48.112548 if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then \
+2026-Jul-08 12:43:48.112548 echo "npm ci attempt $i produced a working install."; \
+2026-Jul-08 12:43:48.112548 exit 0; \
+2026-Jul-08 12:43:48.112548 fi; \
+2026-Jul-08 12:43:48.112548 echo "npm ci attempt $i did not install tsc/vite - retrying."; \
+2026-Jul-08 12:43:48.112548 done; \
+2026-Jul-08 12:43:48.112548 echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 COPY . .
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # Utiliser directement les binaires locaux (pas npx) pour ne jamais risquer
+2026-Jul-08 12:43:48.112548 # un fallback silencieux vers un package du registre npm portant le même nom.
+2026-Jul-08 12:43:48.112548 RUN tsc -b
+2026-Jul-08 12:43:48.112548 RUN vite build
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 # Filet de sécurité : si vite build a réussi mais n'a pas produit dist/,
+2026-Jul-08 12:43:48.112548 # on échoue explicitement plutôt que de laisser nginx servir un dossier vide.
+2026-Jul-08 12:43:48.112548 RUN test -f dist/index.html || (echo "ERREUR: le build Vite n'a pas produit dist/index.html" && exit 1)
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 FROM nginx:alpine
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 COPY --from=builder /app/dist /usr/share/nginx/html
+2026-Jul-08 12:43:48.112548 COPY nginx.conf /etc/nginx/conf.d/default.conf
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 EXPOSE 80
+2026-Jul-08 12:43:48.112548
+2026-Jul-08 12:43:48.112548 CMD ["nginx", "-g", "daemon off;"]
+2026-Jul-08 12:43:48.396285 Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 12:43:48.410702 Pulling & building required images.
+2026-Jul-08 12:43:48.480372 Creating build-time .env file in /artifacts (outside Docker context).
+2026-Jul-08 12:43:48.784153 Adding build arguments to Docker Compose build command.
+2026-Jul-08 12:43:49.343913 [CMD]: docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/b6jkgr6ctjvdrsuuc9cznwle -f /artifacts/b6jkgr6ctjvdrsuuc9cznwle/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:43:49.343913 #1 [internal] load local bake definitions
+2026-Jul-08 12:43:49.466142 #1 reading from stdin 1.62kB done
+2026-Jul-08 12:43:49.466142 #1 DONE 0.0s
+2026-Jul-08 12:43:49.637264 #2 [frontend internal] load build definition from Dockerfile
+2026-Jul-08 12:43:49.643141 #2 transferring dockerfile: 3.67kB done
+2026-Jul-08 12:43:49.643141 #2 DONE 0.0s
+2026-Jul-08 12:43:49.643141
+2026-Jul-08 12:43:49.643141 #3 [backend internal] load build definition from Dockerfile
+2026-Jul-08 12:43:49.643141 #3 transferring dockerfile: 795B done
+2026-Jul-08 12:43:49.643141 #3 DONE 0.0s
+2026-Jul-08 12:43:49.643141
+2026-Jul-08 12:43:49.643141 #4 [backend internal] load metadata for docker.io/library/python:3.11-slim
+2026-Jul-08 12:43:50.152715 #4 DONE 0.7s
+2026-Jul-08 12:43:50.152715
+2026-Jul-08 12:43:50.152715 #5 [frontend internal] load metadata for docker.io/library/node:20-bookworm-slim
+2026-Jul-08 12:43:50.252442 #5 DONE 0.7s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #6 [frontend internal] load metadata for docker.io/library/nginx:alpine
+2026-Jul-08 12:43:50.252442 #6 DONE 0.7s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #7 [backend internal] load .dockerignore
+2026-Jul-08 12:43:50.252442 #7 transferring context: 93B done
+2026-Jul-08 12:43:50.252442 #7 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #8 [frontend internal] load .dockerignore
+2026-Jul-08 12:43:50.252442 #8 transferring context: 71B done
+2026-Jul-08 12:43:50.252442 #8 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #9 [backend 1/6] FROM docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3
+2026-Jul-08 12:43:50.252442 #9 resolve docker.io/library/python:3.11-slim@sha256:e031123e3d85762b141ad1cbc56452ba69c6e722ebf2f042cc0dc86c47c0d8b3 0.0s done
+2026-Jul-08 12:43:50.252442 #9 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #10 [backend 2/6] WORKDIR /app
+2026-Jul-08 12:43:50.252442 #10 CACHED
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #11 [frontend internal] load build context
+2026-Jul-08 12:43:50.252442 #11 transferring context: 326.62kB 0.0s done
+2026-Jul-08 12:43:50.252442 #11 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #12 [frontend builder 1/9] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+2026-Jul-08 12:43:50.252442 #12 resolve docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0 0.0s done
+2026-Jul-08 12:43:50.252442 #12 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #13 [frontend builder 2/9] WORKDIR /app
+2026-Jul-08 12:43:50.252442 #13 CACHED
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #14 [backend internal] load build context
+2026-Jul-08 12:43:50.252442 #14 transferring context: 76.83kB 0.0s done
+2026-Jul-08 12:43:50.252442 #14 DONE 0.0s
+2026-Jul-08 12:43:50.252442
+2026-Jul-08 12:43:50.252442 #15 [frontend builder 3/9] COPY package.json package-lock.json ./
+2026-Jul-08 12:43:50.476584 #15 DONE 0.1s
+2026-Jul-08 12:43:50.476584
+2026-Jul-08 12:43:50.476584 #16 [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+2026-Jul-08 12:43:50.476584 #16 resolve docker.io/library/nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa 0.0s done
+2026-Jul-08 12:43:50.476584 #16 CACHED
+2026-Jul-08 12:43:50.476584
+2026-Jul-08 12:43:50.476584 #17 [backend 3/6] COPY requirements.txt .
+2026-Jul-08 12:43:50.476584 #17 DONE 0.1s
+2026-Jul-08 12:43:50.476584
+2026-Jul-08 12:43:50.476584 #18 [frontend builder 4/9] RUN npm install -g npm@latest
+2026-Jul-08 12:43:56.045568 #18 ...
+2026-Jul-08 12:43:56.045568
+2026-Jul-08 12:43:56.045568 #19 [backend 4/6] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:43:56.045568 #19 4.310 Collecting fastapi==0.115.0 (from -r requirements.txt (line 1))
+2026-Jul-08 12:43:56.045568 #19 4.362 Downloading fastapi-0.115.0-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:43:56.045568 #19 4.496 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:43:56.045568 #19 4.504 Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+2026-Jul-08 12:43:56.045568 #19 4.572 Collecting gunicorn==22.0.0 (from -r requirements.txt (line 3))
+2026-Jul-08 12:43:56.045568 #19 4.579 Downloading gunicorn-22.0.0-py3-none-any.whl.metadata (4.4 kB)
+2026-Jul-08 12:43:56.045568 #19 5.722 Collecting sqlalchemy==2.0.35 (from -r requirements.txt (line 4))
+2026-Jul-08 12:43:56.162728 #19 5.731 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB)
+2026-Jul-08 12:43:56.162728 #19 5.841 Collecting alembic==1.13.3 (from -r requirements.txt (line 5))
+2026-Jul-08 12:43:56.321981 #19 5.849 Downloading alembic-1.13.3-py3-none-any.whl.metadata (7.4 kB)
+2026-Jul-08 12:43:56.400629 #19 6.079 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 6))
+2026-Jul-08 12:43:56.578157 #19 6.086 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:43:56.578157 #19 6.120 Collecting python-jose==3.3.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:43:56.578157 #19 6.125 Downloading python_jose-3.3.0-py2.py3-none-any.whl.metadata (5.4 kB)
+2026-Jul-08 12:43:56.578157 #19 6.257 Collecting bcrypt==4.2.1 (from -r requirements.txt (line 8))
+2026-Jul-08 12:43:56.791171 #19 6.263 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl.metadata (9.8 kB)
+2026-Jul-08 12:43:56.791171 #19 6.313 Collecting python-multipart==0.0.12 (from -r requirements.txt (line 9))
+2026-Jul-08 12:43:56.791171 #19 6.319 Downloading python_multipart-0.0.12-py3-none-any.whl.metadata (1.9 kB)
+2026-Jul-08 12:43:57.242911 #19 6.921 Collecting pillow==11.0.0 (from -r requirements.txt (line 10))
+2026-Jul-08 12:43:57.348173 #19 6.929 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-Jul-08 12:43:57.348173 #19 6.969 Collecting qrcode==8.0 (from -r requirements.txt (line 11))
+2026-Jul-08 12:43:57.348173 #19 6.975 Downloading qrcode-8.0-py3-none-any.whl.metadata (17 kB)
+2026-Jul-08 12:43:57.348173 #19 7.027 Collecting aiofiles==24.1.0 (from -r requirements.txt (line 12))
+2026-Jul-08 12:43:57.505346 #19 7.033 Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
+2026-Jul-08 12:43:57.588061 #19 7.266 Collecting starlette<0.39.0,>=0.37.2 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:43:57.746725 #19 7.274 Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+2026-Jul-08 12:43:58.182084 #19 7.861 Collecting pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:43:58.380503 #19 7.865 Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+2026-Jul-08 12:43:58.380503 #19 7.874 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 53.9 MB/s eta 0:00:00
+2026-Jul-08 12:43:58.380503 #19 7.953 Collecting typing-extensions>=4.8.0 (from fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:43:58.380503 #19 7.958 Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-Jul-08 12:43:58.380503 #19 8.059 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:43:58.602903 #19 8.065 Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:43:58.602903 #19 8.102 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:43:58.602903 #19 8.108 Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-Jul-08 12:43:58.602903 #19 8.131 Requirement already satisfied: packaging in /usr/local/lib/python3.11/site-packages (from gunicorn==22.0.0->-r requirements.txt (line 3)) (26.2)
+2026-Jul-08 12:43:59.026265 #19 8.705 Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.35->-r requirements.txt (line 4))
+2026-Jul-08 12:43:59.185483 #19 8.713 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+2026-Jul-08 12:43:59.252475 #19 8.931 Collecting Mako (from alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:43:59.360565 #19 8.939 Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
+2026-Jul-08 12:43:59.360565 #19 9.037 Collecting ecdsa!=0.15 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:43:59.510084 #19 9.042 Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+2026-Jul-08 12:43:59.510084 #19 9.107 Collecting rsa (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:43:59.510084 #19 9.112 Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+2026-Jul-08 12:43:59.510084 #19 9.189 Collecting pyasn1 (from python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:43:59.666503 #19 9.194 Downloading pyasn1-0.6.3-py3-none-any.whl.metadata (8.4 kB)
+2026-Jul-08 12:44:00.353107 #19 10.03 Collecting cryptography>=3.4.0 (from python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:44:00.510974 #19 10.04 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-Jul-08 12:44:00.524198 #19 10.20 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:00.763746 #19 10.21 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+2026-Jul-08 12:44:00.763746 #19 10.28 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:00.763746 #19 10.29 Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+2026-Jul-08 12:44:00.770886 #19 10.45 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:00.922343 #19 10.45 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-Jul-08 12:44:01.026331 #19 10.70 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:01.031618
+2026-Jul-08 12:44:01.183133 #19 10.71 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:44:01.291249 #19 10.97 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:01.454475 #19 10.98 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-Jul-08 12:44:01.613167 #19 11.29 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 2))
+2026-Jul-08 12:44:01.731438 #19 11.30 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+2026-Jul-08 12:44:01.731438 #19 ...
+2026-Jul-08 12:44:01.731438
+2026-Jul-08 12:44:01.731438 #18 [frontend builder 4/9] RUN npm install -g npm@latest
+2026-Jul-08 12:44:01.731438 #18 11.41
+2026-Jul-08 12:44:01.738212 #18 11.41 removed 65 packages, and changed 112 packages in 11s
+2026-Jul-08 12:44:01.738212 #18 11.41
+2026-Jul-08 12:44:01.738212 #18 11.41 15 packages are looking for funding
+2026-Jul-08 12:44:01.738212 #18 11.41 run `npm fund` for details
+2026-Jul-08 12:44:02.171827 #18 DONE 11.7s
+2026-Jul-08 12:44:02.171827
+2026-Jul-08 12:44:02.171827 #19 [backend 4/6] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:44:02.171827 #19 11.67 Collecting cffi>=2.0.0 (from cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:44:02.171827 #19 11.67 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+2026-Jul-08 12:44:02.171827 #19 11.73 Collecting six>=1.9.0 (from ecdsa!=0.15->python-jose==3.3.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:44:02.171827 #19 11.75 Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-Jul-08 12:44:02.171827 #19 11.85 Collecting annotated-types>=0.6.0 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:44:02.327330 #19 11.86 Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-Jul-08 12:44:02.333496
+2026-Jul-08 12:44:04.902547 #19 14.58 Collecting pydantic-core==2.46.4 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:44:05.077425 #19 14.59 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+2026-Jul-08 12:44:05.077425 #19 14.63 Collecting typing-inspection>=0.4.2 (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:44:05.077425 #19 14.64 Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-Jul-08 12:44:05.077425 #19 14.76 Collecting anyio<5,>=3.4.0 (from starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:44:05.235316 #19 14.76 Downloading anyio-4.14.1-py3-none-any.whl.metadata (4.6 kB)
+2026-Jul-08 12:44:05.346920 #19 15.03 Collecting MarkupSafe>=0.9.2 (from Mako->alembic==1.13.3->-r requirements.txt (line 5))
+2026-Jul-08 12:44:05.503156 #19 15.03 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-Jul-08 12:44:05.517811 #19 15.20 Collecting idna>=2.8 (from anyio<5,>=3.4.0->starlette<0.39.0,>=0.37.2->fastapi==0.115.0->-r requirements.txt (line 1))
+2026-Jul-08 12:44:05.723269 #19 15.20 Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+2026-Jul-08 12:44:05.723269 #19 15.27 Collecting pycparser (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]==3.3.0->-r requirements.txt (line 7))
+2026-Jul-08 12:44:05.723269 #19 15.27 Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+2026-Jul-08 12:44:05.723269 #19 15.40 Downloading fastapi-0.115.0-py3-none-any.whl (94 kB)
+2026-Jul-08 12:44:05.846146 #19 15.41 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 94.6/94.6 kB 129.1 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.846146 #19 15.42 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+2026-Jul-08 12:44:05.846146 #19 15.42 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 190.6 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.846146 #19 15.43 Downloading gunicorn-22.0.0-py3-none-any.whl (84 kB)
+2026-Jul-08 12:44:05.846146 #19 15.43 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.4/84.4 kB 132.5 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.846146 #19 15.44 Downloading SQLAlchemy-2.0.35-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+2026-Jul-08 12:44:05.846146 #19 15.47 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 116.8 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.846146 #19 15.48 Downloading alembic-1.13.3-py3-none-any.whl (233 kB)
+2026-Jul-08 12:44:05.846146 #19 15.49 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 233.2/233.2 kB 101.4 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.846146 #19 15.50 Downloading psycopg2_binary-2.9.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+2026-Jul-08 12:44:05.846146 #19 15.52 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 154.3 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.949374 #19 15.53 Downloading python_jose-3.3.0-py2.py3-none-any.whl (33 kB)
+2026-Jul-08 12:44:05.949374 #19 15.54 Downloading bcrypt-4.2.1-cp39-abi3-manylinux_2_28_x86_64.whl (278 kB)
+2026-Jul-08 12:44:05.949374 #19 15.54 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 278.6/278.6 kB 168.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.949374 #19 15.55 Downloading python_multipart-0.0.12-py3-none-any.whl (23 kB)
+2026-Jul-08 12:44:05.949374 #19 15.56 Downloading pillow-11.0.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.4 MB)
+2026-Jul-08 12:44:05.949374 #19 15.59 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 155.2 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.949374 #19 15.60 Downloading qrcode-8.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:44:05.949374 #19 15.60 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.7/45.7 kB 196.5 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.949374 #19 15.61 Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+2026-Jul-08 12:44:05.949374 #19 15.61 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+2026-Jul-08 12:44:05.949374 #19 15.62 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 143.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:05.949374 #19 15.63 Downloading cryptography-49.0.0-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+2026-Jul-08 12:44:06.067444 #19 15.66 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 162.2 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.067444 #19 15.67 Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+2026-Jul-08 12:44:06.067444 #19 15.67 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 150.8/150.8 kB 150.6 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.067444 #19 15.68 Downloading greenlet-3.5.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (617 kB)
+2026-Jul-08 12:44:06.067444 #19 15.69 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 617.4/617.4 kB 144.9 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.067444 #19 15.69 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-Jul-08 12:44:06.067444 #19 15.70 Downloading httptools-0.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (464 kB)
+2026-Jul-08 12:44:06.067444 #19 15.71 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 464.7/464.7 kB 227.3 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.067444 #19 15.71 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+2026-Jul-08 12:44:06.067444 #19 15.72 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 226.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.067444 #19 15.73 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-Jul-08 12:44:06.067444 #19 15.75 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 147.5 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.174537 #19 15.75 Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+2026-Jul-08 12:44:06.174537 #19 15.76 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2026-Jul-08 12:44:06.174537 #19 15.77 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 156.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.174537 #19 15.78 Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+2026-Jul-08 12:44:06.174537 #19 15.78 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.5/71.5 kB 108.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.174537 #19 15.79 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-Jul-08 12:44:06.174537 #19 15.79 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 96.6 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.174537 #19 15.80 Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+2026-Jul-08 12:44:06.174537 #19 15.83 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 115.9 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.174537 #19 15.84 Downloading watchfiles-1.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+2026-Jul-08 12:44:06.174537 #19 15.85 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 456.9/456.9 kB 121.2 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.86 Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+2026-Jul-08 12:44:06.277826 #19 15.87 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.6/184.6 kB 123.4 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.87 Downloading mako-1.3.12-py3-none-any.whl (78 kB)
+2026-Jul-08 12:44:06.277826 #19 15.88 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.5/78.5 kB 136.6 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.88 Downloading pyasn1-0.6.3-py3-none-any.whl (83 kB)
+2026-Jul-08 12:44:06.277826 #19 15.89 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.0/84.0 kB 145.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.90 Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+2026-Jul-08 12:44:06.277826 #19 15.90 Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-Jul-08 12:44:06.277826 #19 15.91 Downloading anyio-4.14.1-py3-none-any.whl (124 kB)
+2026-Jul-08 12:44:06.277826 #19 15.91 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.9/124.9 kB 173.2 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.92 Downloading cffi-2.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+2026-Jul-08 12:44:06.277826 #19 15.92 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 217.9/217.9 kB 193.0 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.93 Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-Jul-08 12:44:06.277826 #19 15.94 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-Jul-08 12:44:06.277826 #19 15.94 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-Jul-08 12:44:06.277826 #19 15.95 Downloading idna-3.18-py3-none-any.whl (65 kB)
+2026-Jul-08 12:44:06.277826 #19 15.95 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 206.7 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.277826 #19 15.96 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+2026-Jul-08 12:44:06.432963 #19 15.96 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 116.0 MB/s eta 0:00:00
+2026-Jul-08 12:44:06.945606 #19 16.62 Installing collected packages: websockets, uvloop, typing-extensions, six, qrcode, pyyaml, python-multipart, python-dotenv, pycparser, pyasn1, psycopg2-binary, pillow, MarkupSafe, idna, httptools, h11, gunicorn, greenlet, click, bcrypt, annotated-types, aiofiles, uvicorn, typing-inspection, sqlalchemy, rsa, pydantic-core, Mako, ecdsa, cffi, anyio, watchfiles, starlette, python-jose, pydantic, cryptography, alembic, fastapi
+2026-Jul-08 12:44:12.196776 #19 ...
+2026-Jul-08 12:44:12.196776
+2026-Jul-08 12:44:12.196776 #20 [frontend builder 5/9] RUN for i in 1 2 3; do echo "npm ci attempt $i/3..."; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo "npm ci attempt $i produced a working install."; exit 0; fi; echo "npm ci attempt $i did not install tsc/vite - retrying."; done; echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:44:12.196776 #20 0.330 npm ci attempt 1/3...
+2026-Jul-08 12:44:14.716530 #20 ...
+2026-Jul-08 12:44:14.716530
+2026-Jul-08 12:44:14.716530 #19 [backend 4/6] RUN pip install --no-cache-dir -r requirements.txt
+2026-Jul-08 12:44:14.716530 #19 24.40 Successfully installed Mako-1.3.12 MarkupSafe-3.0.3 aiofiles-24.1.0 alembic-1.13.3 annotated-types-0.7.0 anyio-4.14.1 bcrypt-4.2.1 cffi-2.1.0 click-8.4.2 cryptography-49.0.0 ecdsa-0.19.2 fastapi-0.115.0 greenlet-3.5.3 gunicorn-22.0.0 h11-0.16.0 httptools-0.8.0 idna-3.18 pillow-11.0.0 psycopg2-binary-2.9.10 pyasn1-0.6.3 pycparser-3.0 pydantic-2.13.4 pydantic-core-2.46.4 python-dotenv-1.2.2 python-jose-3.3.0 python-multipart-0.0.12 pyyaml-6.0.3 qrcode-8.0 rsa-4.9.1 six-1.17.0 sqlalchemy-2.0.35 starlette-0.38.6 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.30.6 uvloop-0.22.1 watchfiles-1.2.0 websockets-16.0
+2026-Jul-08 12:44:14.868065 #19 24.40 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+2026-Jul-08 12:44:14.905642 #19 24.58
+2026-Jul-08 12:44:14.905642 #19 24.58 [notice] A new release of pip is available: 24.0 -> 26.1.2
+2026-Jul-08 12:44:14.905642 #19 24.58 [notice] To update, run: pip install --upgrade pip
+2026-Jul-08 12:44:16.510532 #19 DONE 26.2s
+2026-Jul-08 12:44:16.510532
+2026-Jul-08 12:44:16.510532 #20 [frontend builder 5/9] RUN for i in 1 2 3; do echo "npm ci attempt $i/3..."; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo "npm ci attempt $i produced a working install."; exit 0; fi; echo "npm ci attempt $i did not install tsc/vite - retrying."; done; echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:44:16.621348 #20 ...
+2026-Jul-08 12:44:16.621348
+2026-Jul-08 12:44:16.621348 #21 [backend 5/6] COPY . .
+2026-Jul-08 12:44:16.621348 #21 DONE 0.1s
+2026-Jul-08 12:44:16.773718 #22 [backend 6/6] RUN chmod +x entrypoint.sh && mkdir -p /data/uploads
+2026-Jul-08 12:44:16.911618 #22 DONE 0.3s
+2026-Jul-08 12:44:16.911618
+2026-Jul-08 12:44:16.911618 #20 [frontend builder 5/9] RUN for i in 1 2 3; do echo "npm ci attempt $i/3..."; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo "npm ci attempt $i produced a working install."; exit 0; fi; echo "npm ci attempt $i did not install tsc/vite - retrying."; done; echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:44:17.066566 #20 ...
+2026-Jul-08 12:44:17.066566
+2026-Jul-08 12:44:17.066566 #23 [backend] exporting to image
+2026-Jul-08 12:44:17.066566 #23 exporting layers
+2026-Jul-08 12:44:26.633726 #23 exporting layers 9.7s done
+2026-Jul-08 12:44:26.842353 #23 exporting manifest sha256:7b4b74e4fde8b32faa7a96c3fa75317bdcd3700900ac1d2c722ce5ec9cf3a570 done
+2026-Jul-08 12:44:26.842353 #23 exporting config sha256:c7ae0e6a1b8143059c946889e33576533c4927ff743eddf4eb7e7c5ba00c329b done
+2026-Jul-08 12:44:26.842353 #23 exporting attestation manifest sha256:516e53fa6a2f07bb9a334e9b00d633ace4c21ebe4a67b33aa3ee349c4115922b 0.0s done
+2026-Jul-08 12:44:26.842353 #23 exporting manifest list sha256:dbcfedbe38d6354b00059a10d40c5d260b414619640744631eb267e562b9f11b done
+2026-Jul-08 12:44:26.842353 #23 naming to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:ac84c61148e5fc0d7f24a9c84a9e771615013155 done
+2026-Jul-08 12:44:26.842353 #23 unpacking to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:ac84c61148e5fc0d7f24a9c84a9e771615013155
+2026-Jul-08 12:44:28.530481 #23 unpacking to docker.io/library/nnrrli1c4wao6m957cdyv6jq_backend:ac84c61148e5fc0d7f24a9c84a9e771615013155 1.8s done
+2026-Jul-08 12:44:28.701066 #23 DONE 11.7s
+2026-Jul-08 12:44:28.701066
+2026-Jul-08 12:44:28.701066 #24 [backend] resolving provenance for metadata file
+2026-Jul-08 12:44:28.862369 #24 DONE 0.0s
+2026-Jul-08 12:44:28.862369
+2026-Jul-08 12:44:28.862369 #20 [frontend builder 5/9] RUN for i in 1 2 3; do echo "npm ci attempt $i/3..."; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo "npm ci attempt $i produced a working install."; exit 0; fi; echo "npm ci attempt $i did not install tsc/vite - retrying."; done; echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:45:15.529373 #20 73.45 npm error code ENOTFOUND
+2026-Jul-08 12:45:15.727716 #20 73.45 npm error syscall getaddrinfo
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error errno ENOTFOUND
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error network request to http://package-firewall.replit.local/npm/yallist/-/yallist-3.1.1.tgz failed, reason: getaddrinfo ENOTFOUND package-firewall.replit.local
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error network This is a problem related to network connectivity.
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error network In most cases you are behind a proxy or have bad network settings.
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error network
+2026-Jul-08 12:45:15.727716 #20 73.46 npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly. See: 'npm help config'
+2026-Jul-08 12:45:15.727716 #20 73.49 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-08T12_44_02_570Z-debug-0.log
+2026-Jul-08 12:45:15.727716 #20 73.50 npm ci attempt 1 did not install tsc/vite - retrying.
+2026-Jul-08 12:45:15.727716 #20 73.50 npm ci attempt 2/3...
+2026-Jul-08 12:46:28.626481 #20 146.5 npm error code ENOTFOUND
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error syscall getaddrinfo
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error errno ENOTFOUND
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error network request to http://package-firewall.replit.local/npm/yallist/-/yallist-3.1.1.tgz failed, reason: getaddrinfo ENOTFOUND package-firewall.replit.local
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error network This is a problem related to network connectivity.
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error network In most cases you are behind a proxy or have bad network settings.
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error network
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly. See: 'npm help config'
+2026-Jul-08 12:46:28.826144 #20 146.6 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-08T12_45_15_717Z-debug-0.log
+2026-Jul-08 12:46:28.826144 #20 146.6 npm ci attempt 2 did not install tsc/vite - retrying.
+2026-Jul-08 12:46:28.826144 #20 146.6 npm ci attempt 3/3...
+2026-Jul-08 12:47:41.866754 #20 219.8 npm error code ENOTFOUND
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error syscall getaddrinfo
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error errno ENOTFOUND
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error network request to http://package-firewall.replit.local/npm/yallist/-/yallist-3.1.1.tgz failed, reason: getaddrinfo ENOTFOUND package-firewall.replit.local
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error network This is a problem related to network connectivity.
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error network In most cases you are behind a proxy or have bad network settings.
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error network
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly. See: 'npm help config'
+2026-Jul-08 12:47:42.012516 #20 219.8 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-08T12_46_28_851Z-debug-0.log
+2026-Jul-08 12:47:42.012516 #20 219.8 npm ci attempt 3 did not install tsc/vite - retrying.
+2026-Jul-08 12:47:42.012516 #20 219.8 ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives
+2026-Jul-08 12:47:42.012516 #20 ERROR: process "/bin/sh -c for i in 1 2 3; do echo \"npm ci attempt $i/3...\"; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo \"npm ci attempt $i produced a working install.\"; exit 0; fi; echo \"npm ci attempt $i did not install tsc/vite - retrying.\"; done; echo \"ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives\" && exit 1" did not complete successfully: exit code: 1
+2026-Jul-08 12:47:42.012516 ------
+2026-Jul-08 12:47:42.012516 > [frontend builder 5/9] RUN for i in 1 2 3; do echo "npm ci attempt $i/3..."; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo "npm ci attempt $i produced a working install."; exit 0; fi; echo "npm ci attempt $i did not install tsc/vite - retrying."; done; echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1:
+2026-Jul-08 12:47:42.012516 219.8 npm error syscall getaddrinfo
+2026-Jul-08 12:47:42.012516 219.8 npm error errno ENOTFOUND
+2026-Jul-08 12:47:42.012516 219.8 npm error network request to http://package-firewall.replit.local/npm/yallist/-/yallist-3.1.1.tgz failed, reason: getaddrinfo ENOTFOUND package-firewall.replit.local
+2026-Jul-08 12:47:42.012516 219.8 npm error network This is a problem related to network connectivity.
+2026-Jul-08 12:47:42.012516 219.8 npm error network In most cases you are behind a proxy or have bad network settings.
+2026-Jul-08 12:47:42.012516 219.8 npm error network
+2026-Jul-08 12:47:42.012516 219.8 npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly. See: 'npm help config'
+2026-Jul-08 12:47:42.012516 219.8 npm error A complete log of this run can be found in: /root/.npm/_logs/2026-07-08T12_46_28_851Z-debug-0.log
+2026-Jul-08 12:47:42.012516 219.8 npm ci attempt 3 did not install tsc/vite - retrying.
+2026-Jul-08 12:47:42.012516 219.8 ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives
+2026-Jul-08 12:47:42.012516 ------
+2026-Jul-08 12:47:42.020543 Dockerfile:51
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 --------------------
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 50 | # a few times if they don't, before failing loudly.
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 51 | >>> RUN for i in 1 2 3; do \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 52 | >>> echo "npm ci attempt $i/3..."; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 53 | >>> rm -rf node_modules; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 54 | >>> npm ci --include=dev --no-audit --no-fund; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 55 | >>> if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 56 | >>> echo "npm ci attempt $i produced a working install."; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 57 | >>> exit 0; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 58 | >>> fi; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 59 | >>> echo "npm ci attempt $i did not install tsc/vite - retrying."; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 60 | >>> done; \
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 61 | >>> echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 62 |
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 --------------------
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 target frontend: failed to solve: process "/bin/sh -c for i in 1 2 3; do echo \"npm ci attempt $i/3...\"; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo \"npm ci attempt $i produced a working install.\"; exit 0; fi; echo \"npm ci attempt $i did not install tsc/vite - retrying.\"; done; echo \"ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives\" && exit 1" did not complete successfully: exit code: 1
+2026-Jul-08 12:47:42.020543
+2026-Jul-08 12:47:42.020543 exit status 1
+2026-Jul-08 12:47:42.135550 ========================================
+2026-Jul-08 12:47:42.154389 Deployment failed: Command execution failed (exit code 1): docker exec b6jkgr6ctjvdrsuuc9cznwle bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/b6jkgr6ctjvdrsuuc9cznwle -f /artifacts/b6jkgr6ctjvdrsuuc9cznwle/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:47:42.154389 Error: Dockerfile:51
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 --------------------
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 50 | # a few times if they don't, before failing loudly.
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 51 | >>> RUN for i in 1 2 3; do \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 52 | >>> echo "npm ci attempt $i/3..."; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 53 | >>> rm -rf node_modules; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 54 | >>> npm ci --include=dev --no-audit --no-fund; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 55 | >>> if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 56 | >>> echo "npm ci attempt $i produced a working install."; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 57 | >>> exit 0; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 58 | >>> fi; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 59 | >>> echo "npm ci attempt $i did not install tsc/vite - retrying."; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 60 | >>> done; \
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 61 | >>> echo "ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives" && exit 1
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 62 |
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 --------------------
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 target frontend: failed to solve: process "/bin/sh -c for i in 1 2 3; do echo \"npm ci attempt $i/3...\"; rm -rf node_modules; npm ci --include=dev --no-audit --no-fund; if [ -x node_modules/.bin/tsc ] && [ -x node_modules/.bin/vite ]; then echo \"npm ci attempt $i produced a working install.\"; exit 0; fi; echo \"npm ci attempt $i did not install tsc/vite - retrying.\"; done; echo \"ERREUR: npm ci n'a pas réussi à installer TypeScript/Vite après 3 tentatives\" && exit 1" did not complete successfully: exit code: 1
+2026-Jul-08 12:47:42.154389
+2026-Jul-08 12:47:42.154389 exit status 1
+2026-Jul-08 12:47:42.170681 Error type: App\Exceptions\DeploymentException
+2026-Jul-08 12:47:42.189941 Error code: 0
+2026-Jul-08 12:47:42.204970 Location: /var/www/html/app/Traits/ExecuteRemoteCommand.php:242
+2026-Jul-08 12:47:42.222367 Stack trace (first 5 lines):
+2026-Jul-08 12:47:42.239980 #0 /var/www/html/app/Traits/ExecuteRemoteCommand.php(106): App\Jobs\ApplicationDeploymentJob->executeCommandWithProcess()
+2026-Jul-08 12:47:42.257942 #1 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(275): App\Jobs\ApplicationDeploymentJob->{closure:App\Traits\ExecuteRemoteCommand::execute_remote_command():72}()
+2026-Jul-08 12:47:42.279136 #2 /var/www/html/app/Traits/ExecuteRemoteCommand.php(72): Illuminate\Support\Collection->each()
+2026-Jul-08 12:47:42.297900 #3 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(773): App\Jobs\ApplicationDeploymentJob->execute_remote_command()
+2026-Jul-08 12:47:42.314143 #4 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(497): App\Jobs\ApplicationDeploymentJob->deploy_docker_compose_buildpack()
+2026-Jul-08 12:47:42.332034 ========================================

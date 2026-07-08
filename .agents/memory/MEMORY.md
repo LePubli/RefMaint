@@ -1,3 +1,3 @@
 - [bcrypt-passlib-compat](bcrypt-passlib-compat.md) — bcrypt v4+ breaks passlib's __about__ lookup; use bcrypt directly instead of passlib CryptContext
 - [lucide-react icon names](lucide-icon-names.md) — `Activity` icon does not exist in this project's lucide-react version; use `BarChart2` instead.
-- [Coolify concurrent build resource contention](coolify-concurrent-build-resource-contention.md) — docker-compose services build in parallel via buildx bake; intermittent build crashes (npm bug one run, exit 255 the next) can be host resource exhaustion, not an app bug.
+- [Replit package-firewall proxy leaking into lockfiles](replit-package-firewall-lockfile-leak.md) — npm/pip lockfiles generated inside Replit bake in an internal-only proxy host; breaks installs on any external build host (Docker/CI), looks fine when re-tested locally.
