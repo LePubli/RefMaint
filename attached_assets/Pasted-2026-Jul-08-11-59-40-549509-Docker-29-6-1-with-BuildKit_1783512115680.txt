@@ -1,0 +1,55 @@
+2026-Jul-08 11:59:40.549509
+Docker 29.6.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-Jul-08 11:59:40.566991
+Starting deployment of ref-maint:main-n10480rjqyhiqjes6w5lsbfg to localhost.
+2026-Jul-08 11:59:41.079949
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-Jul-08 11:59:42.854365
+----------------------------------------
+2026-Jul-08 11:59:42.868156
+Importing LePubli/RefMaint:main (commit sha bb9b4907ded11057b923654ab9b1829c7e7afe42) to /artifacts/vjya5ktrgvjivbxx1od8u8pf.
+2026-Jul-08 11:59:48.879469
+Added 5 ARG declarations to Dockerfile for service backend.
+2026-Jul-08 11:59:49.834549
+Added 10 ARG declarations to Dockerfile for service frontend (multi-stage build, added to 2 stages).
+2026-Jul-08 11:59:49.853844
+Pulling & building required images.
+2026-Jul-08 11:59:50.260242
+Adding build arguments to Docker Compose build command.
+2026-Jul-08 12:01:27.082159
+========================================
+2026-Jul-08 12:01:27.105037
+Deployment failed: Command execution failed (exit code 1): docker exec vjya5ktrgvjivbxx1od8u8pf bash -c 'DOCKER_BUILDKIT=1 COOLIFY_BRANCH='\''main'\'' COOLIFY_RESOURCE_UUID=nnrrli1c4wao6m957cdyv6jq  docker compose --env-file /artifacts/build-time.env --project-name nnrrli1c4wao6m957cdyv6jq --project-directory /artifacts/vjya5ktrgvjivbxx1od8u8pf -f /artifacts/vjya5ktrgvjivbxx1od8u8pf/docker-compose.yml build --pull --no-cache --build-arg COOLIFY_FQDN --build-arg POSTGRES_DB --build-arg POSTGRES_USER --build-arg POSTGRES_PASSWORD --build-arg SECRET_KEY --build-arg COOLIFY_BUILD_SECRETS_HASH=7cd2f3a736c95a5022880474d62d7c24cfca2197b65482dfedb413bbe6f433e4'
+2026-Jul-08 12:01:27.105037
+Error: Dockerfile:29
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+--------------------
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+27 |     # Fail the build loudly if dist/ wasn't produced, instead of nginx
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+28 |     # silently serving an empty/stale directory
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+29 | >>> RUN test -f dist/index.html || (echo "ERREUR: le build Vite n'a pas produit dist/index.html" && exit 1)
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+30 |
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+31 |     FROM nginx:alpine
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+--------------------
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+target frontend: failed to solve: process "/bin/sh -c test -f dist/index.html || (echo \"ERREUR: le build Vite n'a pas produit dist/index.html\" && exit 1)" did not complete successfully: exit code: 1
+2026-Jul-08 12:01:27.105037
+2026-Jul-08 12:01:27.105037
+exit status 1
+2026-Jul-08 12:01:27.342582
+========================================
+2026-Jul-08 12:01:27.893334
+Gracefully shutting down build container: vjya5ktrgvjivbxx1od8u8pf

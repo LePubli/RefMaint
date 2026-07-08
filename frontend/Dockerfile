@@ -16,11 +16,14 @@ COPY . .
 # pour garantir que tsc et vite sont trouvés quel que soit l'environnement
 ENV PATH="/app/node_modules/.bin:$PATH"
 
-# Tenter le build et capturer TOUTE la sortie pour debug en cas d'échec
-RUN (npx tsc -b && npx vite build) 2>&1 | tee /tmp/build.log || (echo "=== BUILD FAILED ===" && cat /tmp/build.log && exit 1)
+# Type-check puis build. Pas de pipe vers tee ici : "cmd | tee file" renvoie
+# le code de sortie de tee (quasi toujours 0), ce qui masquait les erreurs
+# réelles de build et ne les faisait remonter à Docker/Coolify.
+RUN npx tsc -b
+RUN npx vite build
 
-# Fail the build loudly if dist/ wasn't produced, instead of nginx
-# silently serving an empty/stale directory
+# Filet de sécurité : si vite build a réussi mais n'a pas produit dist/,
+# on échoue explicitement plutôt que de laisser nginx servir un dossier vide.
 RUN test -f dist/index.html || (echo "ERREUR: le build Vite n'a pas produit dist/index.html" && exit 1)
 
 FROM nginx:alpine
