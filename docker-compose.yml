@@ -64,5 +64,3 @@ volumes:
 networks:
   trimaint_net:
     driver: bridge
-    coolify:   
-      external: true 
