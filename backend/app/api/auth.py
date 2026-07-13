@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+import re
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -9,12 +10,32 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserOut, Token
 from app.core.security import (
     verify_password, get_password_hash, create_access_token,
-    get_current_user, require_admin
+    get_current_user, require_admin,
 )
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from app.core.activity import log_activity
+from app.main import limiter
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+# Politique de mot de passe : min 8 caractères, au moins une lettre et un chiffre.
+# Rejette les mots de passe triviaux comme "admin123"... enfin presque — il faudra
+# une vraie longueur >= 8. Pour les comptes sensibles, exiger aussi une majuscule.
+PASSWORD_MIN_LEN = 8
+_PASSWORD_RE = re.compile(r"^(?=.*[A-Za-z])(?=.*\d).+$")
+
+
+def validate_password_strength(password: str) -> None:
+    if len(password) < PASSWORD_MIN_LEN:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Mot de passe trop court (min. {PASSWORD_MIN_LEN} caractères)",
+        )
+    if not _PASSWORD_RE.match(password):
+        raise HTTPException(
+            status_code=400,
+            detail="Mot de passe invalide : doit contenir au moins une lettre et un chiffre",
+        )
 
 
 class UserUpdate(BaseModel):
@@ -32,7 +53,8 @@ class PasswordReset(BaseModel):
 # ---------------------------------------------------------------------------
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -72,6 +94,7 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db), current_user
         raise HTTPException(status_code=400, detail="Nom d'utilisateur ou email déjà utilisé")
     if user_in.role not in ("admin", "manager", "technicien"):
         raise HTTPException(status_code=400, detail="Rôle invalide")
+    validate_password_strength(user_in.password)
     user = User(
         username=user_in.username,
         email=user_in.email,
@@ -132,8 +155,7 @@ def reset_password(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Utilisateur introuvable")
-    if len(body.new_password) < 6:
-        raise HTTPException(status_code=400, detail="Mot de passe trop court (min. 6 caractères)")
+    validate_password_strength(body.new_password)
     user.hashed_password = get_password_hash(body.new_password)
     db.commit()
     log_activity(db, current_user, "réinitialisé", "utilisateur", user.id, user.username)
@@ -158,7 +180,7 @@ def delete_user(
     return {"ok": True}
 
 
-# Conserver /register pour compatibilité
+# Conserver /register pour compatibilité (dérivation de create_user, même politique).
 @router.post("/register", response_model=UserOut)
 def register(user_in: UserCreate, db: Session = Depends(get_db), current_user=Depends(require_admin)):
     return create_user(user_in, db, current_user)

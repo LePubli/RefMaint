@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -8,7 +6,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-trimaint}
       POSTGRES_USER: ${POSTGRES_USER:-trimaint}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trimaint_secure_password}
+      # ⚠️ POSTGRES_PASSWORD est obligatoire. Ne pas laisser de fallback
+      # qui permettrait de démarrer avec un mot de passe faible.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Variable POSTGRES_PASSWORD obligatoire — générer un mdp avec `openssl rand -hex 16`}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -26,19 +26,28 @@ services:
     container_name: trimaint_backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-trimaint}:${POSTGRES_PASSWORD:-trimaint_secure_password}@postgres:5432/${POSTGRES_DB:-trimaint}
-      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production-min-32-chars}
+      # ⚠️ DATABASE_URL et SECRET_KEY sont obligatoires — config.py fait échouer
+      # le démarrage si SECRET_KEY est absent ou trop court.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-trimaint}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-trimaint}
+      SECRET_KEY: ${SECRET_KEY:?Variable SECRET_KEY obligatoire — générer avec `openssl rand -hex 32`}
       UPLOAD_DIR: /data/uploads
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      ENABLE_API_DOCS: ${ENABLE_API_DOCS:-false}
     volumes:
       - uploads_data:/data/uploads
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - trimaint_net
-      
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     expose:
       - "8000"
+    networks:
+      - trimaint_net
 
   frontend:
     build:
@@ -46,11 +55,11 @@ services:
       dockerfile: Dockerfile
     container_name: trimaint_frontend
     restart: unless-stopped
-    # Port 80 exposé en interne uniquement - Coolify gère le routage via Traefik
     expose:
       - "80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - trimaint_net
 

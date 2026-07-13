@@ -9,7 +9,7 @@ TriMaint is an industrial maintenance management system (CMMS/GMAO) built for Tr
 - **Backend**: FastAPI (Python 3.11) on `localhost:8000`
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS on `0.0.0.0:5000`
 - **Database**: PostgreSQL (Replit managed)
-- **Auth**: JWT (using python-jose + bcrypt directly)
+- **Auth**: JWT (using PyJWT + bcrypt directly, python-jose removed for CVE)
 
 ## How to Run
 

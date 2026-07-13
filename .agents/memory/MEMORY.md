@@ -1,3 +1,11 @@
 - [bcrypt-passlib-compat](bcrypt-passlib-compat.md) — bcrypt v4+ breaks passlib's __about__ lookup; use bcrypt directly instead of passlib CryptContext
 - [lucide-react icon names](lucide-icon-names.md) — `Activity` icon does not exist in this project's lucide-react version; use `BarChart2` instead.
 - [Replit package-firewall proxy leaking into lockfiles](replit-package-firewall-lockfile-leak.md) — npm/pip lockfiles generated inside Replit bake in an internal-only proxy host; breaks installs on any external build host (Docker/CI), looks fine when re-tested locally.
+- **python-jose replaced by PyJWT** — python-jose 3.3.0 is unmaintained and has known CVEs. Migrated to PyJWT 2.10.1. All `jose.jwt` / `jose.JWTError` calls replaced with `jwt.encode` / `jwt.decode` / `jwt.PyJWTError`.
+- **SECRET_KEY is now mandatory** — `config.py` raises `RuntimeError` at import time if SECRET_KEY is missing, too short (<32), or matches known insecure defaults. `docker-compose.yml` uses `${VAR:?message}` syntax to enforce it at the container level too.
+- **CORS uses explicit origins** — `allow_origins=["*"]` with `allow_credentials=True` was invalid. Now reads from `CORS_ORIGINS` env var (comma-separated). Defaults to localhost only for dev.
+- **Rate-limiting on login** — slowapi installed, 10 req/min on `/api/auth/login`.
+- **RBAC tightened** — PUT/DELETE on pannes, interventions, pieces, maintenance-preventive now require `require_manager_or_admin`. Techniciens can still CREATE (signalement terrain) but not modify/delete.
+- **Intervention.technicien forced server-side** — create_intervention ignores the client-provided technicien field and uses `current_user.username` to prevent impersonation.
+- **Upload magic bytes validation** — `uploads.py` now checks file content against expected magic bytes and sanitizes images via Pillow before storage.
+- **EmailStr activated in schemas** — `UserCreate.email` and `UserOut.email` now use pydantic `EmailStr` (with `email-validator` dep).

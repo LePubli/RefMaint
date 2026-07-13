@@ -9,7 +9,12 @@ from alembic import context
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from app.db.database import Base
-from app.models import user, machine, panne, intervention, piece  # noqa: F401
+
+# Importer TOUS les modèles pour autogenerate
+from app.models import (  # noqa: F401
+    user, machine, panne, intervention, piece,
+    activity_log, notification, maintenance_preventive,
+)
 
 config = context.config
 

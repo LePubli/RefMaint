@@ -7,7 +7,7 @@ from app.models.machine import Machine
 from app.schemas.maintenance_preventive import (
     MaintenancePreventiveCreate, MaintenancePreventiveUpdate, MaintenancePreventiveOut
 )
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_manager_or_admin
 from app.core.activity import log_activity
 from app.core.notifications import create_notification
 
@@ -117,7 +117,7 @@ def update_maintenance(
     mp_id: int,
     mp_in: MaintenancePreventiveUpdate,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_manager_or_admin),
 ):
     mp = db.query(MaintenancePreventive).filter(MaintenancePreventive.id == mp_id).first()
     if not mp:
@@ -134,7 +134,7 @@ def update_maintenance(
 def marquer_effectue(
     mp_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_manager_or_admin),
 ):
     mp = db.query(MaintenancePreventive).filter(MaintenancePreventive.id == mp_id).first()
     if not mp:
@@ -150,7 +150,7 @@ def marquer_effectue(
 def delete_maintenance(
     mp_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_manager_or_admin),
 ):
     mp = db.query(MaintenancePreventive).filter(MaintenancePreventive.id == mp_id).first()
     if not mp:

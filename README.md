@@ -9,7 +9,7 @@ Système de gestion de maintenance industrielle (CMMS) pour les usines de tri Tr
 | Backend   | FastAPI (Python 3.11) |
 | Frontend  | React + Vite + TypeScript + Tailwind CSS |
 | Base de données | PostgreSQL 16 |
-| Auth      | JWT (python-jose + bcrypt) |
+| Auth      | JWT (PyJWT + bcrypt) |
 | Reverse proxy | Nginx |
 | Conteneurisation | Docker + Docker Compose |
 
@@ -31,8 +31,17 @@ cd trimaint
 
 ```bash
 cp .env.example .env
-# Éditer .env et changer les mots de passe
 ```
+
+**Les variables `POSTGRES_PASSWORD` et `SECRET_KEY` sont obligatoires.** Le serveur refusera de démarrer si elles sont absentes ou trop faibles.
+
+```bash
+# Générer des secrets sécurisés
+openssl rand -hex 16  # → POSTGRES_PASSWORD
+openssl rand -hex 32  # → SECRET_KEY
+```
+
+Éditez `.env` et collez les valeurs générées.
 
 ### 3. Lancer l'application
 
@@ -42,24 +51,37 @@ docker compose up --build -d
 
 L'application est disponible sur **http://localhost** (port 80 par défaut).
 
-### Identifiants par défaut
+### Premier démarrage
+
+Au premier lancement, un compte administrateur est créé automatiquement :
 
 | Champ | Valeur |
 |-------|--------|
 | Utilisateur | `admin` |
-| Mot de passe | `admin123` |
+| Mot de passe | Affiché **une seule fois** dans les logs du backend |
 
-> ⚠️ Changez le mot de passe admin dès la première connexion en production.
+Récupérez le mot de passe temporaire dans les logs :
+
+```bash
+docker compose logs backend | grep "Mot de passe temporaire"
+```
+
+> ⚠️ **Changez ce mot de passe immédiatement après la première connexion.**
+
+Vous pouvez aussi prédéfinir le mot de passe via la variable `INITIAL_ADMIN_PASSWORD` dans `.env`.
 
 ## Variables d'environnement
 
-| Variable | Défaut | Description |
-|----------|--------|-------------|
-| `POSTGRES_DB` | `trimaint` | Nom de la base de données |
-| `POSTGRES_USER` | `trimaint` | Utilisateur PostgreSQL |
-| `POSTGRES_PASSWORD` | *(requis)* | Mot de passe PostgreSQL |
-| `SECRET_KEY` | *(requis)* | Clé secrète JWT (min. 32 caractères) |
-| `PORT` | `80` | Port exposé par le frontend |
+| Variable | Obligatoire ? | Défaut | Description |
+|----------|:---:|--------|-------------|
+| `POSTGRES_DB` | | `trimaint` | Nom de la base de données |
+| `POSTGRES_USER` | | `trimaint` | Utilisateur PostgreSQL |
+| `POSTGRES_PASSWORD` | ✅ | *(aucun)* | Mot de passe PostgreSQL |
+| `SECRET_KEY` | ✅ | *(aucun)* | Clé secrète JWT (min. 32 caractères, `openssl rand -hex 32`) |
+| `CORS_ORIGINS` | | `localhost` | Origines autorisées (séparées par virgule) |
+| `ENABLE_API_DOCS` | | `false` | Activer Swagger/ReDoc (`true`/`false`) |
+| `PORT` | | `80` | Port exposé par le frontend |
+| `INITIAL_ADMIN_PASSWORD` | | *(aléatoire)* | Mot de passe admin initial (si non fourni, généré automatiquement) |
 
 ## Déploiement sur Coolify
 
@@ -67,15 +89,10 @@ L'application est disponible sur **http://localhost** (port 80 par défaut).
 2. Choisir **Docker Compose** comme type de déploiement
 3. Pointer vers ce dépôt Git
 4. Définir les variables d'environnement dans l'interface Coolify :
-   - `POSTGRES_PASSWORD` → mot de passe sécurisé
-   - `SECRET_KEY` → clé aléatoire de 64 caractères
+   - `POSTGRES_PASSWORD` → mot de passe sécurisé (`openssl rand -hex 16`)
+   - `SECRET_KEY` → clé aléatoire (`openssl rand -hex 32`)
+   - `CORS_ORIGINS` → votre domaine (ex. `https://trimaint.example.com`)
 5. Cliquer sur **Deploy**
-
-### Générer une SECRET_KEY sécurisée
-
-```bash
-openssl rand -hex 32
-```
 
 ## Architecture des services Docker
 
@@ -98,19 +115,20 @@ openssl rand -hex 32
 
 ## Fonctionnalités
 
-- 🔐 **Authentification** — JWT, rôles admin / manager / technicien
+- 🔐 **Authentification** — JWT, rôles admin / manager / technicien, rate-limiting
 - 🏭 **Machines** — CRUD complet + génération QR code
 - ⚠️ **Pannes** — Enregistrement avec criticité, causes, solution, export CSV
-- 🔧 **Interventions** — Suivi, photos avant/après, validation manager
+- 🔧 **Interventions** — Suivi, photos avant/après, validation manager, technicien forcé
 - 📦 **Pièces détachées** — Stock, emplacement, fournisseur
 - 🔍 **Recherche globale** — Recherche unifiée machines / pannes / interventions
 - 📊 **Dashboard** — Statistiques temps réel, top pannes, état des machines
-- 📎 **Upload fichiers** — Images et PDF stockés localement dans `/data/uploads`
+- 📎 **Upload fichiers** — Images et PDF, validation par magic bytes, sanitisation Pillow
+- 🔔 **Notifications** — Alertes automatiques pannes critiques et maintenance préventive
+- 🔒 **Sécurité** — RBAC par endpoint, CORS strict, mot de passe admin aléatoire
 
 ## API Documentation
 
-Swagger UI disponible sur : **http://localhost/api/docs**  
-ReDoc disponible sur : **http://localhost/api/redoc**
+Swagger UI activable via `ENABLE_API_DOCS=true` : **http://localhost/api/docs**
 
 ## Commandes utiles
 
@@ -137,11 +155,11 @@ docker compose up --build -d
 trimaint/
 ├── backend/
 │   ├── app/
-│   │   ├── api/          # Routes FastAPI
-│   │   ├── core/         # Config, sécurité
+│   │   ├── api/          # Routes FastAPI (RBAC par rôle)
+│   │   ├── core/         # Config, sécurité, notifications, activity log
 │   │   ├── db/           # Session SQLAlchemy
 │   │   ├── models/       # Modèles ORM
-│   │   └── schemas/      # Schémas Pydantic
+│   │   └── schemas/      # Schémas Pydantic (EmailStr, validation)
 │   ├── Dockerfile
 │   └── requirements.txt
 ├── frontend/

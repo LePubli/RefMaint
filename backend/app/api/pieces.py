@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.piece import Piece
 from app.schemas.piece import PieceCreate, PieceUpdate, PieceOut
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_manager_or_admin
 from app.core.activity import log_activity
 
 router = APIRouter(prefix="/api/pieces", tags=["pieces"])
@@ -18,7 +18,7 @@ def list_pieces(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), 
 def get_piece(piece_id: int, db: Session = Depends(get_db), _=Depends(get_current_user)):
     piece = db.query(Piece).filter(Piece.id == piece_id).first()
     if not piece:
-        raise HTTPException(status_code=404, detail="Piece not found")
+        raise HTTPException(status_code=404, detail="Pièce introuvable")
     return piece
 
 
@@ -26,7 +26,7 @@ def get_piece(piece_id: int, db: Session = Depends(get_db), _=Depends(get_curren
 def create_piece(piece_in: PieceCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     existing = db.query(Piece).filter(Piece.reference == piece_in.reference).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Reference already exists")
+        raise HTTPException(status_code=400, detail="Référence déjà existante")
     piece = Piece(**piece_in.model_dump())
     db.add(piece)
     db.commit()
@@ -36,10 +36,10 @@ def create_piece(piece_in: PieceCreate, db: Session = Depends(get_db), current_u
 
 
 @router.put("/{piece_id}", response_model=PieceOut)
-def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get_db), current_user=Depends(require_manager_or_admin)):
     piece = db.query(Piece).filter(Piece.id == piece_id).first()
     if not piece:
-        raise HTTPException(status_code=404, detail="Piece not found")
+        raise HTTPException(status_code=404, detail="Pièce introuvable")
     for key, value in piece_in.model_dump(exclude_unset=True).items():
         setattr(piece, key, value)
     db.commit()
@@ -49,10 +49,10 @@ def update_piece(piece_id: int, piece_in: PieceUpdate, db: Session = Depends(get
 
 
 @router.delete("/{piece_id}")
-def delete_piece(piece_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+def delete_piece(piece_id: int, db: Session = Depends(get_db), current_user=Depends(require_manager_or_admin)):
     piece = db.query(Piece).filter(Piece.id == piece_id).first()
     if not piece:
-        raise HTTPException(status_code=404, detail="Piece not found")
+        raise HTTPException(status_code=404, detail="Pièce introuvable")
     label = f"{piece.nom} ({piece.reference})"
     db.delete(piece)
     db.commit()

@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
-from jose import JWTError, jwt
 import bcrypt
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -21,8 +21,9 @@ def get_password_hash(password: str) -> str:
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=60))
+    expire = datetime.now(tz=timezone.utc) + (expires_delta or timedelta(minutes=60))
     to_encode.update({"exp": expire})
+    # PyJWT (autrefois python-jose) — algorithme HS256 symétrique.
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
@@ -38,7 +39,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-    except JWTError:
+    except jwt.PyJWTError:
         raise credentials_exception
     user = db.query(User).filter(User.username == username).first()
     if user is None:
@@ -55,6 +56,13 @@ def require_admin(current_user=Depends(get_current_user)):
 
 
 def require_manager_or_admin(current_user=Depends(get_current_user)):
-    if current_user.role not in ["admin", "manager"]:
+    if current_user.role not in ("admin", "manager"):
         raise HTTPException(status_code=403, detail="Manager or admin access required")
     return current_user
+
+
+# Dépendance explicite pour les opérations de modification/suppression (mutations)
+# de données métier : pannes, interventions, pièces, maintenance.
+# Les techniciens peuvent créer une panne / une intervention (signalement terrain)
+# mais toute modification ou suppression appartient aux managers/admins.
+require_manager_or_admin_for_write = require_manager_or_admin

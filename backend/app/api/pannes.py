@@ -8,7 +8,7 @@ from app.models.panne import Panne
 from app.models.intervention import Intervention
 from app.models.piece import Piece, PannesPieces
 from app.schemas.panne import PanneCreate, PanneUpdate, PanneOut
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_manager_or_admin
 from app.core.activity import log_activity
 from app.core.notifications import create_notification
 
@@ -147,7 +147,7 @@ def create_panne(panne_in: PanneCreate, db: Session = Depends(get_db),
 
 @router.put("/{panne_id}", response_model=PanneOut)
 def update_panne(panne_id: int, panne_in: PanneUpdate, db: Session = Depends(get_db),
-                 current_user=Depends(get_current_user)):
+                 current_user=Depends(require_manager_or_admin)):
     panne = db.query(Panne).filter(Panne.id == panne_id).first()
     if not panne:
         raise HTTPException(status_code=404, detail="Panne not found")
@@ -161,7 +161,7 @@ def update_panne(panne_id: int, panne_in: PanneUpdate, db: Session = Depends(get
 
 @router.delete("/{panne_id}")
 def delete_panne(panne_id: int, db: Session = Depends(get_db),
-                 current_user=Depends(get_current_user)):
+                 current_user=Depends(require_manager_or_admin)):
     panne = db.query(Panne).filter(Panne.id == panne_id).first()
     if not panne:
         raise HTTPException(status_code=404, detail="Panne not found")
@@ -193,7 +193,7 @@ def ajouter_piece(
     panne_id: int,
     body: PieceAssocIn,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_manager_or_admin),
 ):
     panne = db.query(Panne).filter(Panne.id == panne_id).first()
     if not panne:
@@ -242,7 +242,7 @@ def retirer_piece(
     piece_id: int,
     restaurer_stock: bool = Query(default=False),
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_manager_or_admin),
 ):
     assoc = db.query(PannesPieces).filter(
         PannesPieces.panne_id == panne_id,
